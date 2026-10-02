@@ -1,0 +1,27 @@
+{
+ "bounds": [
+  [
+   24.296196882565372,
+   54.4363820835065
+  ],
+  [
+   24.473605345326238,
+   54.66318395747113
+  ]
+ ],
+ "layers": {
+  "satellite": {
+   "label": "Landsat 2025 true colour"
+  },
+  "heat": {
+   "label": "Summer 2025 surface temperature",
+   "vmin": 35.688568115234375,
+   "vmax": 57.69892883300781,
+   "unit": "\u00b0C",
+   "cmap": "inferno"
+  },
+  "growth": {
+   "label": "New urban 2014\u20132025"
+  }
+ }
+}

@@ -1,0 +1,207 @@
+<title>QAYDH Heat Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/*LEAFLET_CSS*/
+/* Layout: desert-night story map. Left = story chapters (WHERE → WHEN → WHY → WHO → WHAT NEXT), centre = map, right = hotspot card. */
+:root{
+  --night:#14110e; --dune:#1f1a15; --line:#3a3027; --sand:#efe3cf; --mute:#b3a48e;
+  --ember:#ff6b2c; --ember-2:#ffb15c; --cool:#43c6b4; --alert:#ff3d3d;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--night);color:var(--sand);font:15px/1.5 var(--body);margin:0}
+.app{height:100%;display:grid;grid-template-rows:auto 1fr;}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--dune)}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font:800 30px/1 var(--display);letter-spacing:.04em;color:var(--sand)}
+.brand span{font:600 26px/1 var(--body);color:var(--ember)}
+.brand small{color:var(--mute);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.tabs,.chips{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button,.chips button{font:500 13px var(--body);color:var(--mute);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ember);border-color:var(--ember);color:#1b0d05;font-weight:600}
+.chips button[aria-pressed=true]{color:var(--sand);border-color:var(--ember-2)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ember-2);outline-offset:2px}
+.spacer{flex:1}
+.main{display:grid;grid-template-columns:minmax(300px,380px) 1fr minmax(300px,360px);min-height:0}
+.story{overflow:auto;border-right:1px solid var(--line);padding-block:8px}
+.ch{padding:16px 20px;border-left:4px solid transparent;cursor:pointer;opacity:.55;transition:opacity .2s,background .2s}
+.ch[aria-current=true]{opacity:1;border-left-color:var(--ember);background:linear-gradient(90deg,#2a1d13,transparent)}
+.ch .k{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ember-2)}
+.ch h2{font:800 26px/1.05 var(--display);letter-spacing:.01em;margin:4px 0 8px;text-wrap:balance}
+.ch p{margin:0 0 12px;color:var(--sand);max-width:60ch}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat b{display:block;font:800 30px/1 var(--display);color:var(--ember);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--mute)}
+.ribbon{margin-top:12px}
+.ribbon svg{width:100%;height:auto;display:block}
+.map{position:relative;min-height:0}
+#map{position:absolute;inset:0;background:#0f0c0a}
+.legend{position:absolute;left:12px;bottom:12px;z-index:500;background:rgba(20,17,14,.88);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;max-width:260px}
+.legend .bar{height:10px;border-radius:5px;margin:6px 0 2px}
+.legend .row{display:flex;justify-content:space-between;color:var(--mute);font:500 11px var(--mono)}
+.legend .sw{display:inline-flex;align-items:center;gap:6px;margin:2px 10px 2px 0}
+.legend .sw i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.card{overflow:auto;border-left:1px solid var(--line);padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.card h3{font:800 24px/1.05 var(--display);margin:0;text-wrap:balance}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.pill.urgent{background:var(--alert);border-color:var(--alert);color:#fff}
+.pill.high{border-color:var(--ember);color:var(--ember)}
+.pill.ok{border-color:var(--cool);color:var(--cool)}
+.q{display:grid;grid-template-columns:76px 1fr;gap:4px 12px;align-items:baseline}
+.q dt{font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2);text-transform:uppercase}
+.q dd{margin:0;min-width:0}
+.acts{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.acts li{border:1px solid var(--line);border-left:3px solid var(--cool);border-radius:6px;padding:7px 10px;font-weight:500}
+.wif .r{display:grid;grid-template-columns:110px 1fr 62px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.wif .t{height:10px;background:#2a231c;border-radius:5px;position:relative;overflow:hidden}
+.wif .t i{position:absolute;left:0;top:0;bottom:0;background:var(--cool);border-radius:5px}
+.wif .v{font:500 12px var(--mono);text-align:right;color:var(--cool)}
+.alertbox{border:1px dashed var(--ember);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--sand)}
+.alertbox b{color:var(--ember)}
+.hotlist{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.hotlist button{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;text-align:left;background:#1d1712;border:1px solid var(--line);border-radius:8px;color:var(--sand);padding:8px 10px;cursor:pointer;font:500 13px var(--body)}
+.hotlist button:hover,.hotlist button[aria-pressed=true]{border-color:var(--ember)}
+.hotlist .n{font:800 20px var(--display);color:var(--ember)}
+.hotlist .t{font:500 12px var(--mono);color:var(--ember-2)}
+.empty{color:var(--mute);font-size:14px}
+.src{font-size:11px;color:var(--mute);margin-top:auto}
+a{color:var(--ember-2)}
+.hs-ico{width:26px;height:26px;border-radius:50%;background:var(--ember);color:#1b0d05;font:800 14px/26px var(--display);text-align:center;border:2px solid #fff3e0;box-shadow:0 0 0 4px rgba(255,107,44,.35)}
+.leaflet-container{font:13px var(--body);background:#0f0c0a}
+.leaflet-tooltip{background:var(--dune);color:var(--sand);border:1px solid var(--line)}
+@media (max-width:1100px){.main{grid-template-columns:1fr;grid-template-rows:auto 60vh auto}.story,.card{border:0;overflow:visible}.map{min-height:60vh}html,body{height:auto}.app{height:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <div class="brand"><b>QAYDH</b><span>القيظ</span><small>Heat-risk atlas · Team T0049 · Challenge 813</small></div>
+    <div class="tabs" role="group" aria-label="City">
+      <button id="city-riyadh" data-city="riyadh" aria-pressed="true">East Riyadh</button>
+      <button id="city-abudhabi" data-city="abudhabi" aria-pressed="false">Abu Dhabi</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="chips" role="group" aria-label="Map layers" id="chips"></div>
+  </header>
+  <div class="main">
+    <nav class="story" id="story" aria-label="Story chapters"></nav>
+    <div class="map"><div id="map" role="region" aria-label="Map"></div><div class="legend" id="legend"></div></div>
+    <aside class="card" id="card"></aside>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const DATA = __DATA__;
+const CH = __CHAPTERS__;
+const POI = {mosque:["#7ee081","Mosque"],bus_stop:["#5cc8ff","Bus stop"],delivery:["#ffb15c","Rider hub"],construction:["#ff5a5a","Construction"],vulnerable:["#d58cff","School / clinic"]};
+const LAYERS = [["satellite","Satellite"],["growth","Growth"],["heat","Heat"],["surfaces","Surfaces"],["places","People places"],["priority","Priority"]];
+let city = "riyadh", chapter = 0, map, layer = {}, active = new Set(), hotIdx = null;
+try { const c = localStorage.getItem("qaydh-city"); if (c && DATA[c]) city = c; } catch (e) {}
+
+function heatColor(v){ // 0..100 → sand→ember→red
+  const s=[[0,[255,236,190]],[50,[255,150,70]],[80,[235,70,40]],[100,[160,20,30]]]; v=Math.max(0,Math.min(100,v||0));
+  for(let i=1;i<s.length;i++) if(v<=s[i][0]){const [a,ca]=s[i-1],[b,cb]=s[i],t=(v-a)/(b-a);return `rgb(${ca.map((x,j)=>Math.round(x+(cb[j]-x)*t)).join(",")})`;}
+}
+function fmt(n,d=0){return Number(n).toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d})}
+
+function build(){
+  const D = DATA[city]; if(map){map.remove();} layer={};
+  map = L.map("map",{zoomControl:true,attributionControl:true,preferCanvas:true}).setView(D.center,12);
+  map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Planet Tanager CC-BY-4.0 · WorldPop · © OpenStreetMap");
+  const b = D.ov.bounds; map.fitBounds(b);
+  for(const [k,o] of Object.entries(D.ov.layers)) layer[k]=L.imageOverlay(o.img,b,{opacity:k==="satellite"?1:.85});
+  layer.priority = L.geoJSON(D.cells,{style:f=>({fillColor:heatColor(f.properties.HRPI),fillOpacity:.72,weight:0}),
+    onEachFeature:(f,l)=>l.bindTooltip(`Priority ${fmt(f.properties.HRPI)} · ${fmt(f.properties.LST_C,1)} °C · ${fmt(f.properties.people)} residents<br>${f.properties.action}`)});
+  layer.places = L.layerGroup(D.places.filter(p=>POI[p.cat]).map(p=>L.circleMarker([p.lat,p.lon],{radius:4,color:POI[p.cat][0],weight:1,fillOpacity:.9}).bindTooltip(`${POI[p.cat][1]}${p.name?": "+p.name:""}`)));
+  layer.hot = L.layerGroup(D.hot.map((h,i)=>L.marker([h.lat,h.lon],{icon:L.divIcon({className:"",html:`<div class="hs-ico">${i+1}</div>`,iconSize:[26,26]})}).on("click",()=>showHot(i))));
+  if(D.districts){ layer.districts = L.layerGroup(Object.entries(D.districts).map(([n,bb])=>L.rectangle([[bb[1],bb[0]],[bb[3],bb[2]]],{color:"#43c6b4",weight:2,fill:false,dashArray:"6 4"}).bindTooltip(n,{permanent:true,direction:"top",className:""}))); }
+  layer.satellite.addTo(map);
+  renderChips(); renderStory(); goChapter(0);
+}
+function renderChips(){
+  const D=DATA[city]; const el=document.getElementById("chips"); el.innerHTML="";
+  LAYERS.filter(([k])=>layer[k]).forEach(([k,lab])=>{const b=document.createElement("button");b.id="layer-"+k;b.textContent=lab;b.setAttribute("aria-pressed",active.has(k));b.onclick=()=>{toggle(k,!active.has(k));};el.appendChild(b);});
+}
+function toggle(k,on){
+  if(on){active.add(k);layer[k].addTo(map);}else{active.delete(k);map.removeLayer(layer[k]);}
+  const b=document.getElementById("layer-"+k); if(b) b.setAttribute("aria-pressed",on); legend();
+}
+function setLayers(main){
+  for(const k of [...active]) if(k!=="satellite") toggle(k,false);
+  if(!active.has("satellite")) toggle("satellite",true);
+  if(main==="places"){toggle("heat",true);toggle("places",true);} else if(main&&layer[main]&&main!=="satellite") toggle(main,true);
+  if(main==="priority"){layer.hot.addTo(map);} else map.removeLayer(layer.hot);
+  const c=CH[city][chapter]; if(layer.districts){ if(c.districts) layer.districts.addTo(map); else map.removeLayer(layer.districts); }
+}
+function legend(){
+  const D=DATA[city], el=document.getElementById("legend"); let h="";
+  if(active.has("heat")){const o=D.ov.layers.heat;h+=`<b>Surface temperature</b><div class="bar" style="background:linear-gradient(90deg,#000004,#57106e,#bc3754,#f98e09,#fcffa4)"></div><div class="row"><span>${fmt(o.vmin,0)} °C</span><span>${fmt(o.vmax,0)} °C</span></div>`;}
+  if(active.has("surfaces")){const o=D.ov.layers.surfaces;h+=`<b>Surface (Tanager)</b><div>${o.classes.map((c,i)=>`<span class="sw"><i style="background:${o.colors[i]}"></i>${c}</span>`).join("")}</div>`;}
+  if(active.has("priority")) h+=`<b>Heat-risk priority</b><div class="bar" style="background:linear-gradient(90deg,${heatColor(0)},${heatColor(50)},${heatColor(80)},${heatColor(100)})"></div><div class="row"><span>0</span><span>100</span></div>`;
+  if(active.has("growth")) h+=`<span class="sw"><i style="background:#ff00ff"></i>New urban 2014–2025</span>`;
+  if(active.has("places")) h+=`<div>${Object.values(POI).map(([c,l])=>`<span class="sw"><i style="background:${c};border-radius:50%"></i>${l}</span>`).join("")}</div>`;
+  el.innerHTML=h||"<b>Landsat 2025</b>";
+}
+function ribbon(){
+  const w=DATA[city].weather; if(!w) return ""; const W=320,H=90,x=i=>14+i*(W-28)/23, y=t=>H-18-(t-20)*(H-34)/32;
+  let bars=w.share_ge40.map((s,i)=>`<rect x="${x(i)-5}" y="${H-18-s*(H-34)}" width="10" height="${s*(H-34)}" fill="#ff6b2c" opacity=".35"/>`).join("");
+  let line=w.hourly_mean.map((t,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(t).toFixed(1)}`).join("");
+  let ticks=[0,6,12,15,18,23].map(i=>`<text x="${x(i)}" y="${H-4}" fill="#b3a48e" font-size="9" text-anchor="middle" font-family="IBM Plex Mono">${i}h</text>`).join("");
+  return `<div class="ribbon"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mean hourly air temperature and share of days at or above 40 °C">${bars}<path d="${line}" stroke="#ffb15c" stroke-width="2" fill="none"/><line x1="${x(12)}" x2="${x(12)}" y1="8" y2="${H-18}" stroke="#43c6b4" stroke-dasharray="3 3"/><text x="${x(12)+3}" y="14" fill="#43c6b4" font-size="9" font-family="IBM Plex Mono">Dhuhr</text><line x1="${x(15)}" x2="${x(15)}" y1="8" y2="${H-18}" stroke="#43c6b4" stroke-dasharray="3 3"/><text x="${x(15)+3}" y="24" fill="#43c6b4" font-size="9" font-family="IBM Plex Mono">Asr</text>${ticks}</svg><span style="font-size:11px;color:var(--mute)">Line: mean air temperature by hour · bars: share of summer days ≥ 40 °C</span></div>`;
+}
+function renderStory(){
+  const el=document.getElementById("story"); el.innerHTML="";
+  CH[city].forEach((c,i)=>{
+    const d=document.createElement("article"); d.className="ch"; d.id="ch-"+c.id; d.tabIndex=0;
+    d.innerHTML=`<div class="k">${String(i+1).padStart(2,"0")} · ${c.kicker}</div><h2>${c.title}</h2><p>${c.body}</p><div class="stats">${c.stat.map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("")}</div>${c.ribbon?ribbon():""}${c.list?`<div class="hotlist">${DATA[city].hot.map((h,j)=>`<button id="hot-${j}" data-i="${j}"><span class="n">${j+1}</span><span>${h.district||""} ${fmt(h.population)} residents<br><small style="color:var(--mute)">${(h.recommended_action||"").split(" + ")[0]}</small></span><span class="t">${fmt(h.LST_C,1)}°</span></button>`).join("")}</div>`:""}`;
+    d.onclick=e=>{const hb=e.target.closest(".hotlist button"); if(hb){showHot(+hb.dataset.i);e.stopPropagation();return;} goChapter(i);};
+    d.onkeydown=e=>{if(e.key==="Enter")goChapter(i)};
+    el.appendChild(d);
+  });
+}
+function goChapter(i){
+  chapter=i; document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===i));
+  const cur=document.querySelectorAll(".ch")[i]; const st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8;
+  setLayers(CH[city][i].layer); if(!CH[city][i].list) map.fitBounds(DATA[city].ov.bounds);
+  if(CH[city][i].list && hotIdx===null) showHot(0); else if(!CH[city][i].list) cardIntro();
+}
+function cardIntro(){
+  const D=DATA[city]; document.getElementById("card").innerHTML=`<h3>${D.name}</h3><div class="empty">${D.sub}</div>
+  <dl class="q"><dt>Where</dt><dd>Persistent summer hotspots at 300 m</dd><dt>When</dt><dd>Hours above 40 °C, from weather reanalysis</dd><dt>Why</dt><dd>Roof, road, sand or missing greenery, read from hyperspectral spectra</dd><dt>Who</dt><dd>Residents + people outdoors: mosque-goers, bus riders, delivery riders, workers, children</dd><dt>What next</dt><dd>One named action per hotspot, with estimated °C and confidence</dd></dl>
+  <p class="empty">Open the last chapter, “Where to act first”, and pick a hotspot.</p><div class="src">Open data: Planet Tanager (CC-BY-4.0), Landsat 8/9, ESA WorldCover, WorldPop 2025, OpenStreetMap, Microsoft building footprints, Open-Meteo/ERA5.</div>`;
+}
+function showHot(i){
+  hotIdx=i; const D=DATA[city], h=D.hot[i]; if(!h) return;
+  if(chapter!==CH[city].length-1){chapter=CH[city].length-1;document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===chapter));setLayers("priority");}
+  { const cur=document.querySelectorAll(".ch")[chapter], st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8; }
+  document.querySelectorAll(".hotlist button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i));
+  map.setView([h.lat,h.lon],15);
+  const urg=(h.urgency||"").toUpperCase(), uc=urg==="URGENT"?"urgent":"high";
+  const who=h.who_is_exposed||[`${fmt(h.population)} residents`,...["mosque","bus_stop","delivery","construction","vulnerable"].filter(k=>h[k]>0).map(k=>POI[k][1].toLowerCase()+"s")].join(", ");
+  const surf=h.dominant_surface?`Mostly <b>${h.dominant_surface}</b> (roof ${fmt(100*(h.roof_frac||0))}% · road ${fmt(100*(h.road_frac||0))}%)`:`Built ${fmt(100*h.built_frac)}% · surface albedo from Landsat`;
+  const sc=[["Cool roofs",h.dT_cool_roofs_C,h.dT_cool_roofs_CI],["Cool pavement",h.dT_cool_pavement_C,h.dT_cool_pavement_CI],["Trees +15%",h.dT_trees_15pct_C,h.dT_trees_15pct_CI]].filter(s=>s[1]!=null);
+  const mx=Math.max(0.5,...sc.map(s=>Math.abs(s[1])));
+  document.getElementById("card").innerHTML=`
+   <div class="pills">${urg?`<span class="pill ${uc}">${urg}</span>`:""}${h.confidence?`<span class="pill ok">${h.confidence} confidence</span>`:""}<span class="pill">Priority ${fmt(h.HRPI)}</span></div>
+   <h3>Hotspot ${i+1}${h.district?" · "+h.district:""}</h3>
+   <dl class="q">
+     <dt>Where</dt><dd>${h.lat.toFixed(4)}, ${h.lon.toFixed(4)} · <a href="${h.map}" target="_blank" rel="noopener">open map ↗</a></dd>
+     <dt>Heat</dt><dd><b>${fmt(h.LST_C,1)} °C</b> surface at 10:40${h.persistence!=null?` · hot in ${fmt(h.persistence*3)}/3 summers`:""}</dd>
+     <dt>Who</dt><dd>${who}</dd>
+     <dt>Why</dt><dd>${surf} · greenery ${fmt(100*(h.green_frac||0))}%</dd>
+   </dl>
+   <div><div class="k" style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">WHAT NEXT</div><ul class="acts">${(h.recommended_action||"").split(" + ").map(a=>`<li>${a}</li>`).join("")}</ul></div>
+   ${sc.length?`<div class="wif"><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">WHAT-IF · ESTIMATED ΔLST</div>${sc.map(([n,v,ci])=>`<div class="r"><span>${n}</span><span class="t"><i style="width:${100*Math.abs(v)/mx}%"></i></span><span class="v">${v>=0?"+":""}${fmt(v,2)}°</span></div>`).join("")}<span style="font-size:11px;color:var(--mute)">Statistical slope with 95% CI, e.g. cool roofs ${sc[0][2]||""} °C</span></div>`:""}
+   ${h.public_alert?`<div class="alertbox"><b>Public alert</b><br>${h.public_alert}</div>`:""}
+   <div class="src">Estimates come from open satellite data and rank options. They do not guarantee degrees.</div>`;
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{city=b.dataset.city;hotIdx=null;active.clear();document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-pressed",x===b));try{localStorage.setItem("qaydh-city",city)}catch(e){};build();});
+document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.city===city));
+build();
+</script>

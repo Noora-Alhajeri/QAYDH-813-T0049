@@ -1,0 +1,89 @@
+"""Build the QAYDH story dashboard (one self-contained HTML file) from qaydh_outputs/.
+usage: python dashboard/build_dashboard.py      (after running the notebook)
+"""
+import os, json, base64, urllib.request
+import pandas as pd
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, "qaydh_outputs"); D = os.path.join(OUT, "dashboard")
+R = json.load(open(os.path.join(OUT, "results.json")))
+
+def b64(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+def overlays(tag):
+    m = json.load(open(os.path.join(D, f"{tag}_overlays.json")))
+    return dict(bounds=m["bounds"], layers={k: dict(img=b64(os.path.join(D, f"{tag}_{k}.png")), **v) for k, v in m["layers"].items()})
+def cells(path, keep):
+    g = json.load(open(path))
+    for f in g["features"]:
+        f["properties"] = {k: f["properties"].get(k) for k in keep}
+        f["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in ring] for ring in f["geometry"]["coordinates"]]
+    return g
+def places(path): return pd.read_csv(path).fillna("").to_dict("records")
+def hot(path, n=10):
+    df = pd.read_csv(path).head(n)
+    return json.loads(df.to_json(orient="records"))
+
+KEEP = ["HRPI", "LST_C", "people", "green", "roof", "road", "action"]
+mc = {d["approach"]: d for d in R["material_classifier"]["scores"]}
+z = {d["zone"]: d for d in R["lst_by_zone"]}
+ad = R["abudhabi"]; dist = {d["district"]: d for d in ad["districts"]}
+DATA = dict(
+    riyadh=dict(name="East Riyadh", sub="As Sali · Saudi Arabia", center=[24.576, 46.856], ov=overlays("riyadh"),
+                cells=cells(os.path.join(OUT, "qaydh_heat_risk_cells.geojson"), KEEP), places=places(os.path.join(OUT, "riyadh_outdoor_places.csv")),
+                hot=hot(os.path.join(OUT, "top_hotspots.csv")), weather=json.load(open(os.path.join(D, "riyadh_weather.json")))),
+    abudhabi=dict(name="Abu Dhabi", sub="Musaffah · Masdar · MBZ City · Khalifa City", center=[24.385, 54.55], ov=overlays("abudhabi"),
+                  cells=cells(os.path.join(OUT, "abudhabi_heat_risk_cells.geojson"), ["HRPI", "LST_C", "people", "green", "action"]),
+                  places=places(os.path.join(OUT, "abudhabi_outdoor_places.csv")), hot=hot(os.path.join(OUT, "abudhabi_top_hotspots.csv")),
+                  districts=json.load(open(os.path.join(D, "abudhabi_districts.json")))["districts"], dist=dist))
+f2 = lambda x: f"{x:.2f}"; f1 = lambda x: f"{x:.1f}"; f0 = lambda x: f"{x:,.0f}"
+w = R["weather"]; g = R["amenities_per_10k_hot_vs_rest"]; cool = R["cooling_per_0p1_albedo_C"]
+kh = [k for k in mc if k.startswith("Full")][0]; k6 = [k for k in mc if k.startswith("6")][0]; ki = [k for k in mc if k.startswith("Index")][0]
+est = next(v for k, v in z.items() if k.startswith("Est"))
+CH = dict(
+    riyadh=[
+        dict(id="grew", layer="growth", kicker="Where", title="The city grew 28% in eleven years",
+             body=f"Built-up land rose from {f0(R['built_km2_before'])} to {f0(R['built_km2_after'])} km² (2014→2025). Magenta = {f0(R['new_urban_km2'])} km² of confidently new districts.",
+             stat=[(f2(R['cv_built_f1_rf']), "built-up F1"), (f2(R['cv_built_f1_ndbi']), "starter NDBI rule")]),
+        dict(id="burn", layer="heat", kicker="Where", title="Where it burns at 10:40 am",
+             body=f"Median summer surface temperature. Established districts average {f1(est['mean_LST'])} °C. The same cells stay hottest year after year (2024↔2025 r = {f2(R['lst_cells_r_2024_vs_2025'])}).",
+             stat=[(f"{R['persistent_hot_cells']}", "cells hot 3 summers"), (f2(R['ndbi_lst_r_builtup']), "starter NDBI ↔ heat r")]),
+        dict(id="when", layer="heat", kicker="When", title=f"Danger runs {w['danger_window_local']}",
+             body=f"Air passes 40 °C on most summer days from {w['danger_window_local'].split('–')[0]}. That covers Dhuhr and Asr prayers, school runs and lunch-rush deliveries. Peak at {w['typical_peak_hour']}:00.",
+             stat=[(f1(w['heat_hours_ge40_per_day']), "hours/day ≥ 40 °C"), (f"{w['days_air_ge_45']}", "days ≥ 45 °C")], ribbon=True),
+        dict(id="why", layer="surfaces", kicker="Why", title="Roof, road or sand? Tanager reads the surface",
+             body=f"426-band Tanager spectra, labelled automatically from OpenStreetMap + Microsoft building outlines and WorldCover, sort every pixel into road, roof, vegetation and sand. Tested on tiles the model never saw.",
+             stat=[(f2(mc[kh]['macro_F1']), "full spectrum F1"), (f2(mc[k6]['macro_F1']), "6 broad bands"), (f2(mc[ki]['macro_F1']), "starter index rules")]),
+        dict(id="who", layer="places", kicker="Who", title="Who is outside in it",
+             body=f"Mosques, bus stops, delivery-rider hubs, construction sites, schools and clinics on WorldPop residents. The hottest fifth of neighbourhoods has {f2(g['bus_stop']['hottest_20pct'])} mapped bus stops per 10,000 people, against {f2(g['bus_stop']['rest_of_city'])} elsewhere.",
+             stat=[(f0(R['residents_hot20']), "residents in hottest 20%"), (f"{R['top20_changed_by_people_layer_pct']:.0f}%", "priorities changed by counting people")]),
+        dict(id="act", layer="priority", kicker="What next", title="Where to act first",
+             body=f"300 m cells ranked by heat × people × missing greenery. Pick a hotspot to see who is exposed, why it is hot, what to do and the estimated cooling.",
+             stat=[(f"{cool[0]:+.2f} °C", "per +0.10 roof albedo"), (f"+{f2(R['dR2_built'])}", "R² gained from hyperspectral")], list=True),
+    ],
+    abudhabi=[
+        dict(id="grew", layer="growth", kicker="Where", title=f"Abu Dhabi mainland grew {f0(ad['built_km2_before'])} → {f0(ad['built_km2_after'])} km²",
+             body="The same open-data pipeline, moved to the UAE by changing the area of interest. Magenta = new urban land since 2014.",
+             stat=[(f2(ad['cv_built_f1_rf']), "built-up F1"), (f2(ad['cv_built_f1_ndbi']), "starter NDBI rule")]),
+        dict(id="burn", layer="heat", kicker="Where", title="Masdar reads hottest, and the reason is sand",
+             body=f"Masdar City averages {f1(dist['Masdar City']['mean_LST_C'])} °C, but only {dist['Masdar City']['builtup_QAYDH_RF_pct']:.0f}% of it is built. The rest is open sand and {dist['Masdar City']['construction_sites']} construction sites. Musaffah: {f1(dist['Musaffah industrial']['mean_LST_C'])} °C.",
+             stat=[(f1(dist['Masdar City']['mean_LST_C']) + " °C", "Masdar City"), (f1(dist['Musaffah industrial']['mean_LST_C']) + " °C", "Musaffah")], districts=True),
+        dict(id="rule", layer="satellite", kicker="Why", title="The starter rule calls sand a city",
+             body=f"NDBI > 0 labels Musaffah {dist['Musaffah industrial']['builtup_starter_NDBI_pct']:.0f}% and Masdar {dist['Masdar City']['builtup_starter_NDBI_pct']:.0f}% built-up. WorldCover says {dist['Musaffah industrial']['builtup_WorldCover_pct']:.0f}% and {dist['Masdar City']['builtup_WorldCover_pct']:.0f}%. QAYDH's model: {dist['Musaffah industrial']['builtup_QAYDH_RF_pct']:.0f}% and {dist['Masdar City']['builtup_QAYDH_RF_pct']:.0f}%.",
+             stat=[(f"{dist['Masdar City']['builtup_starter_NDBI_pct']:.0f}%", "NDBI says built (Masdar)"), (f"{dist['Masdar City']['builtup_WorldCover_pct']:.0f}%", "WorldCover")], districts=True),
+        dict(id="who", layer="places", kicker="Who", title="Musaffah: workers, riders, worshippers",
+             body=f"Musaffah holds {f0(dist['Musaffah industrial']['residents'])} residents, {dist['Musaffah industrial']['bus_stops']} bus stops and {dist['Musaffah industrial']['mosques']} mosques in one hot industrial grid, the highest people-priority of the four districts.",
+             stat=[(f1(dist['Musaffah industrial']['mean_priority']), "Musaffah priority"), (f1(dist['Masdar City']['mean_priority']), "Masdar priority")], districts=True),
+        dict(id="act", layer="priority", kicker="What next", title="Where to act first in Abu Dhabi",
+             body="Ranked 300 m cells with the action each one needs. Hyperspectral roof/road detail plugs in when Satellite 813 or MBZ-SAT data is available.",
+             stat=[(f0(ad['population']), "residents covered"), (f"{ad['n_osm_places']}", "mapped outdoor places")], list=True),
+    ])
+
+leaflet_css = urllib.request.urlopen("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css", timeout=60).read().decode()
+tpl = open(os.path.join(ROOT, "dashboard", "template.html")).read()
+html = (tpl.replace("/*LEAFLET_CSS*/", leaflet_css)
+           .replace("__DATA__", json.dumps(DATA, separators=(",", ":")))
+           .replace("__CHAPTERS__", json.dumps(CH, separators=(",", ":"), ensure_ascii=False)))
+open(os.path.join(ROOT, "dashboard", "qaydh_heat_atlas.html"), "w").write(html)        # body-only version (for hosted artifact)
+out = os.path.join(ROOT, "dashboard", "index.html")
+open(out, "w").write('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' + html + "</html>")
+print("dashboard:", out, f"{os.path.getsize(out)/1e6:.1f} MB")

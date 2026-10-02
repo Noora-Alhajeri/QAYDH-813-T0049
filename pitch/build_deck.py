@@ -1,251 +1,210 @@
-"""Build the QAYDH pitch deck (HTML -> PDF via headless Chrome) from qaydh_outputs/results.json.
-Every number on the slides comes from the notebook run, so the deck never drifts from the evidence.
-usage: python pitch/build_deck.py   (from the repo root, after running the notebook)
+"""QAYDH pitch deck: visual, story-map style (HTML -> PDF via headless Chrome).
+Every number comes from qaydh_outputs/results.json; screens come from the live dashboard (dashboard/index.html).
+usage: python pitch/build_deck.py   (after the notebook and dashboard/build_dashboard.py)
 """
 import json, os, base64, subprocess, html
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "qaydh_outputs"); PITCH = os.path.join(ROOT, "pitch")
+OUT = os.path.join(ROOT, "qaydh_outputs"); PITCH = os.path.join(ROOT, "pitch"); SHOTS = os.path.join(PITCH, "screens")
+os.makedirs(SHOTS, exist_ok=True)
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 R = json.load(open(os.path.join(OUT, "results.json")))
 HOT = pd.read_csv(os.path.join(OUT, "top_hotspots.csv"))
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
-def img(name):
-    p = os.path.join(OUT, name) if not os.path.isabs(name) else name
-    return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+# ---------- dashboard screens (story-map frames, like a live product walkthrough) ----------
+DASH = open(os.path.join(ROOT, "dashboard", "index.html")).read()
+def shot(name, js, w=1600, h=950):
+    p = os.path.join(SHOTS, name + ".png"); tmp = os.path.join(SHOTS, "_tmp.html")
+    open(tmp, "w").write(DASH.replace("build();\n</script>", f"build();setTimeout(()=>{{{js}}},400);\n</script>"))
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={w},{h}", "--virtual-time-budget=9000",
+                    f"--screenshot={p}", "file://" + tmp], capture_output=True, timeout=180)
+    os.remove(tmp); return p
+SC = dict(
+    grow=shot("01_grow", "goChapter(0);document.getElementById('layer-growth')"),
+    heat=shot("02_heat", "goChapter(1)"),
+    when=shot("03_when", "goChapter(2)"),
+    why=shot("04_why", "goChapter(3)"),
+    who=shot("05_who", "goChapter(4)"),
+    act=shot("06_act", "showHot(0)"),
+    ad=shot("07_abudhabi", "document.getElementById('city-abudhabi').click();setTimeout(()=>goChapter(1),300)"),
+    adact=shot("08_abudhabi_act", "document.getElementById('city-abudhabi').click();setTimeout(()=>showHot(1),300)"),
+)
+def img(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+def fig(n): return img(os.path.join(OUT, n))
 
-z = {d["zone"]: d for d in R["lst_by_zone"]}
-zk = lambda pre: next(v for k, v in z.items() if k.startswith(pre))
-est, new, des, veg = zk("Established"), zk("New"), zk("Desert"), zk("Vegetation")
-lm = {(d["subset"][:3], d["features"][0]): d for d in R["lst_model"]}
-cool = R["cooling_per_0p1_albedo_C"]; gap = R["amenities_per_10k_hot_vs_rest"]
-ov = R["hrpi_top20_overlap"]; chg = R["change_agreement_2017_2023"]
+z = {d["zone"]: d for d in R["lst_by_zone"]}; est = next(v for k, v in z.items() if k.startswith("Est"))
+mc = {d["approach"]: d for d in R["material_classifier"]["scores"]}
+kh = [k for k in mc if k.startswith("Full")][0]; k6 = [k for k in mc if k.startswith("6")][0]; ki = [k for k in mc if k.startswith("Index")][0]
+w = R["weather"]; g = R["amenities_per_10k_hot_vs_rest"]; cool = R["cooling_per_0p1_albedo_C"]; ad = R["abudhabi"]
+dist = {d["district"]: d for d in ad["districts"]}; ms, mu = dist["Masdar City"], dist["Musaffah industrial"]
+t10 = R["top10_summary"]; ov = R["hrpi_top20_overlap"]
 f2 = lambda x: f"{x:.2f}"; f1 = lambda x: f"{x:.1f}"; f0 = lambda x: f"{x:,.0f}"
 
-# ---- dashboard screenshot (interactive map) ----
-shot = os.path.join(PITCH, "dashboard.png")
-if os.path.exists(CHROME):
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--window-size=1500,900",
-                    "--virtual-time-budget=15000", f"--screenshot={shot}",
-                    "file://" + os.path.join(OUT, "qaydh_interactive_map.html")], capture_output=True, timeout=120)
+S = []
+def slide(body, cls=""): S.append(f'<section class="{cls}">{body}</section>')
+def screen(src, kicker, title, quote, n):
+    slide(f'''<img class="bleed" src="{src}"><div class="tag">{kicker}</div>
+    <div class="quote"><div class="qn">{n}</div><h2>{title}</h2><p>{quote}</p></div>''', "screen")
 
-top = HOT.head(5)
-hot_rows = "".join(
-    f"<tr><td>#{int(r['rank'])}</td><td>{r.lat:.4f}, {r.lon:.4f}</td><td>{r.LST_C:.1f} °C</td>"
-    f"<td>{f0(r.population)}</td><td>{html.escape(str(r.recommended_action))}</td></tr>" for _, r in top.iterrows())
+# 1 cover
+slide(f'''<img class="bleed art" src="{fig('dashboard/riyadh_heat.png')}">
+<div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Team T0049</div>
+<h1>QAYDH <span>القيظ</span></h1><h2>Heat-risk intelligence for fast-growing Gulf cities</h2>
+<div class="team">انتصار الحبسي · نورة الهاجري · مريم البني</div></div>''', "dark")
 
-def gap_row(k, label):
-    g = gap[k]; h, o = g["hottest_20pct"], g["rest_of_city"]
-    ratio = (o / h) if h > 0 else float("inf")
-    rtxt = "none mapped" if h == 0 else (f"{ratio:.1f}× fewer" if ratio > 1 else f"{1/ratio:.1f}× more")
-    return f"<tr><td>{label}</td><td>{h:.2f}</td><td>{o:.2f}</td><td><b>{rtxt}</b></td></tr>"
+# 2 why
+slide(f'''<div class="split"><div><div class="kick">Why QAYDH</div><h1 class="big">A heat map says where.<br>A city needs who, why and what next.</h1></div>
+<dl class="why">
+<dt>Challenge</dt><dd>Summer surfaces pass 50 °C. Cooling budgets are spent case by case.</dd>
+<dt>Significance</dt><dd>People still walk to prayer, wait for buses, deliver and build outdoors at noon.</dd>
+<dt>Impact</dt><dd>Shade, cool roofs and trees go first where people are exposed.</dd>
+<dt>Solution</dt><dd>Hyperspectral + thermal + people data → one ranked action map.</dd></dl></div>''')
 
-slides = []
-S = slides.append
+# 3 people
+slide(f'''<div class="kick">The people in the heat</div><h1 class="big">{w['danger_window_local']}: above 40 °C on most summer days</h1>
+<div class="four">
+<div><b>Worshippers</b><span>walking to Dhuhr and Asr</span></div>
+<div><b>Bus riders</b><span>waiting at unshaded stops</span></div>
+<div><b>Delivery riders</b><span>idling outside restaurants</span></div>
+<div><b>Workers</b><span>on construction sites</span></div></div>
+<div class="strip"><div><b>{f0(R['residents_hot20'])}</b>residents in the hottest fifth of east Riyadh</div>
+<div><b>{f2(g['bus_stop']['hottest_20pct'])} vs {f2(g['bus_stop']['rest_of_city'])}</b>mapped bus stops per 10,000 people, hottest vs rest</div>
+<div><b>{f1(w['heat_hours_ge40_per_day'])} h</b>a day at or above 40 °C</div></div>''')
 
-S(f"""<section class="title">
-  <div class="kicker">Arab Youth Space Hackathon 2026 · Challenge 813 · Team T0049</div>
-  <h1>QAYDH <span class="ar">القيظ</span></h1>
-  <h2>Heat-risk intelligence for fast-growing Gulf cities</h2>
-  <p class="lead">Where the city grew · which districts burn hottest · <b>which materials</b> make them hot · <b>who is outside</b> in that heat. One map that tells planners where to act first, and with what.</p>
-  <div class="meta">Theme: Sustainable Urban Planning &amp; Smart Cities, Urban Expansion, Land Use Change &amp; Heat Risk · SDG 3 · 11 · 13</div>
-  <div class="meta">Team: انتصار الحبسي (lead) · نورة الهاجري · مريم البني</div>
-</section>""")
+# 4 solution overview
+slide(f'''<div class="kick">Solution overview</div><h1 class="big">Five questions, one map</h1>
+<div class="five">
+<div><i>Where</i><b>Persistent hotspots</b><span>Landsat LST, 3 summers</span></div>
+<div><i>When</i><b>Danger hours</b><span>ERA5 hourly weather</span></div>
+<div class="hs"><i>Why</i><b>Roof · road · sand</b><span>Planet Tanager 426 bands</span></div>
+<div><i>Who</i><b>People outdoors</b><span>WorldPop + OpenStreetMap</span></div>
+<div class="go"><i>What next</i><b>Named action + °C</b><span>300 m priority cells</span></div></div>''')
 
-S(f"""<section>
-  <div class="kicker">01 · Problem</div><h2>Gulf summers are getting hotter, and people still have to be outside</h2>
-  <div class="cols">
-   <div>
-    <ul class="big">
-     <li>Gulf cities are among the fastest-growing on Earth. Surfaces pass <b>50 °C</b> in summer (median LST here: <b>{f1(est['mean_LST'])} °C</b> in established districts).</li>
-     <li>Every new district locks in its roofs, roads and greenery for decades.</li>
-     <li>Planners decide cool roofs, trees and shade <b>case by case</b>. There is no routine city-wide view linking <b>growth → heat → materials → people</b>.</li>
-    </ul>
-   </div>
-   <div class="people">
-     <div class="p"><span>🕌</span><b>Walking to Dhuhr &amp; Asr</b><br>prayers at peak heat</div>
-     <div class="p"><span>🚌</span><b>Waiting at bus stops</b><br>often unshaded</div>
-     <div class="p"><span>🛵</span><b>Delivery riders</b><br>waiting outside restaurants</div>
-     <div class="p"><span>🏗️</span><b>Construction workers</b><br>outdoors all day</div>
-   </div>
-  </div>
-  <div class="who"><b>User:</b> municipal planning &amp; heat-resilience offices &nbsp;·&nbsp; <b>Decision:</b> which neighbourhoods get cool roofs, shade trees, shaded bus stops, mosque-walkway shade or rider cooling points <i>first</i></div>
-</section>""")
+# 5 data & tools (Ghaf-style three blocks)
+slide(f'''<div class="split"><div><div class="kick">Data &amp; tools</div><h1 class="big">Open data.<br>One notebook.<br>Run all.</h1></div>
+<dl class="why">
+<dt>Data</dt><dd>Planet Tanager hyperspectral · Landsat 8/9 SR + thermal · ESA WorldCover · Impact Observatory · WorldPop 2025 · OpenStreetMap · Microsoft building footprints · Open-Meteo/ERA5</dd>
+<dt>Tools</dt><dd>Python · Planetary Computer STAC · scikit-learn · Leaflet dashboard · gIQ-ready GeoJSON</dd>
+<dt>Steps</dt><dd>Cloud &amp; quality masks → automatic labels → model training → spatial validation → ranked actions → dashboard</dd></dl></div>''')
 
-S(f"""<section>
-  <div class="kicker">02 · Solution</div><h2>Five open-data layers, one decision map</h2>
-  <div class="flow">
-    <div class="box"><b>1 · Urban expansion</b><br>Landsat 2014→2025<br>Random Forest on WorldCover labels</div>
-    <div class="box"><b>2 · Heat hazard</b><br>Landsat surface temperature<br>Jun–Aug 2025</div>
-    <div class="box hs"><b>3 · Materials</b><br>Planet <b>Tanager</b> 426 bands<br>albedo · asphalt 1730 nm · concrete 2330 nm</div>
-    <div class="box pe"><b>4 · People exposure</b><br>WorldPop 2025 + OpenStreetMap<br>mosques · bus stops · riders · workers</div>
-    <div class="box out"><b>5 · Priority map</b><br>300 m cells · ranked<br>action + °C effect per cell</div>
-  </div>
-  <p class="lead">Heat-Risk Priority Index = <b>heat</b> × <b>people exposure</b> × <b>lack of greenery</b> × <b>new-district factor</b>, so each hotspot comes with a named intervention: cool roofs, shade trees, shaded bus shelters, mosque-walkway shade, rider cooling points, or midday work-break enforcement.</p>
-  <p class="note">Portable by design: the Tanager footprint sets the area. Change one scene ID and the whole pipeline moves to another city. AOI here: east Riyadh (As Sali), {f0(R['population_aoi'])} residents, 470 km².</p>
-</section>""")
+# 6-11 story-map screens (product walkthrough)
+screen(SC["grow"], "Where", f"+{R['growth_pct']:.0f}% built-up since 2014", f"{f0(R['built_km2_before'])} → {f0(R['built_km2_after'])} km². Our map scores F1 {f2(R['cv_built_f1_rf'])} against the starter rule's {f2(R['cv_built_f1_ndbi'])}.", "01")
+screen(SC["heat"], "Where", "The same streets burn every summer", f"Established districts average {f1(est['mean_LST'])} °C. Hot cells repeat year to year (r = {f2(R['lst_cells_r_2024_vs_2025'])}). The starter NDBI proxy explains none of it (r = {f2(R['ndbi_lst_r_builtup'])}).", "02")
+screen(SC["when"], "When", f"Danger from {w['danger_window_local'].split('–')[0]}", f"Above 40 °C for {f1(w['heat_hours_ge40_per_day'])} hours a day, across both afternoon prayers.", "03")
+screen(SC["why"], "Why", "Roof, road or sand", f"Labels come free from OpenStreetMap and building footprints. The full spectrum scores F1 {f2(mc[kh]['macro_F1'])} on unseen tiles; the starter index rules score {f2(mc[ki]['macro_F1'])}.", "04")
+screen(SC["who"], "Who", "Where people are outside", f"Counting people instead of buildings changes {R['top20_changed_by_people_layer_pct']:.0f}% of the top-20 priorities.", "05")
+screen(SC["act"], "What next", "One hotspot, one decision", f"Who is exposed, why it is hot, what to do, the cooling estimate and a public alert. Cool roofs: {cool[0]:+.2f} °C per +0.10 albedo.", "06")
 
-S(f"""<section>
-  <div class="kicker">03 · Data &amp; tools</div><h2>Open data only, fully reproducible</h2>
-  <table class="t">
-   <tr><th>Dataset</th><th>Use</th><th>Licence</th></tr>
-   <tr><td><b>Planet Tanager</b> hyperspectral SR (open archive, 15 May 2025)</td><td>Materials, albedo, hyperspectral value test</td><td>CC-BY-4.0</td></tr>
-   <tr><td>Landsat 8/9 C2 L2 (SR + surface temperature)</td><td>Land cover 2014/17/21/23/25, summer LST</td><td>Public domain</td></tr>
-   <tr><td>ESA WorldCover 2021</td><td>Training labels (no manual annotation needed)</td><td>CC-BY-4.0</td></tr>
-   <tr><td>Impact Observatory LULC 2017 / 2023</td><td>Independent validation</td><td>CC-BY-4.0</td></tr>
-   <tr><td>WorldPop 2025 (100 m)</td><td>Residents per cell</td><td>CC-BY-4.0</td></tr>
-   <tr><td>OpenStreetMap</td><td>Mosques, bus stops, rider hubs, construction, schools, clinics</td><td>ODbL</td></tr>
-  </table>
-  <p class="note">Python · Planetary Computer STAC · scikit-learn · one Colab notebook · every scene ID in <code>data_provenance.json</code> · no imagery in GitHub. Next: <b>gIQ</b> + Satellite 813 / MBZ-SAT in incubation.</p>
-</section>""")
+# 12 model architecture
+slide(f'''<div class="kick">Model architecture</div><h1 class="big">Surface intelligence from automatic labels</h1>
+<div class="pipe">
+<div>OSM roads<br>+ building outlines<br>+ WorldCover</div><em>→</em>
+<div>Clean pixels<br>≥50% roof · ≥60% road</div><em>→</em>
+<div class="hs">Tanager spectra<br>98 bands</div><em>→</em>
+<div>Random Forest<br>leave-one-tile-out</div><em>→</em>
+<div class="go">Roof / road / sand<br>per 300 m cell</div></div>
+<div class="three">
+<div><b>Why it fits</b><span>Spectral shape separates asphalt, roofs and sand that look alike in RGB.</span></div>
+<div><b>Why Random Forest</b><span>Small labels, many bands, explainable. Bigger models did not earn their place.</span></div>
+<div><b>Why tiles</b><span>Testing on unseen tiles stops neighbouring pixels from leaking.</span></div></div>''')
 
-S(f"""<section>
-  <div class="kicker">04 · Layer 1, urban expansion</div><h2>East Riyadh grew {f0(R['built_km2_before'])} → {f0(R['built_km2_after'])} km² (+{f0(R['growth_pct'])}%) since 2014</h2>
-  <img class="wide" src="{img('01_urban_expansion.png')}">
-  <div class="stats">
-   <div><b>{f2(R['cv_built_f1_rf'])}</b><span>built-up F1, spatial-block CV<br>vs {f2(R['cv_built_f1_ndbi'])} for the official NDBI rule</span></div>
-   <div><b>{f2(R['indep2023_built_f1_rf'])}</b><span>F1 on an <i>independent</i> map (IO LULC 2023)<br>vs {f2(R['indep2023_built_f1_ndbi'])} NDBI</span></div>
-   <div><b>{f0(R['new_urban_km2'])} km²</b><span>confident new urban land<br>(p&gt;0.6 after, p&lt;0.4 before)</span></div>
-  </div>
-</section>""")
+# 13 evidence
+slide(f'''<div class="kick">Validation</div><h1 class="big">Every claim has a number</h1>
+<div class="nums">
+<div><b>{f2(R['cv_built_f1_rf'])}</b><span>built-up F1 · spatial CV<br>starter rule {f2(R['cv_built_f1_ndbi'])}</span></div>
+<div><b>{f2(R['indep2023_built_f1_rf'])}</b><span>F1 on independent<br>IO LULC 2023</span></div>
+<div><b>{f2(mc[kh]['macro_F1'])}</b><span>surface F1, unseen tiles<br>6 bands {f2(mc[k6]['macro_F1'])} · rules {f2(mc[ki]['macro_F1'])}</span></div>
+<div><b>+{f2(R['dR2_built'])}</b><span>R² for heat from adding<br>hyperspectral (built-up)</span></div>
+<div><b>r {f2(R['coreg_r_after'])}</b><span>Tanager ↔ Landsat<br>co-registration</span></div>
+<div><b>{f0(min(ov.values())*100)}–{f0(max(ov.values())*100)}%</b><span>top-20 stable under<br>re-weighting</span></div></div>''')
 
-S(f"""<section>
-  <div class="kicker">05 · Layer 2, heat hazard</div><h2>Peak-summer surface temperature, summer 2025</h2>
-  <img class="wide" src="{img('02_heat_hazard.png')}">
-  <p class="lead">Established districts <b>{f1(est['mean_LST'])} °C</b> (95% CI {f1(est['ci_low'])}–{f1(est['ci_high'])}) · new districts <b>{f1(new['mean_LST'])} °C</b> · desert {f1(des['mean_LST'])} °C · vegetation <b>{f1(veg['mean_LST'])} °C</b>. In desert cities, open sand is as hot as the city by day, so the decision-relevant comparison is <b>between the places where people live</b>, and greenery is the strongest local coolant.</p>
-</section>""")
+# 14 tradeoffs
+slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 class="big">Where the edges are</h1></div>
+<dl class="why">
+<dt>Labels</dt><dd>Automatic labels carry noise. We keep clear pixels only and test on held-out tiles.</dd>
+<dt>Heat</dt><dd>Landsat sees surfaces at 10:40. Air peaks {w['air_daily_max_minus_overpass_C']:+.1f} °C later; weather data sets the hours.</dd>
+<dt>Spectra</dt><dd>Full spectrum gains {R['material_macroF1_gain_full_vs_6band']:+.2f} F1 over 6 bands for surfaces, +{f2(R['dR2_built'])} R² for heat. Modest, measured, reported.</dd>
+<dt>People</dt><dd>We model where outdoor activity is likely. We do not track people.</dd></dl></div>''')
 
-S(f"""<section>
-  <div class="kicker">06 · Layer 3, hyperspectral materials (Tanager)</div><h2>What makes it hot? Narrow bands see the material</h2>
-  <img class="wide" src="{img('03_hyperspectral_materials.png')}">
-  <div class="stats">
-   <div><b>+{f2(R['dR2_built'])}</b><span>R² gain for predicting LST in built-up areas<br>when Tanager is added ({f2(lm[('Bui','A')]['R2'])} → {f2(lm[('Bui','B')]['R2'])}, spatial CV)</span></div>
-   <div><b>r = {f2(R['coreg_r_after'])}</b><span>Tanager vs Landsat albedo<br>after automatic co-registration</span></div>
-   <div><b>{f0(R['tanager_beta_cloud_pct'])}% → {f1(R['tanager_physics_cloud_pct'])}%</b><span>Planet beta mask called bright sand "cloud".<br>We caught it with a physics test</span></div>
-  </div>
-</section>""")
+# 15 Abu Dhabi
+screen(SC["ad"], "UAE transfer", "Abu Dhabi: Masdar reads hottest, and the reason is sand",
+       f"Masdar {f1(ms['mean_LST_C'])} °C with {ms['builtup_QAYDH_RF_pct']:.0f}% built. The starter rule calls it {ms['builtup_starter_NDBI_pct']:.0f}% built and Musaffah {mu['builtup_starter_NDBI_pct']:.0f}%. Musaffah ranks first for people: {f0(mu['residents'])} residents, {mu['bus_stops']} bus stops, {mu['mosques']} mosques.", "07")
 
-S(f"""<section>
-  <div class="kicker">07 · Layer 4, people exposure</div><h2>Who is outside in this heat?</h2>
-  <img class="wide" src="{img('07_people_exposure.png')}">
-  <div class="cols">
-   <table class="t sm"><tr><th>mapped (OSM) per 10,000 residents</th><th>hottest 20%</th><th>rest of city</th><th></th></tr>
-    {gap_row('bus_stop', '🚌 bus stops')}{gap_row('mosque', '🕌 mosques')}{gap_row('park', '🌳 parks / gardens')}{gap_row('vulnerable', '🏫 schools &amp; clinics')}
-   </table>
-   <div class="callout"><b>{f0(R['residents_hot20'])} residents</b> live in the hottest 20% of populated cells.<br>Counting <b>people instead of buildings</b> changes <b>{f0(R['top20_changed_by_people_layer_pct'])}%</b> of the top-20 priorities.</div>
-  </div>
-</section>""")
+# 16 who benefits / business
+slide(f'''<div class="kick">Who benefits</div><h1 class="big">From map to budget line</h1>
+<div class="three">
+<div><b>Municipalities</b><span>Annual city licence: ranked cells, actions, °C estimates, alerts.</span></div>
+<div><b>Developers &amp; master-planners</b><span>Heat-aware design check before districts lock in.</span></div>
+<div><b>Delivery platforms &amp; contractors</b><span>Rest points, shifts and routes for riders and workers.</span></div></div>
+<div class="strip"><div><b>Dashboard</b>story map + hotspot cards</div><div><b>API</b>GeoJSON per 300 m cell</div><div><b>Alerts</b>summer brief + public heat alerts</div></div>
+<p class="sdg">SDG 3 · 11 · 13 · UAE Net Zero 2050 · Abu Dhabi &amp; Dubai urban heat goals</p>''')
 
-S(f"""<section>
-  <div class="kicker">08 · Layer 5, decision product</div><h2>Where to act first, and with what</h2>
-  <img class="wide" src="{img('06_heat_risk_priority.png')}">
-  <table class="t sm"><tr><th>rank</th><th>location</th><th>LST</th><th>residents</th><th>recommended action</th></tr>{hot_rows}</table>
-  <p class="note">Cool-roof what-if inside built-up areas: <b>+0.10 albedo ⇒ {cool[0]:+.2f} °C</b> (95% CI {cool[1]:+.2f} to {cool[2]:+.2f}), and +0.10 NDVI ⇒ {R['cooling_per_0p1_ndvi_C']:+.2f} °C, so budgets can be compared in °C.</p>
-</section>""")
+# 17 roadmap
+slide(f'''<div class="split"><div><div class="kick">Incubation</div><h1 class="big">PoC → MVP</h1></div>
+<dl class="why">
+<dt>Data</dt><dd>Satellite 813 and MBZ-SAT hyperspectral over Abu Dhabi, Dubai and Al Ain</dd>
+<dt>People</dt><dd>Labour housing and delivery-hub layers from municipal and platform partners</dd>
+<dt>Truth</dt><dd>Weather-station calibration and 200–300 field-checked surface points</dd>
+<dt>Product</dt><dd>gIQ dashboard with a what-if slider for roofs, trees and shaded stops</dd></dl></div>''')
 
-S(f"""<section>
-  <div class="kicker">09 · Validation</div><h2>Every claim has a number and a method</h2>
-  <table class="t">
-   <tr><th>Claim</th><th>Metric</th><th>Validation</th><th>Result</th></tr>
-   <tr><td>Built-up map beats the official rule</td><td>F1 / IoU</td><td>5-fold spatial-block CV (1 km) vs WorldCover</td><td><b>{f2(R['cv_built_f1_rf'])}</b> vs {f2(R['cv_built_f1_ndbi'])} · IoU {f2(R['cv_built_iou_rf'])}</td></tr>
-   <tr><td>Generalises to another year &amp; reference</td><td>F1</td><td>IO LULC 2023, all pixels</td><td><b>{f2(R['indep2023_built_f1_rf'])}</b> vs {f2(R['indep2023_built_f1_ndbi'])}</td></tr>
-   <tr><td>Detected change is real</td><td>precision / F1</td><td>new built 2017→23 vs IO LULC</td><td>precision {f2(chg['precision'])} · F1 {f2(chg['f1'])}</td></tr>
-   <tr><td>Heat differs between zones</td><td>mean LST ± 95% CI</td><td>block bootstrap, 300×</td><td>{f1(est['mean_LST'])} vs veg {f1(veg['mean_LST'])} °C</td></tr>
-   <tr><td>Tanager co-registered</td><td>Pearson r</td><td>albedo vs Landsat, ±4 px search</td><td><b>{f2(R['coreg_r_after'])}</b></td></tr>
-   <tr><td><b>Hyperspectral adds value</b></td><td>ΔR², RMSE</td><td>spatial-block CV, ± Tanager</td><td>all <b>+{f2(R['dR2_all'])}</b> · built-up <b>+{f2(R['dR2_built'])}</b></td></tr>
-   <tr><td>Cool roofs cool</td><td>°C per +0.10 albedo</td><td>OLS, block-bootstrap CI</td><td><b>{cool[0]:+.2f}</b> ({cool[1]:+.2f}…{cool[2]:+.2f})</td></tr>
-   <tr><td>Priorities are robust</td><td>top-20 overlap</td><td>4 alternative weightings</td><td>{f0(min(ov.values())*100)}–{f0(max(ov.values())*100)}%</td></tr>
-  </table>
-  <p class="note">Honest edge: change detection is precise but conservative (recall {f2(chg['recall'])}). It only flags confident change, which is what a planner should act on.</p>
-</section>""")
-
-dash = f'<img class="wide" src="{img(shot)}">' if os.path.exists(shot) else ""
-S(f"""<section>
-  <div class="kicker">10 · Product &amp; delivery</div><h2>How planners use it</h2>
-  <div class="cols">
-   <div>{dash}</div>
-   <div><ul class="big">
-    <li><b>Heat-risk dashboard</b>: 300 m cells by priority, top-10 pinned, toggle layers for mosques, bus stops, rider hubs and construction. Hovering shows LST, residents and the action. To be hosted on <b>gIQ</b>.</li>
-    <li><b>GeoJSON / REST API</b>: <code>GET /cells?city=riyadh&amp;min_hrpi=80</code>, straight into ArcGIS/QGIS and permitting.</li>
-    <li><b>Annual heat brief + alerts</b>: after each summer, a one-page brief per municipality flags new districts entering the top decile, and projects that moved a cell out of it.</li>
-   </ul></div>
-  </div>
-</section>""")
-
-S(f"""<section>
-  <div class="kicker">11 · Impact &amp; business</div><h2>Value for cities, people and budgets</h2>
-  <div class="cols3">
-   <div class="card"><h3>Impact</h3><ul><li>Protects people outdoors: worshippers, bus riders, riders, workers, children</li><li>Targets the shade and cooling budget where it lowers the most °C per dirham</li><li>SDG 3 · 11 · 13 · UAE Net Zero 2050 · Saudi Green Riyadh</li></ul></div>
-   <div class="card"><h3>Who pays</h3><ul><li>Municipalities &amp; planning departments (annual city licence)</li><li>Real-estate developers (heat-aware master-plan check)</li><li>Delivery platforms &amp; contractors (rider and worker heat-safety planning)</li></ul></div>
-   <div class="card"><h3>Why it scales</h3><ul><li>Open data only: any Arab city with Landsat + one hyperspectral scene</li><li>Runs in ~20 min per city per year</li><li>Satellite 813 adds regional hyperspectral revisit</li></ul></div>
-  </div>
-</section>""")
-
-S(f"""<section>
-  <div class="kicker">12 · Roadmap &amp; limits</div><h2>From PoC to MVP in incubation</h2>
-  <div class="cols">
-   <div><h3>Incubation plan</h3><ol class="big">
-    <li>UAE cities (Abu Dhabi, Dubai, Al Ain) with <b>Satellite 813 / MBZ-SAT</b> data</li>
-    <li>Worker-housing and delivery-hub layers from municipal and platform partners</li>
-    <li>Calibrate LST with NCM / municipal weather stations. Field-check 200–300 material points</li>
-    <li>Dashboard on <b>gIQ</b> with a what-if slider (roof albedo, trees, shaded stops)</li></ol></div>
-   <div><h3>Known limits</h3><ul>
-    <li>LST is a ~10:30 surface snapshot, not afternoon air temperature</li>
-    <li>Reference maps, not field truth. Sandy low-density suburbs are hardest</li>
-    <li>OSM under-maps labour housing and rider waiting spots</li>
-    <li>Cooling what-if is a statistical slope with a CI, not a simulation</li>
-    <li>One Tanager date (May). Materials are stable, shade is not</li></ul></div>
-  </div>
-</section>""")
-
-S(f"""<section class="title">
-  <h1>QAYDH <span class="ar">القيظ</span></h1>
-  <h2>Know where it burns, why, and who is outside.</h2>
-  <p class="lead">{f0(R['residents_hot20'])} residents in the hottest 20% of east Riyadh · +{f2(R['dR2_built'])} R² from hyperspectral · {cool[0]:+.2f} °C per +0.10 roof albedo</p>
-  <div class="meta">Code, notebook and outputs: GitHub repository (README) · Data © Planet Labs PBC (CC-BY-4.0), USGS, ESA, Impact Observatory, WorldPop, OpenStreetMap contributors</div>
-</section>""")
+# 18 close
+slide(f'''<img class="bleed art" src="{fig('dashboard/riyadh_surfaces.png')}"><div class="cover"><h1>QAYDH <span>القيظ</span></h1>
+<h2>Where it burns. Why. Who is outside. What to do first.</h2>
+<div class="team">Notebook · dashboard · data: GitHub repository README</div></div>''', "dark")
 
 CSS = """
-@page { size: 1600px 900px; margin: 0 }
-* { box-sizing: border-box }
-body { margin: 0; font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; color: #1d2b24; }
-section { width: 1600px; height: 900px; padding: 56px 72px; page-break-after: always; position: relative; overflow: hidden;
-          background: #fbf8f2; }
-section::after { content: "QAYDH · T0049 · Challenge 813"; position: absolute; bottom: 10px; right: 72px; font-size: 14px; color: #a08c6c }
-section.title { background: linear-gradient(135deg, #3b1d0e 0%, #8a2c0d 55%, #d9531e 100%); color: #fff7ec; padding-top: 200px }
-section.title h1 { font-size: 110px; margin: 10px 0 } section.title h2 { font-size: 44px; font-weight: 500; color: #ffd9a8; margin: 0 0 30px }
-section.title .lead { font-size: 26px; max-width: 1250px } .meta { font-size: 18px; color: #ffcf9a; margin-top: 14px }
-.ar { font-family: 'Geeza Pro', 'Arial', sans-serif; color: #ffb366 }
-.kicker { font-size: 18px; letter-spacing: .08em; text-transform: uppercase; color: #c2410c; font-weight: 700 }
-section.title .kicker { color: #ffcf9a }
-h2 { font-size: 42px; margin: 8px 0 22px; color: #3b1d0e } h3 { color: #8a2c0d; margin: 0 0 10px; font-size: 24px }
-.lead { font-size: 25px; line-height: 1.45 } .note { font-size: 18px; color: #5b4a3a; line-height: 1.4 }
-ul.big li, ol.big li { font-size: 23px; margin-bottom: 14px; line-height: 1.4 } ul li { font-size: 19px; margin-bottom: 8px; line-height: 1.35 }
-.cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; align-items: start }
-.cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 26px }
-.card { background: #fff; border: 1px solid #ecdcc4; border-radius: 14px; padding: 28px; min-height: 560px } .card li { font-size: 23px; margin-bottom: 18px }
-.people { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
-.p { background: #fff; border: 1px solid #ecdcc4; border-radius: 14px; padding: 20px; font-size: 19px; line-height: 1.35 }
-.p span { font-size: 44px; display: block; margin-bottom: 6px }
-.who { position: absolute; bottom: 60px; left: 72px; right: 72px; background: #3b1d0e; color: #ffe7c7; padding: 18px 24px; border-radius: 12px; font-size: 20px }
-.flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin: 20px 0 30px }
-.box { background: #fff; border: 2px solid #e7c9a0; border-radius: 14px; padding: 26px 18px; font-size: 21px; line-height: 1.45; min-height: 260px }
-.box b { font-size: 24px; color: #8a2c0d } .box.hs { border-color: #7b3294 } .box.hs b { color: #7b3294 }
-.box.pe { border-color: #0e7490 } .box.pe b { color: #0e7490 } .box.out { background: #8a2c0d; color: #fff; border-color: #8a2c0d } .box.out b { color: #ffd9a8 }
-img.wide { width: 100%; max-height: 440px; object-fit: contain; display: block; margin: 0 auto 14px; background: #fff; border-radius: 10px }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px }
-.stats div { background: #fff; border-left: 6px solid #d9531e; border-radius: 10px; padding: 14px 18px }
-.stats b { font-size: 40px; color: #8a2c0d; display: block } .stats span { font-size: 17px; color: #5b4a3a }
-table.t { width: 100%; border-collapse: collapse; font-size: 21px; background: #fff }
-table.t th { text-align: left; background: #3b1d0e; color: #ffe7c7; padding: 10px 12px }
-table.t td { padding: 12px 12px; border-bottom: 1px solid #ecdcc4 } table.t.sm { font-size: 16px } table.t.sm td { padding: 6px 10px }
-.callout { background: #8a2c0d; color: #fff; border-radius: 14px; padding: 24px; font-size: 23px; line-height: 1.5 }
-code { background: #f1e6d4; padding: 1px 6px; border-radius: 4px; font-size: .9em }
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+@page{size:1600px 900px;margin:0}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;color:#efe3cf;background:#14110e}
+section{width:1600px;height:900px;position:relative;overflow:hidden;page-break-after:always;padding:80px 96px;background:#14110e}
+section::after{content:"QAYDH · T0049";position:absolute;right:40px;bottom:24px;font:500 13px 'IBM Plex Mono';color:#6f6252;letter-spacing:.1em}
+.kick{font:500 16px 'IBM Plex Mono';letter-spacing:.18em;text-transform:uppercase;color:#ffb15c}
+h1{font:800 64px/1 'Big Shoulders Display';margin:14px 0 36px;color:#efe3cf;letter-spacing:.01em}
+h1.big{font-size:76px;max-width:1250px}
+h1 span,.cover h1 span{color:#ff6b2c;font-family:'IBM Plex Sans Arabic'}
+.bleed{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bleed.art{object-fit:cover;filter:brightness(.55) saturate(1.2);opacity:.9}
+.bleed.dim{filter:brightness(.42) saturate(1.1)}
+.cover{position:absolute;left:96px;bottom:110px;max-width:1200px}
+.cover h1{font-size:150px;margin:10px 0}
+.cover h2{font:600 40px/1.2 'IBM Plex Sans Arabic';color:#ffcf9a;margin:0 0 26px}
+.team{font:500 22px 'IBM Plex Sans Arabic';color:#efe3cf;opacity:.85}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;height:100%}
+dl.why{display:grid;grid-template-columns:150px 1fr;gap:26px 28px;margin:0}
+dl.why dt{font:500 15px 'IBM Plex Mono';letter-spacing:.14em;text-transform:uppercase;color:#ff6b2c;padding-top:6px}
+dl.why dd{margin:0;font-size:26px;line-height:1.35}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:10px}
+.four div,.three div{border-top:4px solid #ff6b2c;padding-top:18px}
+.four b,.three b{display:block;font:800 40px/1 'Big Shoulders Display';margin-bottom:10px}
+.four span,.three span{font-size:22px;color:#cdbda4;line-height:1.35}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:40px}
+.strip{position:absolute;left:96px;right:96px;bottom:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.strip div{font-size:19px;color:#cdbda4;line-height:1.3}
+.strip b{display:block;font:800 54px/1 'Big Shoulders Display';color:#ff6b2c;margin-bottom:8px}
+.five{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:20px}
+.five div{background:#1f1a15;border:1px solid #3a3027;border-radius:14px;padding:30px 22px;min-height:330px;display:flex;flex-direction:column;gap:14px}
+.five i{font:500 15px 'IBM Plex Mono';font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:#ffb15c}
+.five b{font:800 40px/1 'Big Shoulders Display'} .five span{font-size:19px;color:#cdbda4;margin-top:auto}
+.five .hs{border-color:#ff6b2c} .five .go{background:#43c6b4;border-color:#43c6b4;color:#0d1f1c} .five .go span,.five .go i{color:#0d1f1c}
+.screen{padding:0}
+.screen .tag{position:absolute;top:28px;left:420px;font:500 15px 'IBM Plex Mono';letter-spacing:.18em;text-transform:uppercase;background:#ff6b2c;color:#1b0d05;padding:8px 14px;border-radius:999px}
+.quote{position:absolute;right:56px;bottom:56px;width:560px;background:rgba(20,17,14,.94);border:1px solid #3a3027;border-left:6px solid #ff6b2c;border-radius:14px;padding:28px 32px}
+.quote .qn{font:500 14px 'IBM Plex Mono';color:#ffb15c;letter-spacing:.16em}
+.quote h2{font:800 42px/1.02 'Big Shoulders Display';margin:8px 0 12px}
+.quote p{font-size:20px;line-height:1.4;margin:0;color:#e2d4bc}
+.pipe{display:flex;align-items:stretch;gap:12px;margin-top:10px}
+.pipe div{flex:1;background:#1f1a15;border:1px solid #3a3027;border-radius:14px;padding:26px 18px;font-size:22px;line-height:1.3;display:flex;align-items:center}
+.pipe div.hs{border-color:#ff6b2c} .pipe div.go{background:#43c6b4;color:#0d1f1c;font-weight:600}
+.pipe em{font-style:normal;font:800 40px 'Big Shoulders Display';color:#ff6b2c;align-self:center}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px;margin-top:10px}
+.nums b{display:block;font:800 104px/1 'Big Shoulders Display';color:#ff6b2c;font-variant-numeric:tabular-nums}
+.nums span{font-size:21px;color:#cdbda4;line-height:1.3}
+.sdg{position:absolute;left:96px;bottom:34px;font:500 15px 'IBM Plex Mono';color:#8f806b;letter-spacing:.08em}
 """
-doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}</style></head><body>{''.join(slides)}</body></html>"
+doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)
 pdf = os.path.join(PITCH, "QAYDH_T0049_pitch.pdf")
-subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", "file://" + hp],
-               capture_output=True, timeout=180)
-print("deck:", hp, "\npdf :", pdf if os.path.exists(pdf) else "NOT CREATED")
+subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=10000", f"--print-to-pdf={pdf}", "file://" + hp], capture_output=True, timeout=300)
+print("deck:", len(S), "slides ->", pdf, f"{os.path.getsize(pdf)/1e6:.1f} MB")

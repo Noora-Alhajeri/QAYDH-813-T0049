@@ -1,0 +1,44 @@
+{
+ "bounds": [
+  [
+   24.482960857417005,
+   46.739363446071735
+  ],
+  [
+   24.668043904332755,
+   46.971845445531855
+  ]
+ ],
+ "layers": {
+  "satellite": {
+   "label": "Landsat 2025 true colour"
+  },
+  "heat": {
+   "label": "Summer 2025 surface temperature",
+   "vmin": 47.959259033203125,
+   "vmax": 56.136871337890625,
+   "unit": "\u00b0C",
+   "cmap": "inferno"
+  },
+  "surfaces": {
+   "label": "Hyperspectral surfaces (Tanager)",
+   "classes": [
+    "Road / asphalt",
+    "Roof / building",
+    "Vegetation",
+    "Bare / sand",
+    "Water"
+   ],
+   "colors": [
+    "#3a3a3a",
+    "#e4572e",
+    "#2e9e44",
+    "#e9d8a6",
+    "#2b83ba"
+   ]
+  },
+  "growth": {
+   "label": "New urban 2014\u20132025"
+  }
+ }
+}

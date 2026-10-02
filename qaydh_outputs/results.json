@@ -45,6 +45,24 @@
       "ci_high": 52.18
     }
   ],
+  "weather": {
+    "source": "Open-Meteo historical (ERA5) CC-BY-4.0",
+    "danger_window_local": "11:00\u201320:00",
+    "days_air_ge_45": 12,
+    "days_air_ge_40": 87,
+    "n_days": 92,
+    "mean_daily_max_C": 43.12608695652173,
+    "typical_peak_hour": 15,
+    "air_at_landsat_overpass_C": 39.90380434782608,
+    "air_daily_max_minus_overpass_C": 3.22228260869565,
+    "heat_hours_ge40_per_day": 8.26086956521739
+  },
+  "lst_cells_r_2024_vs_2025": 0.8966515417814966,
+  "persistent_hot_cells": 415,
+  "ndbi_lst_r_all": 0.1865446458594683,
+  "ndbi_lst_r_builtup": -0.01217175227357782,
+  "green_km2": 4.1652,
+  "lst_green_minus_builtup_C": -5.286811828613281,
   "tanager_beta_cloud_pct": 74.09143194463216,
   "tanager_physics_cloud_pct": 0.030618915869701342,
   "tanager_cloud_mask_used": "physics",
@@ -139,8 +157,59 @@
     1
   ],
   "georef_method": "HDF-EOS StructMetadata (UTM)",
-  "dR2_all": 0.08700000000000002,
-  "dR2_built": 0.131,
+  "building_outlines": {
+    "osm": 1250,
+    "microsoft": 66063
+  },
+  "material_classifier": {
+    "validation": "leave-one-tile-out (4 tiles, 3.9 km)",
+    "n_labelled": 20042,
+    "labels_per_class": {
+      "Road / asphalt": 3694,
+      "Roof / building": 7506,
+      "Vegetation": 598,
+      "Bare / sand": 8244
+    },
+    "scores": [
+      {
+        "approach": "Index rules (starter NDVI/NDBI/MNDWI)",
+        "macro_F1": 0.377,
+        "accuracy": 0.399,
+        "F1 Road / asphalt": 0.0,
+        "F1 Roof / building": 0.554,
+        "F1 Vegetation": 0.942,
+        "F1 Bare / sand": 0.013
+      },
+      {
+        "approach": "6 broad bands + RF (Landsat-like)",
+        "macro_F1": 0.75,
+        "accuracy": 0.767,
+        "F1 Road / asphalt": 0.525,
+        "F1 Roof / building": 0.781,
+        "F1 Vegetation": 0.839,
+        "F1 Bare / sand": 0.856
+      },
+      {
+        "approach": "Full spectrum (98 bands) + RF",
+        "macro_F1": 0.762,
+        "accuracy": 0.785,
+        "F1 Road / asphalt": 0.552,
+        "F1 Roof / building": 0.796,
+        "F1 Vegetation": 0.833,
+        "F1 Bare / sand": 0.867
+      }
+    ]
+  },
+  "material_macroF1_gain_full_vs_6band": 0.01200000000000001,
+  "surface_shares_scene": {
+    "Road / asphalt": 0.07545094527858151,
+    "Roof / building": 0.3127558028028111,
+    "Vegetation": 0.010603812066292479,
+    "Bare / sand": 0.6011894398523149,
+    "Water": 0.0
+  },
+  "dR2_all": 0.08900000000000002,
+  "dR2_built": 0.132,
   "lst_model": [
     {
       "subset": "All pixels in Tanager footprint",
@@ -152,9 +221,9 @@
     {
       "subset": "All pixels in Tanager footprint",
       "features": "B: Landsat + Tanager",
-      "R2": 0.528,
-      "R2_sd": 0.033,
-      "RMSE_C": 1.357
+      "R2": 0.53,
+      "R2_sd": 0.034,
+      "RMSE_C": 1.354
     },
     {
       "subset": "Built-up pixels only",
@@ -166,9 +235,9 @@
     {
       "subset": "Built-up pixels only",
       "features": "B: Landsat + Tanager",
-      "R2": 0.441,
+      "R2": 0.442,
       "R2_sd": 0.022,
-      "RMSE_C": 1.435
+      "RMSE_C": 1.434
     }
   ],
   "poi_share_in_hot20": {
@@ -212,6 +281,12 @@
   "residents_hot20": 157075.6875,
   "people_in_top_decile_cells": 80468.75,
   "population_aoi": 1091323.625,
+  "green_m2_per_resident": 3.8166496753692627,
+  "residents_in_cells_lt5pct_green": 1067236.0,
+  "cooling_per_0p1_ndvi_CI": [
+    -2.0145698953914324,
+    -1.410129005332381
+  ],
   "cooling_per_0p1_albedo_C": [
     -0.6994674309207177,
     -0.8453202241935313,
@@ -225,5 +300,141 @@
     "hazard\u00b2": 0.75
   },
   "top20_changed_by_people_layer_pct": 90.0,
-  "n_priority_cells_top_decile": 301
+  "n_priority_cells_top_decile": 301,
+  "top10_summary": {
+    "dominant_surface": {
+      "roofs": 9,
+      "roads/asphalt": 1
+    },
+    "confidence": {
+      "High": 6,
+      "Medium": 3,
+      "Low": 1
+    },
+    "urgency": {
+      "High": 7,
+      "URGENT": 3
+    },
+    "mean_dT_cool_roofs_C": -1.7513999999999998,
+    "mean_dT_cool_pavement_C": -0.1258,
+    "mean_dT_trees_C": -0.45030000000000003
+  },
+  "abudhabi": {
+    "aoi": [
+      54.44,
+      24.3,
+      54.66,
+      24.47
+    ],
+    "cv_built_f1_rf": 0.8097342576339341,
+    "cv_built_f1_ndbi": 0.43392043974888017,
+    "built_km2_before": 130.4334,
+    "built_km2_after": 188.721,
+    "new_urban_km2": 37.6263,
+    "population": 560471.25,
+    "n_osm_places": 1709,
+    "districts": [
+      {
+        "district": "Musaffah industrial",
+        "mean_LST_C": 54.5,
+        "p90_LST_C": 57.099998474121094,
+        "builtup_starter_NDBI_pct": 91.6,
+        "builtup_QAYDH_RF_pct": 82.2,
+        "builtup_WorldCover_pct": 69.7,
+        "green_pct": 0.4,
+        "albedo": 0.20000000298023224,
+        "new_urban_km2": 2.0,
+        "residents": 87463.296875,
+        "bus_stops": 25,
+        "mosques": 36,
+        "construction_sites": 1,
+        "mean_priority": 53.7
+      },
+      {
+        "district": "Masdar City",
+        "mean_LST_C": 55.400001525878906,
+        "p90_LST_C": 57.599998474121094,
+        "builtup_starter_NDBI_pct": 79.6,
+        "builtup_QAYDH_RF_pct": 34.8,
+        "builtup_WorldCover_pct": 17.1,
+        "green_pct": 0.5,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 0.7,
+        "residents": 5150.10009765625,
+        "bus_stops": 2,
+        "mosques": 4,
+        "construction_sites": 8,
+        "mean_priority": 43.1
+      },
+      {
+        "district": "Mohamed Bin Zayed City",
+        "mean_LST_C": 54.20000076293945,
+        "p90_LST_C": 55.70000076293945,
+        "builtup_starter_NDBI_pct": 83.5,
+        "builtup_QAYDH_RF_pct": 70.5,
+        "builtup_WorldCover_pct": 52.9,
+        "green_pct": 0.7,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 4.6,
+        "residents": 52773.6015625,
+        "bus_stops": 6,
+        "mosques": 9,
+        "construction_sites": 1,
+        "mean_priority": 39.4
+      },
+      {
+        "district": "Khalifa City A",
+        "mean_LST_C": 53.599998474121094,
+        "p90_LST_C": 56.20000076293945,
+        "builtup_starter_NDBI_pct": 67.9,
+        "builtup_QAYDH_RF_pct": 71.7,
+        "builtup_WorldCover_pct": 65.2,
+        "green_pct": 0.3,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 1.2,
+        "residents": 44463.19921875,
+        "bus_stops": 3,
+        "mosques": 9,
+        "construction_sites": 5,
+        "mean_priority": 33.4
+      }
+    ],
+    "top_hotspots": [
+      {
+        "rank": 1,
+        "district": "",
+        "LST_C": 56.57500076293945,
+        "population": 155.8090057373047,
+        "recommended_action": "Cool roofs & cool pavements + Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 2,
+        "district": "Musaffah industrial",
+        "LST_C": 56.74399948120117,
+        "population": 190.5070037841797,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 3,
+        "district": "Musaffah industrial",
+        "LST_C": 56.25400161743164,
+        "population": 183.08700561523438,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 4,
+        "district": "",
+        "LST_C": 55.71099853515625,
+        "population": 145.1490020751953,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 5,
+        "district": "",
+        "LST_C": 55.733001708984375,
+        "population": 156.3459930419922,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      }
+    ]
+  }
 }

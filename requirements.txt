@@ -21,3 +21,5 @@ odc-geo==0.4.10
 xarray==2024.7.0
 ipykernel==6.31.0
 nbconvert==7.17.1
+pyarrow==21.0.0
+adlfs==2025.8.0
