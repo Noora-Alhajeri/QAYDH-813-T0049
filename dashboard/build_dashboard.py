@@ -8,10 +8,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "qaydh_outputs"); D = os.path.join(OUT, "dashboard")
 R = json.load(open(os.path.join(OUT, "results.json")))
 
-def b64(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+def b64(p, jpeg=False):
+    if jpeg:   # photographic layers as JPEG to keep the single-file dashboard small
+        from PIL import Image; import io
+        b = io.BytesIO(); Image.open(p).convert("RGB").save(b, "JPEG", quality=85); return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
+    return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def overlays(tag):
     m = json.load(open(os.path.join(D, f"{tag}_overlays.json")))
-    return dict(bounds=m["bounds"], layers={k: dict(img=b64(os.path.join(D, f"{tag}_{k}.png")), **v) for k, v in m["layers"].items()})
+    return dict(bounds=m["bounds"], layers={k: dict(img=b64(os.path.join(D, f"{tag}_{k}.png"), jpeg=(k == "satellite")), **v) for k, v in m["layers"].items()})
 def cells(path, keep):
     g = json.load(open(path))
     for f in g["features"]:
@@ -88,6 +92,17 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
     DATA["musaffah"] = dict(name="Musaffah deep dive", sub="Abu Dhabi · 9 × 9 km at 10 m", center=[24.355, 54.50], ov=overlays("musaffah"), block=True,
                             cells=mcells, places=places(os.path.join(OUT, "musaffah_outdoor_places.csv")), hot=json.loads(mh.to_json(orient="records")),
                             sites=json.loads(ms_.to_json(orient="records")))
+    if os.path.exists(os.path.join(D, "musaffah_ann_overlays.json")):
+        a_ = overlays("musaffah_ann"); DATA["musaffah"]["ov"]["layers"]["annotation"] = a_["layers"]["annotation"]
+        def gj(p, nd=6):
+            g = json.load(open(p))
+            def rnd(c): return [rnd(x) for x in c] if isinstance(c[0], list) else [round(c[0], nd), round(c[1], nd)]
+            for f_ in g["features"]: f_["geometry"]["coordinates"] = rnd(f_["geometry"]["coordinates"])
+            return g
+        DATA["musaffah"]["objects"] = gj(os.path.join(D, "musaffah_objects_near_hotspots.geojson"))
+        DATA["musaffah"]["segments"] = gj(os.path.join(OUT, "musaffah_sam_segments.geojson"))
+        DATA["musaffah"]["review"] = gj(os.path.join(OUT, "musaffah_annotation_review_queue.geojson"))
+        br = pd.read_csv(os.path.join(OUT, "musaffah_planner_briefs.csv")); DATA["musaffah"]["briefs"] = {r.hotspot: dict(text=r.brief, check=r.fact_check, signoff=r.human_signoff) for r in br.itertuples()}
     rules_ = [k for k in mc_ if k.startswith("Index")][0]; bestk = R["musaffah_classifier"]["chosen"]
     CH["musaffah"] = [
         dict(id="where", layer="hazard", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
@@ -99,6 +114,9 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
         dict(id="what", layer="surfaces", kicker="What is physically there?", title="Road, roof, sand, plants, water at 10 m",
              body=f"Expert annotation: GIS candidates kept only at ≥80% purity, mixed pixels excluded, noisy labels removed, scored on held-out 1 km blocks.",
              stat=[(f"{mc_[bestk]['test_macro_F1']:.2f}", "macro-F1, held-out blocks"), (f"{mc_[rules_]['test_macro_F1']:.2f}", "starter index rules")], conf=True),
+        dict(id="labels", layer="annotation", kicker="How we labelled it", title="Annotation, objects and AI segments",
+             body=f"Reference labels at ≥80% purity (A–C train · D validate · E test), {R['musaffah_objects']['buildings']:,} building objects with ID and bounding box, SAM segments around hotspots, and a 300-point review queue for people to check.",
+             stat=[(f"{R['musaffah_objects']['buildings']:,}", "labelled building objects"), (f"{R['sam']['annotation_candidates']}", "SAM annotation candidates")]),
         dict(id="why", layer="hazard", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
              body=f"A spatially cross-validated model links each 100 m cell's surface mix to its heat. Drivers are shown as associations, not proof of cause.",
              stat=[(f"{wm['Random Forest']['R2']:.2f}", "R², spatial CV"), (f"{wm['Random Forest']['MAE_C']:.1f} °C", "mean error")]),

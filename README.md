@@ -118,6 +118,13 @@ Section **6c** keeps only clear pixels (≥50% building, ≥60% road, or uniform
 
 No commercial, gIQ, 813 or MBZ-SAT data is used, no credentials are stored, and no raw imagery is in the repository.
 
+## Annotation & AI models
+- **Reference annotation:** GIS candidates kept at ≥80% purity, mixed pixels excluded, 1 km blocks A–C/D/E, confident-learning cleanup → `qaydh_outputs/musaffah_annotation_reference_polygons.geojson`.
+- **Human review queue:** the 300 most uncertain pixels → `musaffah_annotation_review_queue.geojson` (open in QGIS).
+- **Object labels:** every building (Microsoft + OSM) with ID, bounding box, roof class, dark-roof flag, heat zone, new-since-2017, street → `musaffah_building_objects.geojson/.csv`.
+- **SAM (Segment Anything, Apache-2.0)** segments around hotspots with class, purity and heat → `musaffah_sam_segments.geojson`.
+- **Qwen2.5-1.5B-Instruct (Apache-2.0)** drafts planner briefs from verified facts. A unit-aware fact-checker rejects hallucinations and a person signs off → `musaffah_planner_briefs.csv`.
+
 ## Limitations
 
 - LST is surface temperature at ~10:40. Air peaks later, so weather data sets the danger hours.

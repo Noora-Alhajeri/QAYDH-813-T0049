@@ -602,5 +602,29 @@
     "risk_Trees +10%": 0.42,
     "risk_Cool pavement": 0.99,
     "risk_Shaded stops / rest nodes": 0.67
+  },
+  "musaffah_objects": {
+    "buildings": 25462,
+    "cool_roof_candidates": 445,
+    "in_high_or_extreme_heat": 965,
+    "new_since_2017": 1359,
+    "roof_label_agreement": 0.7157332495483466
+  },
+  "sam": {
+    "model": "SAM ViT-B (Meta, Apache-2.0)",
+    "segments": 84,
+    "annotation_candidates": 72,
+    "mean_purity": 0.923095238095238,
+    "hottest_label_by_LST": {
+      "Bare soil / sand": 57.6,
+      "Building / roof": 55.6,
+      "Road / dark pavement": 55.7
+    }
+  },
+  "llm_briefs": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "n": 5,
+    "llm_drafts_passing_fact_check": 0,
+    "policy": "LLM drafts only from verified facts; unit-aware fact-check; failed drafts replaced by the verified template; human sign-off required"
   }
 }

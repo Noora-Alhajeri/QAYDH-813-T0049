@@ -1,0 +1,31 @@
+{
+ "bounds": [
+  [
+   24.313510139956207,
+   54.453371794424875
+  ],
+  [
+   24.39650084919799,
+   54.54657433587071
+  ]
+ ],
+ "layers": {
+  "annotation": {
+   "label": "Reference annotation (\u226580% purity)",
+   "classes": [
+    "Road / dark pavement",
+    "Building / roof",
+    "Bare soil / sand",
+    "Vegetation",
+    "Water"
+   ],
+   "colors": [
+    "#3a3a3a",
+    "#e4572e",
+    "#e9d8a6",
+    "#2e9e44",
+    "#2b83ba"
+   ]
+  }
+ }
+}

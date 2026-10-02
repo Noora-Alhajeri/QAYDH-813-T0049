@@ -25,7 +25,8 @@ mus = "document.getElementById('city-musaffah').click();"
 SC = dict(m_where=shot("m1_where", mus + "setTimeout(()=>goChapter(0),300)"),
           m_who=shot("m2_who", mus + "setTimeout(()=>{goChapter(1);showSite(0)},300)"),
           m_what=shot("m3_what", mus + "setTimeout(()=>goChapter(2),300)"),
-          m_why=shot("m4_why", mus + "setTimeout(()=>goChapter(3),300)"),
+          m_labels=shot("m35_labels", mus + "setTimeout(()=>{goChapter(3);map.setView([" + str(MH.iloc[0].lat) + "," + str(MH.iloc[0].lon) + "],16)},300)"),
+          m_why=shot("m4_why", mus + "setTimeout(()=>goChapter(4),300)"),
           m_act=shot("m5_act", mus + "setTimeout(()=>showHot(0),300)"),
           r_why=shot("r_why", "goChapter(3)"),
           r_when=shot("r_when", "goChapter(2)"),
@@ -116,6 +117,7 @@ slide(f'''<div class="split"><div><h1 class="big">QAYDH<br><span class="o">Appro
 screen(SC["m_where"], "Where is heat high?", "Hazard zones, not fake street temperatures", f"Extreme ≥ {f1(th['P95'])} °C. Landsat gives the zone; buildings and places tell us what falls inside it.", "01")
 screen(SC["m_who"], "Who may be exposed?", f"{sites['n']} named outdoor sites", f"Each scored within 150 m: heat percentile, green, impervious cover, distance to shade.", "02")
 screen(SC["m_what"], "What is physically there?", "Road · roof · sand · green · water", f"Held-out blocks: macro-F1 {f2(mc[mbest]['test_macro_F1'])}. Starter index rules: {f2(mc[mrule]['test_macro_F1'])}.", "03")
+screen(SC["m_labels"], "How we labelled it", "Objects with ID, box and label", f"{R['musaffah_objects']['buildings']:,} buildings labelled: roof class, heat zone, dark-roof flag, street. {R['musaffah_objects']['cool_roof_candidates']} are cool-roof candidates.", "03b")
 screen(SC["m_why"], "Why may it be hot?", "Asphalt and sand up, green down", f"Spatially validated: R² {f2(wm['Random Forest']['R2'])}, error {f1(wm['Random Forest']['MAE_C'])} °C. Shown as associations, not proof of cause.", "04")
 screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"{h0.actions}. Because {h0.why}.", "05")
 # 16 hyperspectral proof + 17 Abu Dhabi screening
@@ -123,6 +125,9 @@ screen(SC["r_why"], "Hyperspectral proof · Riyadh", "Tanager reads roof, road a
 screen(SC["ad"], "Abu Dhabi screening", "The starter rule calls sand a city", f"NDBI says Masdar {ms['builtup_starter_NDBI_pct']:.0f}% built; WorldCover {ms['builtup_WorldCover_pct']:.0f}%. Musaffah: {mu['builtup_starter_NDBI_pct']:.0f}% vs {mu['builtup_WorldCover_pct']:.0f}%.", "07")
 # 18 annotation / detection image (Ghaf: segmentation model visual)
 slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Expert labels, honest tests</h1><img class="figw" src="{fig('11_musaffah_annotation_surfaces.png')}">''')
+slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>Segment, label, brief, then a person decides</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
+<div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div>
+<div><b>{R['llm_briefs']['llm_drafts_passing_fact_check']}/{R['llm_briefs']['n']}</b>LLM drafts passed the fact-check. The rest were caught and replaced</div></div>''')
 # 19 architecture
 slide(f'''<div class="kick">Model architecture</div><h1 class="big">From labels to a decision</h1>
 <div class="pipe"><div>GIS candidates<br>OSM · footprints · WorldCover</div><em>→</em><div>≥80% purity<br>mixed excluded</div><em>→</em>
@@ -216,6 +221,8 @@ section:has(.filmstrip) .split{height:560px}
 .pipe div{flex:1;background:#1f1a15;border:1px solid #3a3027;border-radius:14px;padding:24px 16px;font-size:21px;line-height:1.3;display:flex;align-items:center}
 .pipe div.hs{border-color:#ff6b2c} .pipe div.go{background:#43c6b4;color:#0d1f1c;font-weight:600}
 .pipe em{font-style:normal;font:800 36px 'Big Shoulders Display';color:#ff6b2c;align-self:center}
+.strip{position:absolute;left:96px;right:96px;bottom:60px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.strip div{font-size:19px;color:#cdbda4;line-height:1.3} .strip b{display:block;font:800 54px/1 'Big Shoulders Display';color:#ff6b2c;margin-bottom:6px}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px}
 .nums b{display:block;font:800 108px/1 'Big Shoulders Display';color:#ff6b2c} .nums span{font-size:21px;color:#cdbda4;line-height:1.3}
 ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabic'} ul.ben li{border-bottom:1px solid #3a3027}
