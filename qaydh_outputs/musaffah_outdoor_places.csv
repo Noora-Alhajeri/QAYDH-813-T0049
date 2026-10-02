@@ -1,0 +1,756 @@
+cat,lat,lon,name
+delivery,24.332999,54.5230158,Carrefour
+delivery,24.3729905,54.5181658,Pizza Hut
+delivery,24.3738259,54.5115926,Al Qathara Market
+delivery,24.3730758,54.538394,McDonald's
+delivery,24.3730641,54.5376087,Lulu Express
+delivery,24.372439,54.5384438,Pizza Amore
+delivery,24.3932609,54.4937841,Spinneys
+delivery,24.3229694,54.5204652,Signature
+delivery,24.3232096,54.5208319,Circle K
+delivery,24.3437133,54.5310327,Sangeetha Vegetarian Restaurant
+delivery,24.3314642,54.533449,Sri Lankan Butterfly
+bus_stop,24.3717043,54.5362402,
+mosque,24.3571943,54.4969832,
+delivery,24.3653075,54.514961,Kohat Dream Resturant
+delivery,24.3308933,54.5354719,Tuwairish SuperMarket
+vulnerable,24.3589888,54.5405495,Future Centre for Special Needs
+delivery,24.3506119,54.4737368,La Playa Cafe
+delivery,24.3184788,54.5356949,Ashallal Cafe
+delivery,24.3335674,54.5242302,El Chico Mexican Restaurant
+delivery,24.3468479,54.5151548,KM Trading
+delivery,24.3742589,54.5173819,
+vulnerable,24.321182,54.5372165,"THE MODEL SCHOOL, ABU DHABI"
+delivery,24.3585588,54.5036259,
+delivery,24.3598403,54.5003117,
+delivery,24.3585627,54.5036942,
+delivery,24.359756,54.5003139,baqala
+delivery,24.3600679,54.5003065,
+delivery,24.3582467,54.5067357,
+delivery,24.3600564,54.5093466,
+delivery,24.3601477,54.5003048,
+bus_stop,24.3595096,54.5036853,
+delivery,24.3598684,54.5035085,
+delivery,24.3598668,54.5033598,
+delivery,24.3599679,54.506688,
+delivery,24.3649471,54.5168873,Mirchi Indian Restaurant
+delivery,24.3649681,54.517426,Pak Punjab Restaurant
+delivery,24.3180506,54.5357604,Dine Out Restaurant
+delivery,24.3376146,54.5365388,karak tea
+delivery,24.3309224,54.524041,
+delivery,24.3355939,54.5240345,Food cort
+delivery,24.3407912,54.5312355,Ambassador Restaurant
+delivery,24.3698994,54.5036159,Baqala
+delivery,24.3719034,54.4967083,
+delivery,24.36982,54.5036084,
+delivery,24.369708,54.503616,
+delivery,24.3712112,54.5033612,
+delivery,24.3728092,54.5099004,Fresh & More
+delivery,24.3720176,54.496711,
+delivery,24.3700015,54.5036177,Baqala
+delivery,24.3798866,54.4961046,Mussafah Sanahiya Restaurant
+delivery,24.3798694,54.4956043,
+delivery,24.3700846,54.5036073,Baqala
+delivery,24.3705555,54.5034388,
+delivery,24.3798759,54.4958233,
+delivery,24.3798816,54.4960249,
+delivery,24.3697639,54.5036105,
+delivery,24.3710512,54.5033671,
+delivery,24.3434762,54.5316836,Bon Ga korean restaurant
+delivery,24.3435419,54.531713,HanARum K-mart
+delivery,24.3481855,54.5192013,
+delivery,24.3534861,54.5185078,
+delivery,24.360976,54.5170709,Golden Paramount Restaurant
+delivery,24.3529793,54.5189352,
+delivery,24.3408808,54.5352457,Salam Bombay
+delivery,24.353254,54.5201471,
+vulnerable,24.3479403,54.5211213,
+delivery,24.3556201,54.5141342,KHAIBER RESTAURANT & CAFETERIA
+delivery,24.3408103,54.5349595,
+delivery,24.3543491,54.522363,
+delivery,24.347847,54.5219567,
+delivery,24.3534473,54.5224869,
+delivery,24.344242,54.5352113,مخبز غلام
+bus_stop,24.3619492,54.5167343,"Mussafah St 17 Workers Village - 111, M1, M5"
+vulnerable,24.3410675,54.5373473,
+vulnerable,24.3438666,54.5372234,
+delivery,24.3538435,54.520167,
+delivery,24.3611997,54.5154101,
+delivery,24.373312,54.5142889,كهربجي
+vulnerable,24.378704,54.5214212,Musaffah Health
+bus_stop,24.3395948,54.4906987,icad
+vulnerable,24.3786635,54.5214016,Musaffah Health
+delivery,24.324083,54.5386509,Sagar Restaurant
+delivery,24.3310046,54.5237923,Russo Pizza
+delivery,24.3311765,54.5237938,Muma Fu Thai
+vulnerable,24.3936153,54.4975635,Hunain School
+delivery,24.3350626,54.524285,Shakespeare & Co
+delivery,24.3638665,54.5101237,Tikka Tonight Indian
+delivery,24.3616525,54.5154292,تصليح سيارة
+vulnerable,24.3938408,54.4968075,Hunain School
+delivery,24.340878,54.490708,al madina
+vulnerable,24.3463534,54.5392847,Al Ain University Of Science & Technology - Abu Dhabi - Abu Dhabi
+delivery,24.3368944,54.5339796,Pinoy Avenue Restaurant
+delivery,24.34069,54.5359045,Lebanese Roaster Musaffah
+delivery,24.3263674,54.532159,PizzaZone Cafeteria
+delivery,24.3723047,54.5388512,Mazyad Mall
+mosque,24.3695216,54.5302573,Tablighi Markez
+delivery,24.3472691,54.512713,
+delivery,24.3477993,54.5126822,Shibl Al Fedaa Restaurant
+delivery,24.3728294,54.5188284,
+vulnerable,24.3466295,54.5116214,
+delivery,24.3606835,54.5170887,City Park Restaurant
+delivery,24.3625021,54.5170459,
+delivery,24.3473439,54.5127036,
+delivery,24.360733,54.5170905,Green Darbar City Restaurant
+delivery,24.3475541,54.5126946,
+delivery,24.3605498,54.5170827,AL BAWABA Restaurant
+delivery,24.3467813,54.5138092,
+delivery,24.3467809,54.5127706,Top Ten
+delivery,24.348054,54.5126794,
+delivery,24.3477048,54.5126891,
+delivery,24.3626954,54.5170329,
+delivery,24.3494346,54.4767956,Target near Alam market
+delivery,24.3272199,54.5381223,al mahrosa cafe
+delivery,24.3704645,54.5062028,Lal market
+mosque,24.3571826,54.5069025,
+delivery,24.3427497,54.5185923,Food Yard Restaurant Emirates Driving Institute Branch
+vulnerable,24.3423737,54.5205424,Emirates Driving Company
+delivery,24.3650137,54.5189054,Magic Chef Restaurant LLC
+delivery,24.3649978,54.5175965,Royal Grand Hypermarket LLC
+delivery,24.366669,54.5197986,Yellow Duck Hypermarket L.L.C
+delivery,24.356926,54.4902474,MOMO HOUSE Restaurant
+vulnerable,24.3467518,54.5109096,Fatima medical center fmc mussafa
+mosque,24.3556618,54.514568,Al siraj mosque mussafa
+delivery,24.3605001,54.5229287,Village mall
+delivery,24.3484836,54.5191972,Mid night supermarket
+delivery,24.3555768,54.5135429,Mirch masala mussafa
+delivery,24.3512524,54.5007739,Blue lake restaurant
+delivery,24.3471463,54.5177397,Mid night supermarket
+bus_stop,24.3815238,54.4838312,Almansoori office
+delivery,24.3497308,54.474379,Wardat al madina cafeteria
+delivery,24.373845,54.5100233,Alam supermarket
+delivery,24.3435531,54.5361745,Saravanaa Bhavan
+mosque,24.3608006,54.5200406,Worker village mosque
+delivery,24.3673542,54.5108068,Baqala
+bus_stop,24.3731444,54.5134541,"Mussafah St 8 Emirates Islamic Bank - 111, M1, M2, M3, M4, M5"
+delivery,24.3726441,54.5165721,
+delivery,24.3718272,54.5166159,
+delivery,24.3698727,54.5214214,Kofu Language cafe
+delivery,24.3724454,54.5114953,
+delivery,24.3694828,54.5176774,Elysee Cafe
+delivery,24.3708399,54.5165636,Baqala
+delivery,24.3694239,54.5194617,Tripoli Restaurant
+delivery,24.3689892,54.509261,Deluxe Palace Restaurant
+delivery,24.3727239,54.5165684,
+delivery,24.3690471,54.5105,Pakistan Youth Restaurant
+delivery,24.3733352,54.5301339,
+delivery,24.3733393,54.5302142,Baqala
+delivery,24.3728281,54.5129589,
+delivery,24.3692334,54.5106689,Carefive
+delivery,24.3714915,54.5166352,
+delivery,24.37089,54.5165616,
+delivery,24.3733412,54.5302893,
+delivery,24.3707878,54.5165663,
+bus_stop,24.3738869,54.533,Sultan Bin Mohammed Al Qubaisi St / Capital Mall
+delivery,24.3716517,54.5166223,
+delivery,24.3709393,54.5165582,
+delivery,24.3441484,54.5299486,Malabar Star Restaurant
+delivery,24.3304483,54.5365594,Sea Shell Cafeteria
+delivery,24.3345757,54.5353677,Lahore Flower Restaurant
+delivery,24.3566708,54.4999818,Big mart
+delivery,24.3514805,54.4857618,Afghanistan restaurant llc br -1
+delivery,24.3315889,54.535144,Broast king fresh shawarma restaurant
+delivery,24.3495195,54.5208696,Blue pearls supermarket
+mosque,24.3525796,54.5237402,
+delivery,24.3270629,54.5336475,spinneys
+delivery,24.3330954,54.5240245,Paparoti cafe
+mosque,24.3482951,54.514273,Mosque inside camp
+delivery,24.3529006,54.5201039,Bakery
+vulnerable,24.3467598,54.5364638,Elite private school
+mosque,24.3658852,54.5126471,Uthman Mosque
+delivery,24.3483074,54.5165847,
+delivery,24.3521596,54.4853732,Royal catering service llc
+delivery,24.3717203,54.5018995,Iqbal restaurant
+delivery,24.3202528,54.5358339,Good Chef Resturant
+delivery,24.349122,54.492192,
+delivery,24.3447799,54.5371392,Tea Centre
+delivery,24.3444088,54.5371925,Dar H Dhabi
+delivery,24.3430015,54.5300712,Mawal Al Sham Flower Cafeteria
+delivery,24.3419493,54.530083,Ali Salem Cafeteria
+delivery,24.341876,54.530083,Ali Ba Rasheed Grocery
+delivery,24.340776,54.5318085,Grand Shooters Cafe
+delivery,24.3376172,54.536316,
+delivery,24.3376094,54.5367702,Golden Age Restaurant
+delivery,24.3376157,54.5368812,Global Fresh
+delivery,24.3376312,54.5371186,Quick Bite Restaurant
+delivery,24.3376359,54.5373491,Marakech Palace
+vulnerable,24.3376779,54.5380048,New Almazroui Medical Centre
+delivery,24.3361423,54.5367053,Merit Restaurant
+delivery,24.3360443,54.5366746,Karam Al Arab Restaurant
+delivery,24.3355838,54.5355715,Lahore Grill
+delivery,24.3370859,54.5350268,Noor Al Ain Coffee Shop
+delivery,24.3372374,54.5361733,Arayes Cafeteria
+delivery,24.3362956,54.5362126,Premier Foodstuff
+delivery,24.3361097,54.5359752,Baqala
+delivery,24.3360918,54.5333997,Big Star Bakery & Supermarket
+delivery,24.3359683,54.5331127,AL Madinah Hypermarket
+delivery,24.3362983,54.5304391,Falafel Sultan Dubai
+delivery,24.3363114,54.5316116,Baqala
+delivery,24.3347795,54.5331708,Shalimar Bakery
+delivery,24.333715,54.532603,Al Safsaf
+delivery,24.3354077,54.5352459,Al Akkawi Corner Restaurant
+delivery,24.334805,54.5353353,Darain Restaurant
+delivery,24.3339879,54.5367886,Baqala
+delivery,24.3504777,54.5175569,First Line Cafeteria
+delivery,24.3506692,54.5175405,Al Nuila Bakery
+delivery,24.3332011,54.5365199,Baskin robbins
+delivery,24.3620787,54.5170219,Alam Hypermarket
+delivery,24.3625651,54.5169983,Quick Cook Cafeteria
+delivery,24.3629066,54.5169811,The Royal
+delivery,24.3650036,54.516887,Afghan Bukhari Restaurant
+delivery,24.3663767,54.5168161,Halab Tent Restaurant
+delivery,24.3664498,54.5168176,Al Janoob Mandi Restaurant
+delivery,24.3665481,54.5168123,Mermais of Island Cafe & Refreshments
+delivery,24.3714767,54.5154964,Roboa Al Yemen Restaurant & Kitchen
+delivery,24.3339234,54.5369113,Shanzlehzah Cafe
+delivery,24.3345188,54.5368764,Mister Burger
+delivery,24.3355345,54.5379875,Al Fajir Eye Cafeteria
+delivery,24.3348453,54.5380182,More and More Restaurant
+delivery,24.3342058,54.5380558,Tiger Caferteria
+delivery,24.3319296,54.5361604,Al Mussaffah East Coffee Shop
+delivery,24.3319174,54.5335085,WideRange Restaurant
+delivery,24.3303811,54.5336253,Karan Cafeteria
+delivery,24.3299393,54.5336595,Baqala
+delivery,24.3293216,54.5357956,Abu Ashraf Restaurant
+delivery,24.3293511,54.5362481,Layali Al Sham
+delivery,24.3293589,54.5365469,Fresh Fruit Mart
+delivery,24.3294321,54.5355395,Baqala
+delivery,24.3304543,54.5353192,Kashmir Valley Restaurant
+delivery,24.330322,54.5353346,
+delivery,24.3287869,54.5370259,Zahrat Alliali Pastry
+delivery,24.3287327,54.5378613,Marakech Cafeteria
+delivery,24.3271636,54.5363937,Alam Supermarket
+delivery,24.3274125,54.5364074,Magic Shell Cafeteria
+delivery,24.3284363,54.5363493,Mandy Al Watany
+delivery,24.3279011,54.5356851,Honey Cake
+delivery,24.3270966,54.5341961,Abuiman Refreshments
+delivery,24.3273044,54.5335931,Farha Restaurant
+delivery,24.3275582,54.53359,Home Foods Restaurant
+delivery,24.3273754,54.531167,Grand Taj Restaurant
+delivery,24.3272278,54.53117,Baqala
+delivery,24.326304,54.531115,Hot & Good Restaurant
+delivery,24.3253897,54.5321853,Baqala
+delivery,24.326495,54.5365764,Sahal Alaarab Restaurant
+delivery,24.3271221,54.5383617,Al Hajrain Restaurant & Kitchen
+delivery,24.3224152,54.538355,Fresh & More Supermarket
+delivery,24.3239863,54.5382589,Baqala
+delivery,24.3240473,54.5373141,Fresh Fruit Mart
+delivery,24.3239953,54.5367908,Baqala
+delivery,24.3235556,54.5358953,Malabar Spicy Restaurant
+delivery,24.3234555,54.5358973,Abu Dhabi Flour Mill Co.
+delivery,24.3221716,54.5319061,Al Qadri Bakery
+delivery,24.3241485,54.5336062,Al Muasher Cafeteria
+delivery,24.3613776,54.5159946,Lahore Restaurant
+delivery,24.3232528,54.5348837,Baniyas General Market
+delivery,24.3227922,54.5348922,Brown Bag Supermarket
+delivery,24.3222741,54.5349178,Baqala
+delivery,24.3179216,54.5361483,Baqala
+delivery,24.3189741,54.5370075,Red Mart Supermarket
+delivery,24.3202868,54.5377016,Sandwich Point Cafeteria
+delivery,24.3202681,54.5383039,Baqala
+delivery,24.3196731,54.5386828,Star Diamond Restaurant
+delivery,24.324996,54.5385592,Hot Food Restaurant
+delivery,24.3591206,54.5121754,Restaurant & Cafe Layali Al Jawa
+delivery,24.3674556,54.5108046,
+delivery,24.3770238,54.5103026,
+delivery,24.343632,54.5369615,Al Kashkha
+delivery,24.3437212,54.5299852,Al Roshan Restaurant
+delivery,24.3435553,54.5367522,Tea Breeze
+delivery,24.3435196,54.5344934,Zaithoon Restaurant
+delivery,24.3434142,54.5323553,Cafeteria Ksara
+delivery,24.343391,54.5317005,Baskin Robbins
+delivery,24.3433833,54.5314522,Tea Point
+delivery,24.3403555,54.5337039,Tea Palace
+delivery,24.3405179,54.5336915,Delicious Flowers Bakery
+delivery,24.3410033,54.5311448,Ambassador Restaurant
+delivery,24.34153,54.5316335,Fruit Juice Cafeteria
+delivery,24.3415514,54.5320807,Gulf Pastry
+delivery,24.3415943,54.533033,Paris Cafe
+delivery,24.3416721,54.5347336,Juice Island
+delivery,24.3416899,54.5351789,Nabeh Al Sham Restaurant
+delivery,24.3417051,54.5355241,Foodlands Restaurant
+vulnerable,24.3417096,54.5358683,Universal Specialty Medical Center
+delivery,24.3370726,54.5380245,Mohammed Akter Supermarket
+delivery,24.3373606,54.5371739,Baqala
+delivery,24.3376768,54.535506,Safe Way Cafeteria
+delivery,24.3376917,54.5357564,Frooj Almidan Restaurant
+delivery,24.3374633,54.5379041,Baqala
+delivery,24.3364352,54.5374394,Walifih Cafe
+delivery,24.3367708,54.5359482,Chilli Cafeteria
+delivery,24.3362975,54.5338214,Biryani Palace Restaurant
+delivery,24.3362654,54.5329051,Hakaya Restaurant & Grills
+delivery,24.3362418,54.532088,Green Door Restaurant
+delivery,24.3369363,54.5306691,Baqala
+delivery,24.3371789,54.5307647,Baqala
+vulnerable,24.3348823,54.5305309,Al Ahalia Ophthalmology Medical Center
+delivery,24.3343489,54.5305289,Kaman Wa Kaman Pastry
+delivery,24.3338081,54.5314965,Baqala
+delivery,24.3472229,54.5019172,Royal Spice Restaurant
+delivery,24.3730191,54.5183061,Data Sarkar
+delivery,24.372219,54.5188549,Al Brtioa
+delivery,24.3719861,54.4900857,Golden Fork
+delivery,24.3812865,54.512979,Al Ashwaq Flower Supermarket
+delivery,24.3782247,54.5114848,Al Maraghi
+delivery,24.3808432,54.5141968,Stars Garden
+delivery,24.3797254,54.5118179,Tea Planet Cafeteria
+delivery,24.3220284,54.5357311,Night And Day
+delivery,24.3241493,54.5336705,Sarah Cafeteria
+delivery,24.3550643,54.501501,Saeed Al Zaabi
+delivery,24.3337582,54.5334568,Baqala
+delivery,24.334086,54.5334598,Baqala
+delivery,24.334792,54.5334424,Garden Ammas Restaurant
+delivery,24.3226071,54.5349061,Yummy
+delivery,24.3222904,54.5355741,Dream Palace Cafe
+delivery,24.3220097,54.5355716,Tabarak Restaurant
+delivery,24.3194852,54.536067,Al Nisal Refreshments
+delivery,24.3190787,54.5360966,Bread And Cake
+delivery,24.3228557,54.5356524,Al Jouhara Restaurant
+delivery,24.3548376,54.4974503,Al Afghani House Restaurant
+delivery,24.3548353,54.4972164,Biriyani Hut
+delivery,24.35469,54.494291,Asia Bakery
+delivery,24.3354546,54.5337918,Albukanal Kitchen & Restaurant
+delivery,24.3354971,54.5343405,Maple Restaurant
+delivery,24.3543956,54.4863484,Rabee Al Madeena Supermarket
+delivery,24.3544288,54.4866685,Rabee Al Madeena Restaurant
+delivery,24.3349948,54.535073,Tea & Talk
+delivery,24.3339595,54.5354133,Mangalore Restaurant
+delivery,24.3339536,54.5358093,Baqala
+delivery,24.3339796,54.5360435,Baqala
+delivery,24.333989,54.5362933,New Family Restaurant
+delivery,24.3339984,54.5364486,Broadway Chilly Restaurant
+delivery,24.3339902,54.537137,Qager Al Joud Mandi Restaurant & Kitchen
+delivery,24.3350913,54.5370882,Baqala
+delivery,24.3356244,54.5374385,Baqala
+delivery,24.334858,54.5377776,Black Horse Cafeteria
+delivery,24.3345196,54.5377996,Baqala
+delivery,24.3219548,54.536115,Sea Cave
+delivery,24.3240747,54.5323138,Abu Yousuf Retaurant & Grills
+delivery,24.36188,54.5021172,Oilfield Supplies
+vulnerable,24.3662076,54.5019074,Universal Hospital One Day Surgery
+delivery,24.3715048,54.5016832,Abu Ashraf Restaurant
+delivery,24.3714286,54.5016874,Central Lahore Restaurant
+delivery,24.3716573,54.5016779,Khan Darbar Restaurant
+delivery,24.371611,54.5016789,Salt and Pepper Restaurant
+delivery,24.3238477,54.5327145,Sadiya Restaurant
+delivery,24.3238609,54.5345786,Baniyas Spike
+delivery,24.3233483,54.5345994,Sea Bird
+delivery,24.3222776,54.5346471,Nas Cafe
+delivery,24.3186444,54.5358321,Jouharat Al Khallj Cafeteria
+delivery,24.3179947,54.5359385,Masala Xpress Cafeteria
+delivery,24.3189313,54.5374413,Sweet & Savory
+delivery,24.3189165,54.5374969,City Way Cafeteria
+delivery,24.3197175,54.5384745,Tasty & Enjoy
+delivery,24.317919,54.5382989,Mini Max Cafeteria
+delivery,24.317924,54.5380393,Four by Four Cafeteria
+delivery,24.3179193,54.5366508,Happy Honey
+delivery,24.3179149,54.5365522,Fried Falafel
+delivery,24.317893,54.5357949,Dine Out
+bus_stop,24.372705,54.5052365,
+delivery,24.324169,54.531602,Golden City Refreshments
+delivery,24.3242054,54.5330538,Millennium Supermarket
+delivery,24.3243792,54.5377108,Saba Modern Restaurant
+delivery,24.3244389,54.5385846,Sagar Restaurant
+delivery,24.3269879,54.5345338,Restaurant
+delivery,24.3264821,54.5362538,Tea
+delivery,24.3260824,54.5330424,Alen Towers Restaurant & Cafeteria
+delivery,24.3262621,54.5348499,Fresh & More
+delivery,24.3266596,54.5384883,Tea Plaza Cafeteria
+delivery,24.3230695,54.5386106,Alahlam & Al Rais Coffee Shop
+delivery,24.3237355,54.5385619,Mushabbak
+delivery,24.3240833,54.5385445,Maq Nawalt Rajput Cafeteria
+delivery,24.3242383,54.5358837,Telal Khorfakan Peoples Restaurant & Cuisine
+delivery,24.3239541,54.5355907,Diamond Spoon Refreshment
+delivery,24.3545478,54.5014582,Deah Bangla Supermarket
+delivery,24.3545214,54.5008308,Nelover Restaurant
+delivery,24.3545192,54.5007036,Supermarket Gheysar
+delivery,24.3528177,54.4648706,Jabal Sawad
+delivery,24.3467846,54.5103154,Fathima General Market
+delivery,24.3320754,54.5365504,No Fear Cafe
+delivery,24.3328005,54.5363625,Number one Sagar Restaurant
+delivery,24.3328674,54.5363557,Almossaffah East Coffee Shop
+delivery,24.3330121,54.5363625,Arooj Restaurant
+delivery,24.3331739,54.5358451,"Rainbow Steak House, LLC"
+delivery,24.3331101,54.5345184,Towers Mandi Restaurant
+delivery,24.3330992,54.5343527,Tea Day
+delivery,24.3324022,54.5332633,Only Biryani Restaurant
+delivery,24.3318016,54.5331831,Hazar Restaurant
+delivery,24.3305992,54.5333655,Al Sham Gardens & Pastry
+delivery,24.3293653,54.5339205,Reem Al Maha Cafe
+delivery,24.3292774,54.5343634,Farm Tea
+delivery,24.3297081,54.5359462,Ritaj Restaurant
+delivery,24.3296938,54.5355913,Sahareej Aden Restaurant
+delivery,24.3306549,54.5359817,Lulu Burger
+delivery,24.3284922,54.5370576,Amna Al Arab Restaurant
+delivery,24.3284547,54.5379448,Baqala
+delivery,24.328509,54.5384772,Bandar Aden Restaurant
+delivery,24.3275377,54.5385311,Al Sultan Bakeries & Markets
+delivery,24.3280951,54.5366261,Karam Lebanon Restaurant
+delivery,24.328553,54.5365991,Baqala
+delivery,24.328641,54.5360328,Al Maria Chef & Baker Restaurant
+delivery,24.3286461,54.5359235,Golden Plum Pastery
+delivery,24.3285181,54.535438,Happy Burger
+delivery,24.3283098,54.5354692,Baqala
+delivery,24.3272492,54.5353642,Thani Nadan Restaurant
+delivery,24.3273229,54.5348162,Musaffah Flower Coffee Shop
+delivery,24.3274083,54.5344387,Sagar Vegetables
+delivery,24.3273553,54.5337644,Ruby Tea Cafeteria
+delivery,24.3282662,54.5337308,Dany's
+vulnerable,24.3275882,54.5330578,"Home Health Medical Centre, LLC"
+delivery,24.3285723,54.5317632,Royal South Indian Restaurant
+delivery,24.3284522,54.5314714,Ladies Kitchen
+delivery,24.326046,54.5312123,Fort Gate Restaurant
+delivery,24.3263109,54.5313802,
+delivery,24.3259577,54.5318939,Nasmat Al Sham Restaurant
+delivery,24.3252386,54.5319163,Shai Albahar Cafeteria
+delivery,24.3251316,54.5319088,Biryani Spice Restaurant
+mosque,24.3217108,54.4777661,
+bus_stop,24.3235208,54.5351769,Shabiya 12 takreer bus stop
+delivery,24.353935,54.4900116,Express Al Madina Hypermarket
+delivery,24.3732274,54.4990613,Star four
+delivery,24.3668824,54.4853899,Mussafah City
+delivery,24.3464426,54.510294,Fathima general market
+delivery,24.3546282,54.5014547,Dash bangla supermarket
+delivery,24.3305737,54.5335315,M36 Tamil hotel
+mosque,24.3435308,54.4849987,
+delivery,24.3799121,54.5143701,Bakery bakstani
+delivery,24.329749,54.5346696,Mutabbaq House
+delivery,24.3478294,54.4735483,القرية الشامية المصفح
+delivery,24.3439054,54.5352408,Khalifa Al Haney Grocery
+delivery,24.3237945,54.5310164,baqala
+delivery,24.3227726,54.5326963,
+delivery,24.3301622,54.5352112,Bait Al Diyafa Roastery
+delivery,24.3222271,54.5335814,baqala
+delivery,24.3234336,54.5330825,
+delivery,24.3234247,54.5328095,
+vulnerable,24.3243488,54.5354641,Talat Medical Centre
+delivery,24.3299567,54.5352219,tea centre cafeteria
+delivery,24.3303522,54.5351941,Abul Wafa Restaurant
+delivery,24.3649829,54.5177369,
+delivery,24.3604841,54.5227919,
+delivery,24.3649753,54.5176648,
+delivery,24.3649836,54.5178843,
+vulnerable,24.360754,54.5214287,
+delivery,24.3649881,54.5180934,
+delivery,24.3725191,54.5065948,
+delivery,24.3724181,54.5066137,Alam Supermarket
+delivery,24.3744188,54.5131646,baqala
+delivery,24.3743474,54.5104518,YASMIN SWEETS & RESTAURANT
+delivery,24.3330741,54.5241159,Delma mall Abu Dhabi
+delivery,24.3501012,54.4847494,Al ayubia restaurant
+delivery,24.3517871,54.4886025,Al Fahad Supermarket
+delivery,24.3522748,54.4904002,Express Al Madina Hypermarket
+delivery,24.3491935,54.4883254,WAFI Hypermarket
+delivery,24.3509835,54.4884973,Afghan Bakery
+delivery,24.3501036,54.488335,Kohat Restaurent
+delivery,24.3596219,54.5213642,Qasr aldar hospitality
+vulnerable,24.3374451,54.5321252,New National Medical
+bus_stop,24.3715222,54.5366149,Bus Stop to Abu Dhabi
+delivery,24.3706222,54.4890359,
+delivery,24.3706211,54.489275,
+vulnerable,24.3710502,54.5048939,
+delivery,24.3709654,54.5045074,
+delivery,24.3709323,54.5042285,
+delivery,24.3724002,54.5052769,
+delivery,24.3704958,54.5054174,
+mosque,24.3556088,54.5133917,Al siraj mosque
+delivery,24.328826,54.53449,سويت برجر
+delivery,24.33397,54.5371445,مندي الجود
+delivery,24.3471928,54.517863,Gujjarat restaurant
+delivery,24.3635483,54.5075034,Ever choice hypermarket
+delivery,24.3628992,54.5122375,Musaffah tea cafeteria
+mosque,24.3614573,54.5127191,
+delivery,24.350409,54.4846659,Paragon
+delivery,24.35416,54.5173919,
+delivery,24.3547656,54.518107,
+mosque,24.3516664,54.5205432,Mosque masjid
+delivery,24.3446839,54.5351434,Alahlia Co-operative Society
+delivery,24.3444218,54.5345556,Nourmandy Sea Food Restauurant
+vulnerable,24.3302293,54.5372636,
+delivery,24.3548996,54.5139364,Lunch house restaurant
+delivery,24.3369612,54.5303225,SFC PLUS
+delivery,24.3345534,54.5304027,Naan House
+delivery,24.3722024,54.4952181,delight movers
+delivery,24.3315175,54.5336125,Wild range restaurant
+delivery,24.3467849,54.5156569,
+delivery,24.3264248,54.5338037,
+delivery,24.3453296,54.4753879,مقهى ومطعم
+delivery,24.3268794,54.5339617,Fantastic General
+vulnerable,24.3306562,54.5317675,Mediclinic musaffah
+delivery,24.3473254,54.4857821,bab lahore
+delivery,24.3301955,54.5366336,Kashkha grills
+delivery,24.3580276,54.5157639,Baqala
+delivery,24.3574282,54.5125129,
+delivery,24.3360551,54.5317803,
+mosque,24.3697202,54.5301221,Masjid Salman Alfarsi
+vulnerable,24.3828819,54.5139893,
+delivery,24.3595467,54.5216158,baqala
+delivery,24.3595751,54.5207498,
+delivery,24.3595694,54.5219597,
+delivery,24.3476747,54.5126893,baqala
+delivery,24.3369497,54.5328669,Raj Bhog Restaurant
+delivery,24.335194,54.5307056,Golden Tulip Baqala
+vulnerable,24.3826078,54.5137874,Emirates technical & safety development centre - ETSDC
+delivery,24.3490928,54.4978054,Alduha Bakery
+delivery,24.3571908,54.4737653,Subway
+delivery,24.3735235,54.5027799,baqala
+delivery,24.3735815,54.5027761,
+delivery,24.3746587,54.5035286,
+delivery,24.3746623,54.5033505,
+delivery,24.3367311,54.5379451,Al Adil Supermarket
+delivery,24.33636,54.5329375,RAJBHOG
+vulnerable,24.3610518,54.5095967,Alkhaled.car.samweel
+delivery,24.3568236,54.4983523,Aluminium Workshops & Scrap Area
+delivery,24.3412272,54.5321192,CCTOT
+delivery,24.3408883,54.5332876,CCTOT 1
+delivery,24.3907111,54.49276,Circle Cafe
+bus_stop,24.3340009,54.526479,Adnoc Free Bus
+bus_stop,24.3799954,54.5104573,111
+bus_stop,24.370969,54.5108542,111
+bus_stop,24.368583,54.5138445,"111, M1, M5"
+bus_stop,24.3749995,54.510665,111
+vulnerable,24.3608366,54.5210047,LIFE CARE HOSPITAL MISAFFAH
+vulnerable,24.3789185,54.5160306,LIFE LINE HOSPITAL MISAFFAH
+delivery,24.360737,54.5236266,Royal Stars
+delivery,24.3899054,54.4965994,Rich & Fresh
+delivery,24.3906574,54.4928056,Circle Cafe
+bus_stop,24.3601384,54.5182448,
+delivery,24.3456387,54.4897828,BIG MART HYPERMARKET
+delivery,24.3372473,54.5332272,My Selfie Restaurant
+mosque,24.3494783,54.515336,Prophet Elias Catheddal Greek Ortodox
+delivery,24.3344847,54.5320763,Al Furat Coffee Shop
+bus_stop,24.3365282,54.5383394,
+delivery,24.3357987,54.5310141,SadaBahar Bakery
+delivery,24.3358011,54.5310656,Telangana Restaurant
+mosque,24.3295454,54.5372775,
+delivery,24.3631083,54.508497,
+delivery,24.3632012,54.5084775,
+delivery,24.3635407,54.4844758,baqala
+delivery,24.3650367,54.4861595,
+delivery,24.3601423,54.485111,
+delivery,24.3597504,54.488845,baqala
+bus_stop,24.3461099,54.5146865,
+delivery,24.365059,54.5090453,baqala
+delivery,24.3638713,54.5084403,baqala
+delivery,24.3597626,54.4858449,
+bus_stop,24.3455457,54.5000245,
+delivery,24.3650393,54.4863957,baqala
+delivery,24.3597265,54.4881951,
+delivery,24.3898495,54.4971416,Rich & Fresh
+delivery,24.3597546,54.4856131,ROYAL ROSE RESTAURANT
+delivery,24.3596889,54.489484,SHAKEEL KHAN RESTAURANT
+delivery,24.359696,54.4896335,AL MOHAMMED RESTAURANT
+delivery,24.3634802,54.4844784,PAK RAVI RESTAURANT
+delivery,24.3597406,54.4852538,RICE HOUSE RESTAURANT
+delivery,24.3491452,54.4782058,
+delivery,24.349256,54.4979189,
+delivery,24.3597221,54.489951,baqala
+delivery,24.3498371,54.4947279,
+delivery,24.3498911,54.4952023,
+delivery,24.3490859,54.4977427,baqala
+delivery,24.3517683,54.4954886,Ali Hasan Hypermarket
+delivery,24.3518051,54.495763,
+delivery,24.3498454,54.4948037,
+delivery,24.3503419,54.4947602,baqala
+delivery,24.3498698,54.494988,baqala
+delivery,24.349077,54.4975737,
+delivery,24.3498936,54.4952776,
+delivery,24.3648851,54.4864185,
+delivery,24.350321,54.4949015,
+delivery,24.3657184,54.4834132,
+delivery,24.3604377,54.4853036,
+delivery,24.3656973,54.4833389,
+delivery,24.3657269,54.4835892,
+delivery,24.3602591,54.4842225,baqala
+delivery,24.364884,54.4858126,
+delivery,24.3650122,54.4856729,
+delivery,24.3255526,54.5308261,
+mosque,24.3638732,54.5201076,
+bus_stop,24.3645489,54.5211378,"Mussafah Mar Thoma Church - 111, M1, M5"
+bus_stop,24.3690593,54.5136403,"Mussafah St 10... - 111, M1, M5"
+bus_stop,24.3709477,54.5113344,"Mussafah St 15 Emirates Transport - 111, M1, M5"
+delivery,24.3658724,54.5164132,مطعم الجنوب مصفح
+delivery,24.3274471,54.5311689,Al Janah Al Dhahabi Foodstuff
+delivery,24.3455427,54.4856804,
+delivery,24.3456718,54.4864603,K.M. HYPERMARKET
+delivery,24.3455552,54.4854232,baqala
+vulnerable,24.3456875,54.4865923,
+delivery,24.3487367,54.5216843,
+delivery,24.3731497,54.495692,
+delivery,24.3722597,54.5038863,Baqala
+delivery,24.3408162,54.4702637,
+delivery,24.3486987,54.5210188,
+delivery,24.3407805,54.4696778,
+delivery,24.3518523,54.4995153,
+delivery,24.3707749,54.5122654,
+delivery,24.3520404,54.499511,
+delivery,24.3524528,54.4994762,
+delivery,24.3526002,54.4994706,
+delivery,24.3408322,54.4700266,
+delivery,24.3752068,54.5306168,LuLu Hypermarket Capital Mall
+delivery,24.331251,54.5238208,McDonald's
+delivery,24.3709169,54.5357935,McDonald's
+bus_stop,24.3308984,54.5349637,Bus Stop
+delivery,24.3678557,54.5092999,
+delivery,24.3682829,54.5093762,baqala
+delivery,24.372927,54.5154107,
+bus_stop,24.3270031,54.5352189,Bus Stop 10078A
+delivery,24.3286559,54.533996,Chicking
+delivery,24.376686,54.516381,Sham Flowers
+vulnerable,24.3360623,54.5316905,Ideal Clinical Laboratories
+delivery,24.3949717,54.5411968,The Boundary
+delivery,24.3328022,54.5341776,Family Thattukada
+delivery,24.3242619,54.534351,Fine tea
+delivery,24.3239926,54.5354913,Chickie's Restaurant
+delivery,24.3260467,54.5313569,Grand Red Chilly Restaurant
+delivery,24.3242599,54.5343924,Proper Restuarant
+delivery,24.3709163,54.5357055,Kfc
+delivery,24.3765443,54.5306879,IL Forno
+delivery,24.3353884,54.5330457,Malabar restaurant
+vulnerable,24.3820536,54.5163655,MUSAFAH SCREENING CENTER (FREE PCR TEST)
+mosque,24.3775855,54.5205681,
+delivery,24.3796172,54.4863136,baqala
+delivery,24.3729717,54.4906448,
+delivery,24.371512,54.4962984,baqala
+delivery,24.3691119,54.4999272,
+delivery,24.3644102,54.5241305,
+delivery,24.3656121,54.5100113,baqala
+bus_stop,24.3728753,54.4962202,M4
+bus_stop,24.365494,54.5247385,"Mussafah ADNOC ... - 111, M1, M5"
+delivery,24.3796436,54.4865388,
+delivery,24.3733266,54.4906353,
+bus_stop,24.3723802,54.4950885,"MBZ CITY St 79, Mazyad Mall - M4"
+delivery,24.3623004,54.5100329,
+bus_stop,24.3692841,54.5182231,"Mussafah St10 ... - 111, M1, M5"
+bus_stop,24.3820332,54.508243,M2
+bus_stop,24.3659285,54.5013173,
+delivery,24.3701356,54.5037618,
+delivery,24.3719818,54.5089233,
+delivery,24.37106,54.5085427,
+delivery,24.3704649,54.5046973,
+delivery,24.3727448,54.5115774,
+mosque,24.3559661,54.5130681,
+delivery,24.3513664,54.4816916,
+delivery,24.3512939,54.4817021,
+delivery,24.351204,54.4817139,
+delivery,24.3510421,54.4817328,
+delivery,24.3508726,54.4817419,Mazaj time
+delivery,24.3519094,54.4816569,
+delivery,24.3520922,54.481639,
+delivery,24.3731364,54.4803206,Grand Gifts
+delivery,24.3546091,54.5387903,Caffe Vergnano 1882
+delivery,24.3456983,54.4868232,SADAF
+delivery,24.3456962,54.4872105,
+delivery,24.3488944,54.473793,Khyber Shinwari Restaurant & Cafe
+delivery,24.3242438,54.5364317,Corniche Automatic Bakeries and Markets
+delivery,24.336072,54.5380559,Al Khabbat Fish and Seafood
+delivery,24.3332198,54.5394959,Royal Gujrat Restaurant
+delivery,24.3435557,54.5368436,House of Tea
+delivery,24.3440908,54.537313,Just Burger
+delivery,24.3441569,54.5373023,Just Fresh
+delivery,24.3367106,54.5349016,Al Akkawi Flower Cafeteria
+vulnerable,24.3395979,54.5365574,Al Najah Private School ANPS
+delivery,24.3468276,54.5161708,Hydrrabad Spice Restaurant
+delivery,24.3286041,54.5325097,Al Farah Restaurant
+delivery,24.3315032,54.5346177,Sagar Fish Grill
+delivery,24.3249982,54.5386514,Dine Out Restaurant
+delivery,24.3248115,54.53427,Cafeteria Tea World
+delivery,24.3243105,54.5345485,Topi Vappa Biriyani
+delivery,24.3738346,54.5115571,baqala
+delivery,24.3677012,54.4735342,Suryana Cafe مقهى سوريانا
+delivery,24.3677923,54.4735296,Areej Al Sham اريج الشام
+delivery,24.3680032,54.4735441,Al Ghouta Coffee Shop كوفي شوي الغوطة
+delivery,24.3412653,54.5348227,Njangaddakadda Restaurant
+delivery,24.3415144,54.5341253,Alexandria Cafe
+vulnerable,24.3457522,54.48897,NMC Medical Centre
+delivery,24.3732021,54.5375867,La Brioche
+delivery,24.3324191,54.5241756,La Brioche
+vulnerable,24.3659263,54.521286,OccuMed Clinic
+delivery,24.3403971,54.5363694,Rich And Fresh Supermarket
+delivery,24.3184317,54.5385965,Burger Master
+delivery,24.3408189,54.5375034,Baqala
+delivery,24.3338073,54.5296499,Shot
+delivery,24.3339637,54.5297518,Starbucks
+delivery,24.333971,54.5298323,WH Smith
+delivery,24.3306563,54.5242253,Shake Shack
+mosque,24.3630319,54.5407974,Masjid
+delivery,24.3731249,54.5379408,Mazyad Mall
+delivery,24.3330564,54.523821,Dalma Mall
+delivery,24.3428158,54.5303299,AlSafeer Mall
+vulnerable,24.3698099,54.5169282,Alpha Medical Centre
+delivery,24.3720149,54.4929116,Big Star
+mosque,24.3738018,54.510379,
+mosque,24.3210665,54.5313424,Amna Ahmad
+delivery,24.375761,54.5303567,Capital Mall
+vulnerable,24.3384316,54.5308407,Sunrise English Private School
+vulnerable,24.3465437,54.5355269,Merryland International School
+vulnerable,24.3464836,54.5339819,Al Murooj Scientific Private School
+vulnerable,24.3458652,54.5304703,Cambridge High School
+vulnerable,24.3425433,54.5331386,Abu Dhabi Grammar School branch 1
+vulnerable,24.3429018,54.5343501,Belvedere British School
+vulnerable,24.3328297,54.5375358,Creative British School
+vulnerable,24.3459848,54.5412851,Abu Dhabi International School
+vulnerable,24.3444198,54.5412273,Bright Riders School
+vulnerable,24.3210347,54.5339864,Shining Star International
+vulnerable,24.3199691,54.5344201,Al Bashair Private School
+vulnerable,24.3165877,54.5327139,Al Maali International School
+mosque,24.3582053,54.5068583,
+delivery,24.3599259,54.5043768,GRACE SUPER MARKET Branch-1
+delivery,24.3727656,54.5205165,KFC
+mosque,24.3734103,54.5003736,
+mosque,24.3472279,54.5097618,
+mosque,24.3423394,54.5304034,
+mosque,24.3311043,54.5314312,Sheikh Mohammed Bin Khalifa Mosque
+mosque,24.3371472,54.5355705,
+mosque,24.3697083,54.5222026,Мечеть
+mosque,24.3278916,54.5339776,
+vulnerable,24.3393152,54.5307941,
+mosque,24.341434,54.5332153,
+delivery,24.3566952,54.5012956,BIG Mart
+delivery,24.3735963,54.5060332,Royal Emirates Supermarket
+delivery,24.3798462,54.5163654,golden spike and wheet EST
+mosque,24.3598355,54.5023365,
+delivery,24.3439945,54.4768405,Modern Bakery
+delivery,24.3547493,54.521591,Wafa Al Madina Supermarket
+delivery,24.3548566,54.5149569,Zezenia Cafe
+delivery,24.3461753,54.4999042,Fresh Food
+delivery,24.3707597,54.5356692,
+vulnerable,24.3759491,54.5373249,
+vulnerable,24.3723446,54.5401117,LA Medical Center
+vulnerable,24.3679134,54.5403039,AGD Care Medical Center
+vulnerable,24.3661333,54.5403854,Archer Dental & Dermatology Center
+vulnerable,24.3655613,54.5404172,CMC - Canadian Medical Cos Center
+mosque,24.3257296,54.5317905,
+vulnerable,24.3208414,54.5319546,Pakistan Community Welfare School
+mosque,24.3370363,54.5310007,
+vulnerable,24.3296342,54.5313401,Seer Bani Yas Secondary School
+vulnerable,24.3292327,54.5333895,Prime Care Medical Centre
+vulnerable,24.3626367,54.5242377,Al Ahalia hospital
+mosque,24.3717099,54.5123334,
+mosque,24.3775775,54.5205751,
+mosque,24.3773697,54.5206202,
+mosque,24.3699454,54.5221174,Мечеть
+mosque,24.3718791,54.4919402,
+mosque,24.3559551,54.5130721,
+mosque,24.3232865,54.5315851,Maryam Jamal Al Khoory
+vulnerable,24.3238881,54.5400249,Bloom Plus Medical Center
+mosque,24.3629735,54.5408029,
+mosque,24.3552905,54.5413674,
+delivery,24.3676817,54.5403137,Sugar & Salt Station
+vulnerable,24.3544785,54.5387818,Burjeel Medical City
+construction,24.3494715,54.536334,
+mosque,24.3607522,54.5201965,
+mosque,24.3708321,54.5389296,
+mosque,24.3813145,54.53118,
+vulnerable,24.3454645,54.5322195,Al Dhafrah Private Schools
+vulnerable,24.3355392,54.5324066,Emirates Future International Academy

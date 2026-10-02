@@ -37,6 +37,11 @@ East Riyadh: 470 km², 1,091,324 residents. Abu Dhabi: Musaffah 54.5 °C · Masd
 | Priorities robust | top-20 overlap | 4 alternative weightings | 60–100% |
 | Abu Dhabi transfer | built-up F1 | Spatial-block CV | **0.81** vs NDBI 0.43 |
 | Starter rule fails in desert cities | % built-up | NDBI vs WorldCover vs QAYDH | Masdar 80% vs 17% vs 35% · Musaffah 92% vs 70% vs 82% |
+| **Musaffah** surfaces at 10 m (road/roof/sand/veg/water) | macro-F1 | Expert annotation, 1 km blocks A–C train · D val · **E held-out test** | **0.91** vs starter index rules 0.47 (road F1 0.88 vs 0.00) |
+| Annotation quality | labels removed | Confident learning (out-of-fold) | 1,718 of 64,643 flagged as noise; 300-point review queue exported |
+| **Musaffah** why-model | R² / MAE | 5-fold 1 km spatial CV, 100 m thermal cells | **R² 0.85**, MAE 1.2 °C (linear 0.81) |
+| **Musaffah** exposure sites | count | OSM sites scored within 150 m | 139 sites · 1 very high · 7 high |
+| Top Musaffah hotspot | — | Rule engine with stated reasons | M-001: Shade structures + cool pavement + Shaded rest nodes + midday work-break enforcement + Trees / vegetated shade on open ground (irrigation needed) |
 
 Also: Planet's *beta* cloud mask flagged 74% of this clear scene as cloud (bright sand and concrete). Our physics test found 0.0%, so the beta mask was replaced.
 <!-- RESULTS_END -->
@@ -82,6 +87,7 @@ Section **6c** keeps only clear pixels (≥50% building, ≥60% road, or uniform
 |---|---|
 | `QAYDH_T0049_urban_heat_risk.ipynb` | End-to-end pipeline, executed, all outputs visible |
 | `requirements.txt` | Pinned dependencies |
+| `qaydh_outputs/musaffah_*` | **Musaffah deep dive**: annotation polygons + review queue (QGIS), exposure sites, hotspots, 100 m cells |
 | `dashboard/index.html` | **Interactive story dashboard** (Riyadh + Abu Dhabi): chapters, layers, hotspot cards, what-if, alerts |
 | `pitch/QAYDH_T0049_pitch.pdf` | Pitch deck (PDF, built by `pitch/build_deck.py`) |
 | `qaydh_outputs/results.json` | Every number, the source of the deck and dashboard |

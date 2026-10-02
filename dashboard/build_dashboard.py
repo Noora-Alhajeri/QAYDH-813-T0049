@@ -78,6 +78,34 @@ CH = dict(
              stat=[(f0(ad['population']), "residents covered"), (f"{ad['n_osm_places']}", "mapped outdoor places")], list=True),
     ])
 
+# ---- Musaffah deep dive (10 m block) ----
+if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
+    mh = pd.read_csv(os.path.join(OUT, "musaffah_hotspots.csv")).head(10); ms_ = pd.read_csv(os.path.join(OUT, "musaffah_exposure_sites.csv"))
+    mcells = json.load(open(os.path.join(OUT, "musaffah_cells_100m.geojson")))
+    for f_ in mcells["features"]: f_["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in ring] for ring in f_["geometry"]["coordinates"]]
+    mc_ = {d["approach"]: d for d in R["musaffah_classifier"]["scores"]}; wm = {d["model"]: d for d in R["musaffah_why_model"]["scores"]}
+    th = R["musaffah_hazard_thresholds_C"]; top = R["musaffah_top_hotspot"]; sites = R["musaffah_sites"]
+    DATA["musaffah"] = dict(name="Musaffah deep dive", sub="Abu Dhabi · 9 × 9 km at 10 m", center=[24.355, 54.50], ov=overlays("musaffah"), block=True,
+                            cells=mcells, places=places(os.path.join(OUT, "musaffah_outdoor_places.csv")), hot=json.loads(mh.to_json(orient="records")),
+                            sites=json.loads(ms_.to_json(orient="records")))
+    rules_ = [k for k in mc_ if k.startswith("Index")][0]; bestk = R["musaffah_classifier"]["chosen"]
+    CH["musaffah"] = [
+        dict(id="where", layer="hazard", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
+             body=f"Landsat thermal (≈100 m) shows zones: elevated ≥ {th['P75']:.1f} °C, high ≥ {th['P90']:.1f} °C, extreme ≥ {th['P95']:.1f} °C. It never pretends to know one bus stop's exact temperature.",
+             stat=[(f"{th['P95']:.1f} °C", "extreme threshold (P95)"), (f"{th['median']:.1f} °C", "block median")]),
+        dict(id="who", layer="sites", kicker="Who may be exposed?", title="Bus stops, mosques, clinics, labour camps",
+             body=f"{sites['n']} named outdoor sites from OpenStreetMap, each scored within 150 m: heat percentile, vegetation, impervious cover, distance to green.",
+             stat=[(f"{sites['very_high']}", "very-high sites"), (f"{sites['high']}", "high sites")]),
+        dict(id="what", layer="surfaces", kicker="What is physically there?", title="Road, roof, sand, plants, water at 10 m",
+             body=f"Expert annotation: GIS candidates kept only at ≥80% purity, mixed pixels excluded, noisy labels removed, scored on held-out 1 km blocks.",
+             stat=[(f"{mc_[bestk]['test_macro_F1']:.2f}", "macro-F1, held-out blocks"), (f"{mc_[rules_]['test_macro_F1']:.2f}", "starter index rules")], conf=True),
+        dict(id="why", layer="hazard", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
+             body=f"A spatially cross-validated model links each 100 m cell's surface mix to its heat. Drivers are shown as associations, not proof of cause.",
+             stat=[(f"{wm['Random Forest']['R2']:.2f}", "R², spatial CV"), (f"{wm['Random Forest']['MAE_C']:.1f} °C", "mean error")]),
+        dict(id="act", layer="priority", kicker="What should be done?", title="Where to act first in Musaffah",
+             body="Ranked 100 m cells with the action, the reason in plain words, and the relative potential of trees, cool pavement and shaded stops.",
+             stat=[(top["id"], "top hotspot"), (top["priority"], "priority")], list=True)]
+
 leaflet_css = urllib.request.urlopen("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css", timeout=60).read().decode()
 tpl = open(os.path.join(ROOT, "dashboard", "template.html")).read()
 html = (tpl.replace("/*LEAFLET_CSS*/", leaflet_css)

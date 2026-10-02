@@ -1,0 +1,63 @@
+{
+ "bounds": [
+  [
+   24.313510139956207,
+   54.453371794424875
+  ],
+  [
+   24.39650084919799,
+   54.54657433587071
+  ]
+ ],
+ "layers": {
+  "satellite": {
+   "label": "Sentinel-2 10 m true colour (summer 2025)"
+  },
+  "geometry": {
+   "label": "Buildings (Microsoft + OSM) and roads (OSM), 2 m"
+  },
+  "surfaces": {
+   "label": "Surfaces (Sentinel-2 classifier, 10 m)",
+   "classes": [
+    "Road / dark pavement",
+    "Building / roof",
+    "Bare soil / sand",
+    "Vegetation",
+    "Water"
+   ],
+   "colors": [
+    "#3a3a3a",
+    "#e4572e",
+    "#e9d8a6",
+    "#2e9e44",
+    "#2b83ba"
+   ]
+  },
+  "confidence": {
+   "label": "Classifier confidence",
+   "classes": [
+    "Low / mixed",
+    "Medium",
+    "High"
+   ],
+   "colors": [
+    "#d73027",
+    "#fee08b",
+    "#1a9850"
+   ]
+  },
+  "hazard": {
+   "label": "Heat hazard zones (Landsat LST)",
+   "classes": [
+    "Elevated \u226556.0 \u00b0C",
+    "High \u226557.0 \u00b0C",
+    "Extreme \u226557.5 \u00b0C"
+   ],
+   "colors": [
+    "#fdae61",
+    "#f46d43",
+    "#a50026"
+   ]
+  }
+ }
+}

@@ -436,5 +436,171 @@
         "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
       }
     ]
+  },
+  "musaffah_annotation": {
+    "purity_rule": "\u226580% one class (roof/road), uniform WorldCover+index agreement (sand/veg/water), mixed excluded",
+    "labelled_pixels": 64643,
+    "removed_as_noisy": 1718,
+    "per_split": {
+      "A-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 386,
+        "Water": 3000
+      },
+      "B-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 1577,
+        "Water": 3000
+      },
+      "C-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 189,
+        "Water": 2484
+      },
+      "D-validation": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 552,
+        "Water": 3000
+      },
+      "E-test": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 2455,
+        "Water": 3000
+      }
+    }
+  },
+  "musaffah_classifier": {
+    "validation": "1 km spatial blocks: A\u2013C train, D validation (model choice), E held-out test",
+    "chosen": "Sentinel-2 RF + spatial context",
+    "scores": [
+      {
+        "approach": "Index rules (starter NDVI/NDBI/BUI/MNDWI)",
+        "val_macro_F1": 0.463,
+        "test_macro_F1": 0.466,
+        "test_accuracy": 0.497,
+        "F1 Road / dark pavement": 0.0,
+        "F1 Building / roof": 0.303,
+        "F1 Bare soil / sand": 0.095,
+        "F1 Vegetation": 0.993,
+        "F1 Water": 0.938
+      },
+      {
+        "approach": "Sentinel-2 RF (bands + indices)",
+        "val_macro_F1": 0.888,
+        "test_macro_F1": 0.898,
+        "test_accuracy": 0.895,
+        "F1 Road / dark pavement": 0.87,
+        "F1 Building / roof": 0.842,
+        "F1 Bare soil / sand": 0.811,
+        "F1 Vegetation": 0.984,
+        "F1 Water": 0.983
+      },
+      {
+        "approach": "Sentinel-2 RF + spatial context",
+        "val_macro_F1": 0.899,
+        "test_macro_F1": 0.906,
+        "test_accuracy": 0.903,
+        "F1 Road / dark pavement": 0.878,
+        "F1 Building / roof": 0.854,
+        "F1 Bare soil / sand": 0.827,
+        "F1 Vegetation": 0.985,
+        "F1 Water": 0.984
+      }
+    ]
+  },
+  "musaffah_surface_shares": {
+    "Road / dark pavement": 0.28668476642970264,
+    "Building / roof": 0.3339549173007538,
+    "Bare soil / sand": 0.31092296883744747,
+    "Vegetation": 0.019610855094726064,
+    "Water": 0.04850379261482037
+  },
+  "musaffah_hazard_thresholds_C": {
+    "P75": 55.988189697265625,
+    "P90": 56.99652099609375,
+    "P95": 57.54170227050781,
+    "median": 54.966217041015625
+  },
+  "musaffah_why_model": {
+    "validation": "5-fold 1 km spatial blocks",
+    "scores": [
+      {
+        "model": "Linear (standardised)",
+        "MAE_C": 1.402,
+        "RMSE_C": 1.974,
+        "R2": 0.814
+      },
+      {
+        "model": "Random Forest",
+        "MAE_C": 1.188,
+        "RMSE_C": 1.777,
+        "R2": 0.849
+      }
+    ],
+    "linear_coef_C_per_SD": {
+      "road_frac": 10.7,
+      "building_frac": 10.312,
+      "bare_frac": 12.594,
+      "vegetation_frac": 3.645,
+      "albedo": -0.18,
+      "ndvi": -0.973,
+      "dist_green_m": -0.318
+    },
+    "rf_importance": {
+      "road_frac": 0.03,
+      "building_frac": 0.032,
+      "bare_frac": 0.029,
+      "vegetation_frac": 0.054,
+      "albedo": 0.761,
+      "ndvi": 0.056,
+      "dist_green_m": 0.038
+    }
+  },
+  "musaffah_sites": {
+    "n": 139,
+    "very_high": 1,
+    "high": 7,
+    "by_type": {
+      "Bus stop": 51.0,
+      "Mosque": 51.0,
+      "School / clinic": 42.0
+    }
+  },
+  "musaffah_top_hotspot": {
+    "id": "M-001",
+    "lat": 24.34857,
+    "lon": 54.51194,
+    "risk": 82.0,
+    "heat_pct": 93,
+    "LST_C": 57.2,
+    "dominant_surface": "road",
+    "road": 0.54,
+    "roof": 0.02,
+    "sand": 0.44,
+    "veg": 0.0,
+    "impervious": 0.56,
+    "dist_green_m": 230,
+    "residents": 24,
+    "exposure_context": "industrial outdoor workers, pedestrians",
+    "drivers": "asphalt / dark pavement \u2191, bare sand \u2191, surface brightness (albedo) \u2193",
+    "actions": "Shade structures + cool pavement + Shaded rest nodes + midday work-break enforcement + Trees / vegetated shade on open ground (irrigation needed)",
+    "why": "54% dark pavement on a walking/transit route + industrial outdoor work + 44% bare sand, 0% vegetation",
+    "confidence": "High",
+    "priority": "High",
+    "dLST_trees_C": -4.93,
+    "dLST_coolpave_C": -0.09,
+    "risk_Trees +10%": 0.42,
+    "risk_Cool pavement": 0.99,
+    "risk_Shaded stops / rest nodes": 0.67
   }
 }
