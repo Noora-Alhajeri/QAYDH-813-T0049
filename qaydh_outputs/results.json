@@ -1,0 +1,229 @@
+{
+  "cv_built_f1_rf": 0.8949409062571672,
+  "cv_built_f1_ndbi": 0.5805374088104885,
+  "cv_built_iou_rf": 0.8099656818745131,
+  "cv_macro_f1_rf": 0.8801356529707738,
+  "indep2023_built_f1_rf": 0.856900427162904,
+  "indep2023_built_f1_ndbi": 0.5777291618659997,
+  "change_agreement_2017_2023": {
+    "precision": 0.6368719816995679,
+    "recall": 0.1915793766088131,
+    "f1": 0.29455329153605014,
+    "iou": 0.17271327803690004
+  },
+  "built_km2_before": 166.96439999999998,
+  "built_km2_after": 213.9804,
+  "new_urban_km2": 32.600699999999996,
+  "growth_pct": 28.15929623320901,
+  "lst_by_zone": [
+    {
+      "zone": "Desert / bare",
+      "km2": 239.32,
+      "mean_LST": 51.810001373291016,
+      "ci_low": 51.65,
+      "ci_high": 51.97
+    },
+    {
+      "zone": "Vegetation",
+      "km2": 15.94,
+      "mean_LST": 50.439998626708984,
+      "ci_low": 49.69,
+      "ci_high": 51.19
+    },
+    {
+      "zone": "Established urban (built \u22642014)",
+      "km2": 155.35,
+      "mean_LST": 52.16999816894531,
+      "ci_low": 51.97,
+      "ci_high": 52.38
+    },
+    {
+      "zone": "New urban (2014\u20132025)",
+      "km2": 32.6,
+      "mean_LST": 51.869998931884766,
+      "ci_low": 51.58,
+      "ci_high": 52.18
+    }
+  ],
+  "tanager_beta_cloud_pct": 74.09143194463216,
+  "tanager_physics_cloud_pct": 0.030618915869701342,
+  "tanager_cloud_mask_used": "physics",
+  "tanager_saturated_pct": 0.11608723643972317,
+  "materials": [
+    {
+      "cluster": 0,
+      "share": 0.0423,
+      "albedo": 0.4537999927997589,
+      "ndvi": -0.01940000057220459,
+      "hi": 0.0035000001080334187,
+      "bd2200": -0.03359999880194664,
+      "bd2330": -0.021199999377131462,
+      "suggested_material": "Brightest: high-albedo roofs / pale sand"
+    },
+    {
+      "cluster": 1,
+      "share": 0.1805,
+      "albedo": 0.3393000066280365,
+      "ndvi": 0.03139999881386757,
+      "hi": 0.0024999999441206455,
+      "bd2200": -0.013700000010430813,
+      "bd2330": 0.030400000512599945,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 2,
+      "share": 0.1936,
+      "albedo": 0.42089998722076416,
+      "ndvi": 0.04749999940395355,
+      "hi": 0.0019000000320374966,
+      "bd2200": 0.0071000000461936,
+      "bd2330": 0.07349999994039536,
+      "suggested_material": "Carbonate-rich: concrete / limestone ground"
+    },
+    {
+      "cluster": 3,
+      "share": 0.1025,
+      "albedo": 0.2969000041484833,
+      "ndvi": 0.031099999323487282,
+      "hi": 0.0024999999441206455,
+      "bd2200": -0.015300000086426735,
+      "bd2330": 0.023900000378489494,
+      "suggested_material": "Darkest impervious: asphalt roads / dark roofs"
+    },
+    {
+      "cluster": 4,
+      "share": 0.1519,
+      "albedo": 0.37040001153945923,
+      "ndvi": 0.023099999874830246,
+      "hi": 0.002400000113993883,
+      "bd2200": -0.01119999960064888,
+      "bd2330": 0.02889999933540821,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 5,
+      "share": 0.1572,
+      "albedo": 0.45329999923706055,
+      "ndvi": 0.04800000041723251,
+      "hi": 0.0017000000225380063,
+      "bd2200": 0.009399999864399433,
+      "bd2330": 0.08900000154972076,
+      "suggested_material": "Brightest: high-albedo roofs / pale sand"
+    },
+    {
+      "cluster": 6,
+      "share": 0.1503,
+      "albedo": 0.39480000734329224,
+      "ndvi": 0.03849999979138374,
+      "hi": 0.002300000051036477,
+      "bd2200": -0.0013000000035390258,
+      "bd2330": 0.05209999904036522,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 7,
+      "share": 0.0217,
+      "albedo": 0.25780001282691956,
+      "ndvi": 0.17440000176429749,
+      "hi": 0.0026000000070780516,
+      "bd2200": -0.026100000366568565,
+      "bd2330": 0.018200000748038292,
+      "suggested_material": "Sparse / irrigated greenery & gardens"
+    }
+  ],
+  "dark_albedo_threshold": 0.3373852074146271,
+  "coreg_r_before": 0.8487635483057938,
+  "coreg_r_after": 0.8706851093448739,
+  "coreg_shift_px": [
+    1,
+    1
+  ],
+  "georef_method": "HDF-EOS StructMetadata (UTM)",
+  "dR2_all": 0.08700000000000002,
+  "dR2_built": 0.131,
+  "lst_model": [
+    {
+      "subset": "All pixels in Tanager footprint",
+      "features": "A: Landsat only",
+      "R2": 0.441,
+      "R2_sd": 0.032,
+      "RMSE_C": 1.475
+    },
+    {
+      "subset": "All pixels in Tanager footprint",
+      "features": "B: Landsat + Tanager",
+      "R2": 0.528,
+      "R2_sd": 0.033,
+      "RMSE_C": 1.357
+    },
+    {
+      "subset": "Built-up pixels only",
+      "features": "A: Landsat only",
+      "R2": 0.31,
+      "R2_sd": 0.03,
+      "RMSE_C": 1.593
+    },
+    {
+      "subset": "Built-up pixels only",
+      "features": "B: Landsat + Tanager",
+      "R2": 0.441,
+      "R2_sd": 0.022,
+      "RMSE_C": 1.435
+    }
+  ],
+  "poi_share_in_hot20": {
+    "mosque": 4.678362573099415,
+    "bus_stop": 0.0,
+    "delivery": 5.405405405405405,
+    "construction": 0.0,
+    "vulnerable": 2.3255813953488373,
+    "park": 1.7857142857142856
+  },
+  "mean_lst_at_poi": {
+    "mosque": 50.94025802612305,
+    "bus_stop": 50.74425506591797,
+    "delivery": 51.19330978393555,
+    "construction": 51.3535041809082,
+    "vulnerable": 50.949951171875,
+    "park": 51.18860626220703
+  },
+  "amenities_per_10k_hot_vs_rest": {
+    "mosque": {
+      "hottest_20pct": 0.5099999904632568,
+      "rest_of_city": 1.7400000095367432
+    },
+    "bus_stop": {
+      "hottest_20pct": 0.0,
+      "rest_of_city": 0.6299999952316284
+    },
+    "delivery": {
+      "hottest_20pct": 0.12999999523162842,
+      "rest_of_city": 0.3700000047683716
+    },
+    "vulnerable": {
+      "hottest_20pct": 0.05999999865889549,
+      "rest_of_city": 0.44999998807907104
+    },
+    "park": {
+      "hottest_20pct": 0.12999999523162842,
+      "rest_of_city": 1.1799999475479126
+    }
+  },
+  "residents_hot20": 157075.6875,
+  "people_in_top_decile_cells": 80468.75,
+  "population_aoi": 1091323.625,
+  "cooling_per_0p1_albedo_C": [
+    -0.6994674309207177,
+    -0.8453202241935313,
+    -0.5646536033874905
+  ],
+  "cooling_per_0p1_ndvi_C": -1.7014875360600035,
+  "hrpi_top20_overlap": {
+    "hazard\u00d7exposure only": 0.6,
+    "green-heavy": 1.0,
+    "exposure-heavy": 0.65,
+    "hazard\u00b2": 0.75
+  },
+  "top20_changed_by_people_layer_pct": 90.0,
+  "n_priority_cells_top_decile": 301
+}

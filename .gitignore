@@ -1,0 +1,12 @@
+# raw imagery and downloads are never committed (licence + size); the notebook re-downloads them
+data/
+*.h5
+*.tif
+*.part
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+# course material from the organisers (distribution restricted)
+docs/
+pitch/QAYDH_T0049_pitch.html

@@ -1,0 +1,242 @@
+[
+  {
+    "source": "Planet Tanager (open archive)",
+    "collection": "tanager-core-imagery/urban",
+    "items": [
+      "20250515_080954_16_4001"
+    ],
+    "dates": [
+      "2025-05-15T08:09:54.165094Z"
+    ],
+    "licence": "CC-BY-4.0 \u00a9 Planet Labs PBC"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface reflectance",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC08_L2SP_166043_20211006_02_T1",
+      "LC08_L2SP_165043_20210913_02_T1",
+      "LC08_L2SP_165043_20210828_02_T1",
+      "LC08_L2SP_166043_20210819_02_T1",
+      "LC08_L2SP_165043_20210812_02_T1",
+      "LC08_L2SP_166043_20210803_02_T1",
+      "LC08_L2SP_165043_20210727_02_T1",
+      "LC08_L2SP_166043_20210702_02_T1",
+      "LC08_L2SP_165043_20210625_02_T1",
+      "LC08_L2SP_166043_20210616_02_T1"
+    ],
+    "dates": [
+      "2021-06-16",
+      "2021-06-25",
+      "2021-07-02",
+      "2021-07-27",
+      "2021-08-03",
+      "2021-08-12",
+      "2021-08-19",
+      "2021-08-28",
+      "2021-09-13",
+      "2021-10-06"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface reflectance",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC08_L2SP_166043_20141104_02_T1",
+      "LC08_L2SP_166043_20141019_02_T1",
+      "LC08_L2SP_166043_20141003_02_T1",
+      "LC08_L2SP_165043_20140926_02_T1",
+      "LC08_L2SP_166043_20140917_02_T1",
+      "LC08_L2SP_166043_20140901_02_T1",
+      "LC08_L2SP_165043_20140825_02_T1",
+      "LC08_L2SP_166043_20140816_02_T1",
+      "LC08_L2SP_166043_20140731_02_T1",
+      "LC08_L2SP_165043_20140724_02_T1"
+    ],
+    "dates": [
+      "2014-07-24",
+      "2014-07-31",
+      "2014-08-16",
+      "2014-08-25",
+      "2014-09-01",
+      "2014-09-17",
+      "2014-09-26",
+      "2014-10-03",
+      "2014-10-19",
+      "2014-11-04"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface reflectance",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC09_L2SP_166043_20251009_02_T1",
+      "LC08_L2SP_166043_20251001_02_T1",
+      "LC09_L2SP_165043_20250916_02_T1",
+      "LC08_L2SP_166043_20250915_02_T1",
+      "LC08_L2SP_165043_20250908_02_T1",
+      "LC09_L2SP_165043_20250831_02_T1",
+      "LC08_L2SP_166043_20250830_02_T1",
+      "LC08_L2SP_165043_20250823_02_T1",
+      "LC08_L2SP_166043_20250814_02_T1",
+      "LC08_L2SP_165043_20250807_02_T1"
+    ],
+    "dates": [
+      "2025-08-07",
+      "2025-08-14",
+      "2025-08-23",
+      "2025-08-30",
+      "2025-08-31",
+      "2025-09-08",
+      "2025-09-15",
+      "2025-09-16",
+      "2025-10-01",
+      "2025-10-09"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface reflectance",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC08_L2SP_166043_20231012_02_T1",
+      "LC08_L2SP_165043_20231005_02_T1",
+      "LC09_L2SP_166043_20231004_02_T1",
+      "LC09_L2SP_165043_20230927_02_T1",
+      "LC08_L2SP_165043_20230919_02_T1",
+      "LC08_L2SP_165043_20230903_02_T1",
+      "LC09_L2SP_165043_20230826_02_T1",
+      "LC08_L2SP_166043_20230825_02_T1",
+      "LC08_L2SP_165043_20230818_02_T1",
+      "LC09_L2SP_166043_20230817_02_T1"
+    ],
+    "dates": [
+      "2023-08-17",
+      "2023-08-18",
+      "2023-08-25",
+      "2023-08-26",
+      "2023-09-03",
+      "2023-09-19",
+      "2023-09-27",
+      "2023-10-04",
+      "2023-10-05",
+      "2023-10-12"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface reflectance",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC08_L2SP_166043_20171027_02_T1",
+      "LC08_L2SP_166043_20171011_02_T1",
+      "LC08_L2SP_165043_20171004_02_T1",
+      "LC08_L2SP_166043_20170925_02_T1",
+      "LC08_L2SP_165043_20170918_02_T1",
+      "LC08_L2SP_165043_20170902_02_T1",
+      "LC08_L2SP_166043_20170808_02_T1",
+      "LC08_L2SP_166043_20170723_02_T1",
+      "LC08_L2SP_165043_20170630_02_T1",
+      "LC08_L2SP_166043_20170621_02_T1"
+    ],
+    "dates": [
+      "2017-06-21",
+      "2017-06-30",
+      "2017-07-23",
+      "2017-08-08",
+      "2017-09-02",
+      "2017-09-18",
+      "2017-09-25",
+      "2017-10-04",
+      "2017-10-11",
+      "2017-10-27"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "esa-worldcover 2021",
+    "collection": "esa-worldcover",
+    "items": [
+      "ESA_WorldCover_10m_2021_v200_N24E045"
+    ],
+    "dates": [
+      "2021"
+    ],
+    "licence": "CC-BY-4.0 \u00a9 ESA WorldCover project 2021"
+  },
+  {
+    "source": "io-lulc-annual-v02 2023",
+    "collection": "io-lulc-annual-v02",
+    "items": [
+      "38R-2023"
+    ],
+    "dates": [
+      "2023"
+    ],
+    "licence": "CC-BY-4.0 \u00a9 Impact Observatory, Microsoft, Esri"
+  },
+  {
+    "source": "io-lulc-annual-v02 2017",
+    "collection": "io-lulc-annual-v02",
+    "items": [
+      "38R-2017"
+    ],
+    "dates": [
+      "2017"
+    ],
+    "licence": "CC-BY-4.0 \u00a9 Impact Observatory, Microsoft, Esri"
+  },
+  {
+    "source": "Landsat 8/9 C2 L2 surface temperature (ST_B10)",
+    "collection": "landsat-c2-l2",
+    "items": [
+      "LC09_L2SP_165043_20250831_02_T1",
+      "LC08_L2SP_166043_20250830_02_T1",
+      "LC08_L2SP_165043_20250823_02_T1",
+      "LC08_L2SP_166043_20250814_02_T1",
+      "LC08_L2SP_165043_20250807_02_T1",
+      "LC09_L2SP_166043_20250806_02_T1",
+      "LC09_L2SP_165043_20250730_02_T1",
+      "LC08_L2SP_165043_20250722_02_T1",
+      "LC09_L2SP_166043_20250721_02_T1",
+      "LC09_L2SP_166043_20250705_02_T1"
+    ],
+    "dates": [
+      "2025-07-05",
+      "2025-07-21",
+      "2025-07-22",
+      "2025-07-30",
+      "2025-08-06",
+      "2025-08-07",
+      "2025-08-14",
+      "2025-08-23",
+      "2025-08-30",
+      "2025-08-31"
+    ],
+    "licence": "Public domain (USGS)"
+  },
+  {
+    "source": "WorldPop 2025 constrained population 100 m (R2025A)",
+    "collection": "https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2025/SAU/v1/100m/constrained/sau_pop_2025_CN_100m_R2025A_v1.tif",
+    "items": [
+      "sau_pop_2025_CN_100m_R2025A_v1.tif"
+    ],
+    "dates": [
+      "2025"
+    ],
+    "licence": "CC-BY-4.0 \u00a9 WorldPop"
+  },
+  {
+    "source": "OpenStreetMap via Overpass API",
+    "collection": "OSM",
+    "items": [
+      "434 POIs"
+    ],
+    "dates": [
+      "2026-10-02T14:46:36Z"
+    ],
+    "licence": "ODbL \u00a9 OpenStreetMap contributors"
+  }
+]
