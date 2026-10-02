@@ -15,6 +15,10 @@ A heat map answers *where is the ground hot?* QAYDH answers the five questions a
 
 It runs on **east Riyadh** (the only Arab-region Tanager scene in the open archive) and transfers to **Abu Dhabi: Musaffah, Masdar City, MBZ City and Khalifa City**.
 
+![QAYDH dashboard walkthrough: Musaffah](pitch/gifs/qaydh_musaffah_tour.gif)
+
+**Dashboard:** open `dashboard/index.html` and press **Start the tour**, then **Next**. The six steps are: where is heat high → who may be exposed → what is physically there → how it was labelled → why it may be hot → what should be done. Click any hotspot (M-001), site (S-001) or building (B-00001) for its evidence card.
+
 <!-- RESULTS_START -->
 ### Results (from `qaydh_outputs/results.json`)
 East Riyadh: 470 km², 1,091,324 residents. Abu Dhabi: Musaffah 54.5 °C · Masdar 55.4 °C · MBZ City 54.2 °C · Khalifa City A 53.6 °C.
@@ -42,6 +46,9 @@ East Riyadh: 470 km², 1,091,324 residents. Abu Dhabi: Musaffah 54.5 °C · Masd
 | **Musaffah** why-model | R² / MAE | 5-fold 1 km spatial CV, 100 m thermal cells | **R² 0.85**, MAE 1.2 °C (linear 0.81) |
 | **Musaffah** exposure sites | count | OSM sites scored within 150 m | 139 sites · 1 very high · 7 high |
 | Top Musaffah hotspot | — | Rule engine with stated reasons | M-001: Shade structures + cool pavement + Shaded rest nodes + midday work-break enforcement + Trees / vegetated shade on open ground (irrigation needed) |
+| Ground truth: Al Bateen (OMAD) | ERA5 vs station r, MAE | NOAA ISD hourly, summer 2025 | r 0.95 · MAE 1.4 °C · danger 12:00–15:00 (station) vs 11:00–16:00 (ERA5) · LST−air +15.2 °C |
+| Ground truth: Abu Dhabi Intl (OMAA) | ERA5 vs station r, MAE | NOAA ISD hourly, summer 2025 | r 0.95 · MAE 1.5 °C · danger 11:00–16:00 (station) vs 11:00–17:00 (ERA5) · LST−air +15.5 °C |
+| Ground truth: Riyadh King Khaled (OERK) | ERA5 vs station r, MAE | NOAA ISD hourly, summer 2025 | r 0.99 · MAE 1.4 °C · danger 10:00–20:00 (station) vs 11:00–19:00 (ERA5) · LST−air +10.7 °C |
 
 Also: Planet's *beta* cloud mask flagged 74% of this clear scene as cloud (bright sand and concrete). Our physics test found 0.0%, so the beta mask was replaced.
 <!-- RESULTS_END -->
@@ -125,13 +132,21 @@ No commercial, gIQ, 813 or MBZ-SAT data is used, no credentials are stored, and 
 - **SAM (Segment Anything, Apache-2.0)** segments around hotspots with class, purity and heat → `musaffah_sam_segments.geojson`.
 - **Qwen2.5-1.5B-Instruct (Apache-2.0)** drafts planner briefs from verified facts. A unit-aware fact-checker rejects hallucinations and a person signs off → `musaffah_planner_briefs.csv`.
 
-## Limitations
+## Limitations: solved, reduced, remaining
 
-- LST is surface temperature at ~10:40. Air peaks later, so weather data sets the danger hours.
-- Automatic labels carry noise (unmapped buildings, typical road widths). We use clear pixels only and validate on unseen tiles.
-- Abu Dhabi has no open hyperspectral scene yet. Its materials come from Landsat albedo, and district boxes are approximate.
-- People exposure models where outdoor activity is likely. It does not count people. OSM under-maps labour housing and rider waiting spots.
-- What-if °C values are statistical slopes with 95% CIs, not simulations. They rank options.
+| Limitation | Status | How |
+|---|---|---|
+| Starter NDBI rule confuses sand, roads and roofs | Solved | Riyadh F1 0.89 vs 0.58; Musaffah surfaces 0.91 vs 0.47 on held-out blocks |
+| Planet beta cloud mask flags bright desert as cloud | Solved | Physics-based cloud test (74% → 0%) |
+| Labels need annotation | Solved for the PoC | ≥80%-purity GIS labels, confident-learning cleanup, SAM candidates, 300-point review queue |
+| Unnamed OSM places · sparse OSM buildings | Solved | Nearest-street names · Microsoft open footprints |
+| No air-temperature check | Solved | NOAA stations: ERA5 r 0.95–0.99; LST runs 11–15 °C above air, so it is used as relative hazard |
+| LST is a 10:40 snapshot | Reduced | Station-checked ERA5 sets the danger hours; 3-summer persistence |
+| Thermal is coarse (~100 m) | Reduced | Shown as hazard zones; 10 m surfaces and objects explain them |
+| LLMs can hallucinate | Reduced | Unit-aware fact-check rejected 5/5 drafts here; verified template + human sign-off |
+| Hyperspectral over Musaffah | In progress | No Tanager scene; **NASA EMIT** (285 bands, 60 m) has 33 passes over Musaffah and plugs into section 10e with a free NASA Earthdata login |
+| Field truth for labels | Remains | Review queue is ready for a field visit |
+| People exposure ≠ head counts | By design | Exposure opportunity from places + residents; no tracking of individuals |
 
 ## Incubation (PoC → MVP)
 

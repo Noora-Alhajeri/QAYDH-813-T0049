@@ -14,7 +14,7 @@ R = json.load(open(os.path.join(OUT, "results.json")))
 MH = pd.read_csv(os.path.join(OUT, "musaffah_hotspots.csv")); MS = pd.read_csv(os.path.join(OUT, "musaffah_exposure_sites.csv"))
 
 # ---------------- dashboard screens (story-map frames) ----------------
-DASH = open(os.path.join(ROOT, "dashboard", "index.html")).read()
+DASH = open(os.path.join(ROOT, "dashboard", "index.html")).read().replace("</style>", "#intro{display:none!important}</style>", 1)
 def shot(name, js, w=1600, h=950):
     p = os.path.join(SHOTS, name + ".png"); tmp = os.path.join(SHOTS, "_tmp.html")
     open(tmp, "w").write(DASH.replace("build();\n</script>", f"build();setTimeout(()=>{{{js}}},500);\n</script>"))
@@ -44,6 +44,10 @@ def crop(lat, lon, half_m=450, layers=("sat", "geo"), size=900):
     for l in layers[1:]:
         ov = box_({"geo": GEO, "haz": HAZ, "surf": SURF}[l]); base = Image.alpha_composite(base, ov)
     b = io.BytesIO(); base.convert("RGB").save(b, "JPEG", quality=88); return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
+ICONS = os.path.join(PITCH, "icons")
+def icon(n, size=56, color="#ff6b2c"):
+    svg = open(os.path.join(ICONS, n + ".svg")).read()
+    return svg.replace('stroke="currentColor"', f'stroke="{color}"').replace('width="24"', f'width="{size}"').replace('height="24"', f'height="{size}"')
 def img(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def fig(n): return img(os.path.join(OUT, n))
 h0 = MH.iloc[0]
@@ -60,7 +64,7 @@ mc = {d["approach"]: d for d in R["musaffah_classifier"]["scores"]}; mbest = R["
 wm = {d["model"]: d for d in R["musaffah_why_model"]["scores"]}; th = R["musaffah_hazard_thresholds_C"]; ann = R["musaffah_annotation"]; sites = R["musaffah_sites"]
 hs = {d["approach"]: d for d in R["material_classifier"]["scores"]}; hk = [k for k in hs if k.startswith("Full")][0]; h6 = [k for k in hs if k.startswith("6")][0]
 w = R["weather"]; ad = R["abudhabi"]; dist = {d["district"]: d for d in ad["districts"]}; mu, ms = dist["Musaffah industrial"], dist["Masdar City"]
-ov = R["hrpi_top20_overlap"]
+ov = R["hrpi_top20_overlap"]; cool = R["cooling_per_0p1_albedo_C"]
 
 S = []
 def slide(body, cls=""): S.append(f'<section class="{cls}">{body}</section>')
@@ -87,17 +91,28 @@ slide(f'''<div class="split"><div><h1 class="big">Why QAYDH as a solution?<br><s
 <dt>Impact</dt><dd>Shade, cool surfaces and trees go first where people are exposed.</dd>
 <dt>Solution</dt><dd>Thermal + hyperspectral + 10 m surfaces + OSM → one ranked action map.</dd></dl></div>
 <div class="filmstrip">{''.join(f'<img src="{c[0]}">' for c in COL)}</div>''')
+# 5b problem · what exists · gap
+slide(f'''<div class="kick">The problem we solve</div><h1 class="big">Heat maps exist. Decisions don't.</h1>
+<div class="cmp"><div><h3>{icon("eye", 40, "#b3a48e")} What exists today</h3><ul>
+<li>City heat maps: they show where, not who or why</li><li>Starter NDBI rule: calls {mu['builtup_starter_NDBI_pct']:.0f}% of Musaffah "built"</li>
+<li>Site surveys: slow, one district at a time</li><li>Generic advice: "plant trees" everywhere</li></ul></div>
+<div class="arrow">{icon("arrow-right", 64)}</div>
+<div class="hl"><h3>{icon("shield-check", 40, "#43c6b4")} What QAYDH adds</h3><ul>
+<li>People: who is outside, at which hours</li><li>Surfaces: road, roof, sand, green at 10 m (F1 {mc[mbest]['test_macro_F1']:.2f})</li>
+<li>Every Gulf city, every summer, open data</li><li>One named action per hotspot, with its reason</li></ul></div></div>''')
 # 6 collage
 slide(f'''<div class="kick">Musaffah, Abu Dhabi</div><h1 class="big">Real places, not pixels</h1>
 <div class="collage">{''.join(f'<figure><img src="{c[0]}"><figcaption><b>{c[1]}</b>{c[2]}</figcaption></figure>' for c in COL)}</div>
 <p class="credit">Sentinel-2 10 m · buildings: Microsoft + OSM · roads: OSM · heat: Landsat</p>''')
-# 7 solution overview
-slide('''<div class="split"><div><h1 class="big">Solution<br><span class="o">Overview</span></h1></div>
-<div class="mods"><div><i>1</i><b>Where is heat high?</b><span>Landsat hazard zones, 3-summer persistence, danger hours</span></div>
-<div><i>2</i><b>Who may be exposed?</b><span>Bus stops, mosques, clinics, camps, routes + WorldPop</span></div>
-<div><i>3</i><b>What is there?</b><span>Road · roof · sand · green · water at 10 m; materials from Tanager</span></div>
-<div><i>4</i><b>Why may it be hot?</b><span>Spatially validated driver model</span></div>
-<div><i>5</i><b>What should be done?</b><span>Ranked action, reason, relative potential, alerts</span></div></div></div>''')
+# 7 solution overview: five questions, step by step, with icons and real crops
+steps = [("flame", "Where is heat high?", "Landsat hazard zones · 3 summers · danger hours", crop(h0.lat, h0.lon, 700, ("sat", "haz"))),
+         ("users", "Who may be exposed?", "Bus stops · mosques · clinics · camps · residents", crop(bus.lat, bus.lon, 700)),
+         ("scan", "What is there?", "Road · roof · sand · green at 10 m", crop(h0.lat, h0.lon, 700, ("sat", "surf"))),
+         ("temperature", "Why may it be hot?", f"Driver model R² {wm['Random Forest']['R2']:.2f}", crop(h0.lat, h0.lon, 700, ("sat", "geo"))),
+         ("target", "What should be done?", "Ranked action + reason + brief", crop(h0.lat, h0.lon, 350, ("sat", "geo", "haz")))]
+slide('<div class="kick">Solution overview</div><h1 class="big">Five questions, answered step by step</h1><div class="steps5">' +
+      "".join(f'<div><div class="ic">{icon(i_, 44)}</div><i>{k+1}</i><b>{t}</b><span>{d_}</span><img src="{im}"></div>' for k, (i_, t, d_, im) in enumerate(steps)) + "</div>")
+
 # 8 splash with three lenses (Ghaf: GreenScope · Palm / Ghaf / Mangrove)
 slide(f'''<h1 class="splash">QAYDH <span>القيظ</span></h1><div class="lenses">
 <figure><img src="{crop(h0.lat, h0.lon, 900, ("sat", "haz"))}"><figcaption>Heat</figcaption></figure>
@@ -128,12 +143,18 @@ slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Expert label
 slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>Segment, label, brief, then a person decides</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
 <div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div>
 <div><b>{R['llm_briefs']['llm_drafts_passing_fact_check']}/{R['llm_briefs']['n']}</b>LLM drafts passed the fact-check. The rest were caught and replaced</div></div>''')
-# 19 architecture
-slide(f'''<div class="kick">Model architecture</div><h1 class="big">From labels to a decision</h1>
-<div class="pipe"><div>GIS candidates<br>OSM · footprints · WorldCover</div><em>→</em><div>≥80% purity<br>mixed excluded</div><em>→</em>
-<div>Noise cleanup<br>confident learning</div><em>→</em><div class="hs">Surface model<br>blocks A–C · D · E</div><em>→</em>
-<div>Heat driver model<br>spatial CV</div><em>→</em><div class="go">Priority + action<br>+ reason</div></div>
-<div class="three"><div><b>Supervised</b><span>Random Forest, pixel + context features</span></div><div><b>Validated</b><span>1 km blocks never seen in training</span></div><div><b>Explainable</b><span>Every action states its reason</span></div></div>''')
+# 19 architecture (icon diagram)
+def col(title, items, cls=""):
+    return f'<div class="acol {cls}"><h4>{title}</h4>' + "".join(f'<div class="aitem">{icon(i_, 30, "#ffb15c" if not cls else "#0d1f1c")}<span>{t}</span></div>' for i_, t in items) + "</div>"
+slide('<div class="kick">Architecture</div><h1>From open satellites to a decision</h1><div class="arch">' +
+      col("Data", [("satellite", "Landsat 8/9 thermal"), ("satellite", "Sentinel-2 10 m"), ("satellite", "Planet Tanager hyperspectral"), ("database", "WorldCover · Microsoft footprints"), ("map-pin", "OpenStreetMap · WorldPop"), ("sun", "ERA5 + NOAA stations")]) +
+      f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
+      col("Process", [("checklist", "Cloud & quality masks"), ("scan", "Annotation ≥80% purity"), ("brain", "SAM segments · RF models"), ("chart-dots", "Spatial validation A–E")]) +
+      f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
+      col("Answers", [("flame", "Hazard zones"), ("road", "Surface mix"), ("users", "Exposure sites"), ("temperature", "Heat drivers"), ("target", "Priority + action")]) +
+      f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
+      col("Delivery", [("world", "Story dashboard"), ("database", "GeoJSON / API"), ("checklist", "Planner brief + sign-off"), ("clock", "Summer alerts")], "go") + "</div>")
+
 # 20 why it fits
 slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert city</h1>
 <div class="four"><div><b>Sand looks built</b><span>Index rules call {mc[mrule].get('F1 Road / dark pavement',0)*100:.0f}% of roads right. The model: {mc[mbest]['F1 Road / dark pavement']*100:.0f}%.</span></div>
@@ -143,7 +164,7 @@ slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert
 # 21 tradeoffs
 slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 class="big">Being upfront</h1></div>
 <dl class="why"><dt>Labels</dt><dd>Automatic candidates still carry noise. {ann['removed_as_noisy']:,} removed; a {300}-point review queue goes to QGIS.</dd>
-<dt>Heat</dt><dd>Surface, ~10:40. Air peaks later; ERA5 sets the hours.</dd>
+<dt>Heat</dt><dd>Surface runs 11–15 °C above air (NOAA stations). We rank zones; ERA5, checked against stations, sets the hours.</dd>
 <dt>Materials</dt><dd>No open hyperspectral over Musaffah yet. 813 plugs in.</dd>
 <dt>People</dt><dd>Exposure opportunity, not head counts.</dd></dl></div>''')
 # 22 proof
@@ -154,15 +175,33 @@ slide(f'''<div class="kick">Proof</div><h1 class="big">Every claim has a number<
 <div><b>+{f2(R['dR2_built'])}</b><span>R² from hyperspectral<br>Riyadh built-up</span></div>
 <div><b>{f2(R['lst_cells_r_2024_vs_2025'])}</b><span>hotspots repeat<br>2024 ↔ 2025</span></div>
 <div><b>{f0(min(ov.values())*100)}–{f0(max(ov.values())*100)}%</b><span>priorities stable<br>under re-weighting</span></div></div>''')
-# 23 who benefits
-slide(f'''<div class="split"><div><h1 class="big">Who<br><span class="o">benefits</span></h1></div>
-<ul class="ben"><li>Municipalities &amp; urban planners</li><li>Abu Dhabi DMT · Dubai Municipality</li><li>Industrial-zone operators</li><li>Transport authorities (bus shelters)</li><li>Delivery platforms &amp; contractors</li><li>Developers &amp; master-planners</li></ul></div>''')
-# 24 solution value (Ghaf: value + strategic alignment)
-slide(f'''<div class="split"><div><h1 class="big">Solution<br><span class="o">value</span></h1></div>
-<dl class="why"><dt>People</dt><dd>Protects people outdoors at the hours that matter</dd>
-<dt>Budgets</dt><dd>Ranks shade, cool surfaces and trees by need</dd>
-<dt>Scale</dt><dd>Open data, one notebook, any Gulf city</dd>
-<dt>Alignment</dt><dd>UAE Net Zero 2050 · We the UAE 2031 · SDG 3 · 11 · 13</dd></dl></div>''')
+# 23 who benefits (icon tiles)
+ben = [("building-skyscraper", "Municipalities", "Ranked cells, actions and briefs"), ("building-factory", "Industrial zones", "Rest nodes, work-break planning"),
+       ("bus", "Transport authorities", "Which bus stops to shade first"), ("motorbike", "Delivery platforms", "Rider cooling points and hours"),
+       ("crane", "Contractors", "Outdoor-work heat safety"), ("home", "Residents", "Shade on the routes they walk")]
+slide('<div class="kick">Who benefits</div><h1 class="big">Six users, one map</h1><div class="tiles">' +
+      "".join(f'<div>{icon(i_, 52)}<b>{t}</b><span>{d_}</span></div>' for i_, t, d_ in ben) + "</div>")
+
+# 24 solution value + impact (icon tiles + numbers)
+st_ = {d["station"]: d for d in R.get("station_check", [])}
+slide(f'''<div class="kick">Solution value &amp; impact</div><h1 class="big">Value you can measure</h1><div class="tiles four4">
+<div>{icon("users", 52)}<b>{f0(R['residents_hot20'])}</b><span>residents in the hottest fifth of east Riyadh</span></div>
+<div>{icon("building-skyscraper", 52)}<b>{R['musaffah_objects']['cool_roof_candidates']}</b><span>cool-roof candidates in Musaffah</span></div>
+<div>{icon("bus", 52)}<b>{sites['very_high'] + sites['high']}</b><span>exposure sites at high or very high priority</span></div>
+<div>{icon("leaf", 52)}<b>{cool[0]:+.2f} °C</b><span>per +0.10 roof albedo (95% CI)</span></div></div>
+<p class="sdg">Aligned with UAE Net Zero 2050 · We the UAE 2031 · Abu Dhabi urban heat goals · SDG 3 · 11 · 13</p>''')
+# 24b ground truth
+if st_:
+    slide(f'''<div class="kick">Ground truth · NOAA weather stations</div><h1>Checked against real thermometers</h1><img class="figw" style="height:430px" src="{fig('14_station_validation.png')}">
+    <div class="strip" style="bottom:50px">{"".join(f"<div><b>r {d['era5_vs_station_r']:.2f}</b>{n}: ERA5 vs station · danger {d['danger_window_station']}</div>" for n, d in list(st_.items())[:3])}</div>''')
+# 24c see it work (storyboard from the GIF)
+from PIL import ImageSequence
+g_ = Image.open(os.path.join(PITCH, "gifs", "qaydh_musaffah_tour.gif")); frs = [f.convert("RGB") for f in ImageSequence.Iterator(g_)]
+def fb(f): b = io.BytesIO(); f.save(b, "JPEG", quality=85); return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
+lab_ = ["Where", "Who", "What", "Labels", "Why", "Act", "Hotspot card", "Site card"]
+slide('<div class="kick">See it work · animated walkthrough in the repo</div><h1>The dashboard, step by step</h1><div class="story8">' +
+      "".join(f'<figure><img src="{fb(f)}"><figcaption>{k+1} · {lab_[k]}</figcaption></figure>' for k, f in enumerate(frs[:8])) + "</div>")
+
 # 25 closing
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_geometry.png'))}">
 <div class="cover"><h1>QAYDH <span>القيظ</span></h1><h2>From “where is it hot?” to “where we act first, why, and how.”</h2>
@@ -223,6 +262,23 @@ section:has(.filmstrip) .split{height:560px}
 .pipe em{font-style:normal;font:800 36px 'Big Shoulders Display';color:#ff6b2c;align-self:center}
 .strip{position:absolute;left:96px;right:96px;bottom:60px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
 .strip div{font-size:19px;color:#cdbda4;line-height:1.3} .strip b{display:block;font:800 54px/1 'Big Shoulders Display';color:#ff6b2c;margin-bottom:6px}
+.steps5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.steps5>div{background:#1f1a15;border:1px solid #3a3027;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.steps5 i{font:800 40px/1 'Big Shoulders Display';font-style:normal;color:#ff6b2c} .steps5 b{font:800 28px/1.05 'Big Shoulders Display'} .steps5 span{font-size:16px;color:#cdbda4;min-height:44px}
+.steps5 img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;margin-top:auto}
+.cmp{display:grid;grid-template-columns:1fr 90px 1fr;gap:20px;align-items:center}
+.cmp>div:not(.arrow){background:#1f1a15;border:1px solid #3a3027;border-radius:18px;padding:28px} .cmp .hl{border-color:#43c6b4}
+.cmp h3{display:flex;align-items:center;gap:12px;font:800 34px 'Big Shoulders Display';margin:0 0 14px;color:#efe3cf}
+.cmp ul{margin:0;padding-left:22px;font-size:24px;line-height:1.55;color:#e2d4bc}
+.arch{display:flex;gap:10px;align-items:stretch}
+.acol{flex:1;background:#1f1a15;border:1px solid #3a3027;border-radius:16px;padding:20px} .acol.go{background:#43c6b4;border-color:#43c6b4;color:#0d1f1c}
+.acol h4{font:800 30px 'Big Shoulders Display';margin:0 0 14px;color:#ff6b2c} .acol.go h4{color:#0d1f1c}
+.aitem{display:flex;align-items:center;gap:12px;font-size:19px;margin:12px 0} .aarr{align-self:center}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:26px} .tiles.four4{grid-template-columns:repeat(4,1fr)}
+.tiles>div{background:#1f1a15;border:1px solid #3a3027;border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:10px}
+.tiles b{font:800 40px/1.05 'Big Shoulders Display'} .tiles.four4 b{font-size:64px;color:#ff6b2c} .tiles span{font-size:20px;color:#cdbda4}
+.story8{display:grid;grid-template-columns:repeat(4,1fr);gap:14px} .story8 figure{margin:0} .story8 img{width:100%;border-radius:10px;display:block}
+.story8 figcaption{font:500 15px 'IBM Plex Mono';color:#ffb15c;margin-top:6px}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px}
 .nums b{display:block;font:800 108px/1 'Big Shoulders Display';color:#ff6b2c} .nums span{font-size:21px;color:#cdbda4;line-height:1.3}
 ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabic'} ul.ben li{border-bottom:1px solid #3a3027}

@@ -626,5 +626,40 @@
     "n": 5,
     "llm_drafts_passing_fact_check": 0,
     "policy": "LLM drafts only from verified facts; unit-aware fact-check; failed drafts replaced by the verified template; human sign-off required"
-  }
+  },
+  "station_check": [
+    {
+      "station": "Al Bateen (OMAD)",
+      "hours_compared": 2022,
+      "era5_vs_station_r": 0.955,
+      "MAE_C": 1.37,
+      "bias_C": -0.57,
+      "danger_window_station": "12:00\u201315:00",
+      "danger_window_era5": "11:00\u201316:00",
+      "landsat_days": 18,
+      "LST_minus_air_C": 15.2
+    },
+    {
+      "station": "Abu Dhabi Intl (OMAA)",
+      "hours_compared": 2019,
+      "era5_vs_station_r": 0.951,
+      "MAE_C": 1.53,
+      "bias_C": -0.36,
+      "danger_window_station": "11:00\u201316:00",
+      "danger_window_era5": "11:00\u201317:00",
+      "landsat_days": 10,
+      "LST_minus_air_C": 15.5
+    },
+    {
+      "station": "Riyadh King Khaled (OERK)",
+      "hours_compared": 2015,
+      "era5_vs_station_r": 0.986,
+      "MAE_C": 1.38,
+      "bias_C": -1.31,
+      "danger_window_station": "10:00\u201320:00",
+      "danger_window_era5": "11:00\u201319:00",
+      "landsat_days": 22,
+      "LST_minus_air_C": 10.7
+    }
+  ]
 }

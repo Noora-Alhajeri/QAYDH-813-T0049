@@ -77,6 +77,21 @@ a{color:var(--ember-2)}
 .brief b{color:var(--cool)}
 .hs-ico{width:26px;height:26px;border-radius:50%;background:var(--ember);color:#1b0d05;font:800 14px/26px var(--display);text-align:center;border:2px solid #fff3e0;box-shadow:0 0 0 4px rgba(255,107,44,.35)}
 .leaflet-container{font:13px var(--body);background:#0f0c0a}
+.leaflet-image-layer{image-rendering:pixelated;image-rendering:crisp-edges}
+.stepper{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:600;display:flex;align-items:center;gap:8px;background:rgba(20,17,14,.92);border:1px solid var(--line);border-radius:999px;padding:6px 8px}
+.stepper button{font:600 13px var(--body);border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--sand);padding:6px 14px;cursor:pointer}
+.stepper button.primary{background:var(--ember);border-color:var(--ember);color:#1b0d05}
+.stepper .dots{display:flex;gap:6px}.stepper .dots i{width:9px;height:9px;border-radius:50%;background:#4a3d31;cursor:pointer}.stepper .dots i.on{background:var(--ember);width:22px;border-radius:5px}
+.stepper .lbl{font:500 12px var(--mono);color:var(--ember-2);letter-spacing:.08em;text-transform:uppercase;min-width:150px;text-align:center}
+.intro{position:fixed;inset:0;z-index:2000;background:rgba(10,8,6,.78);display:grid;place-items:center;padding:16px}
+.intro>div{max-width:760px;background:var(--dune);border:1px solid var(--line);border-radius:18px;padding:28px 30px}
+.intro h2{font:800 40px/1 var(--display);margin:0 0 6px}.intro .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0}
+.intro .cols3 div{border-top:3px solid var(--ember);padding-top:10px;font-size:14px;color:var(--mute)}.intro .cols3 b{display:block;color:var(--sand);font:800 20px var(--display);margin-bottom:4px}
+.intro button{font:600 15px var(--body);background:var(--ember);color:#1b0d05;border:0;border-radius:999px;padding:10px 22px;cursor:pointer}
+details.layers{position:relative}details.layers summary{list-style:none;cursor:pointer;font:500 13px var(--body);color:var(--sand);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+details.layers[open] .chips{position:absolute;right:0;top:38px;z-index:1500;background:var(--dune);border:1px solid var(--line);border-radius:12px;padding:10px;width:340px}
+.hint{font-size:12px;color:var(--cool);margin-top:6px}
+@media (max-width:700px){.intro .cols3{grid-template-columns:1fr}.stepper .lbl{display:none}}
 .leaflet-tooltip{background:var(--dune);color:var(--sand);border:1px solid var(--line)}
 @media (max-width:1100px){.main{grid-template-columns:1fr;grid-template-rows:auto 60vh auto}.story,.card{border:0;overflow:visible}.map{min-height:60vh}html,body{height:auto}.app{height:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -91,15 +106,24 @@ a{color:var(--ember-2)}
       <button id="city-musaffah" data-city="musaffah" aria-pressed="false">Musaffah deep dive</button>
     </div>
     <div class="spacer"></div>
-    <div class="chips" role="group" aria-label="Map layers" id="chips"></div>
+    <details class="layers"><summary>Layers ▾</summary><div class="chips" role="group" aria-label="Map layers" id="chips"></div></details>
   </header>
   <div class="main">
     <nav class="story" id="story" aria-label="Story chapters"></nav>
-    <div class="map"><div id="map" role="region" aria-label="Map"></div><div class="legend" id="legend"></div></div>
+    <div class="map"><div id="map" role="region" aria-label="Map"></div><div class="legend" id="legend"></div>
+      <div class="stepper"><button id="prev">Back</button><span class="dots" id="dots"></span><span class="lbl" id="steplbl"></span><button id="next" class="primary">Next</button></div></div>
     <aside class="card" id="card"></aside>
   </div>
 </div>
 
+<div class="intro" id="intro"><div>
+  <div style="font:500 12px var(--mono);letter-spacing:.14em;color:var(--ember-2)">QAYDH · القيظ · HEAT-RISK ATLAS</div>
+  <h2>Where it burns, who is outside, what to do first</h2>
+  <p style="color:var(--mute);margin:0">A planner's map built from open satellite data for Musaffah, Abu Dhabi and east Riyadh.</p>
+  <div class="cols3"><div><b>1 · Follow the story</b>Press Next. Each step shows one question: where, who, what, why, what to do.</div>
+  <div><b>2 · Click anything</b>Hotspots (M-001), sites (S-001) and buildings (B-00001) open a card with the evidence.</div>
+  <div><b>3 · Take the output</b>Ranked actions with reasons, confidence, relative impact and a planner brief.</div></div>
+  <button id="start">Start the tour</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const DATA = __DATA__;
@@ -107,7 +131,7 @@ const CH = __CHAPTERS__;
 const POI = {mosque:["#7ee081","Mosque"],bus_stop:["#5cc8ff","Bus stop"],delivery:["#ffb15c","Rider hub"],construction:["#ff5a5a","Construction"],vulnerable:["#d58cff","School / clinic"]};
 const LAYERS = [["imagery","Hi-res imagery"],["annotation","Annotation"],["review","Review queue"],["objects","Building objects"],["segments","SAM segments"],["satellite","Satellite"],["geometry","Buildings & roads"],["growth","Growth"],["heat","Heat"],["hazard","Heat hazard"],["surfaces","Surfaces"],["confidence","Confidence"],["places","People places"],["sites","Exposure sites"],["priority","Priority"]];
 const SITE = {"Bus stop":["B","#5cc8ff"],"Mosque":["M","#7ee081"],"School / clinic":["S","#d58cff"]};
-let city = "riyadh", chapter = 0, map, layer = {}, active = new Set(), hotIdx = null;
+let city = DATA.musaffah ? "musaffah" : "riyadh", chapter = 0, map, layer = {}, active = new Set(), hotIdx = null;
 try { const c = localStorage.getItem("qaydh-city"); if (c && DATA[c]) city = c; } catch (e) {}
 
 function heatColor(v){ // 0..100 → sand→ember→red
@@ -142,7 +166,9 @@ function build(){
   layer.places = L.layerGroup(D.places.filter(p=>POI[p.cat]).map(p=>L.circleMarker([p.lat,p.lon],{radius:4,color:POI[p.cat][0],weight:1,fillOpacity:.9}).bindTooltip(`${POI[p.cat][1]}${p.name?": "+p.name:""}`)));
   layer.hot = L.layerGroup(D.hot.map((h,i)=>L.marker([h.lat,h.lon],{icon:L.divIcon({className:"",html:`<div class="hs-ico${h.id?" wide":""}">${h.id||("#"+(i+1))}</div>`,iconSize:h.id?[54,24]:[26,26]})}).on("click",()=>showHot(i))));
   if(D.districts){ layer.districts = L.layerGroup(Object.entries(D.districts).map(([n,bb])=>L.rectangle([[bb[1],bb[0]],[bb[3],bb[2]]],{color:"#43c6b4",weight:2,fill:false,dashArray:"6 4"}).bindTooltip(n,{permanent:true,direction:"top",className:""}))); }
-  layer.satellite.addTo(map);
+  layer.satellite.addTo(map); active.add("satellite");
+  layer.imagery.on("tileload",()=>{ if(!active.has("imagery")){active.add("imagery"); const b=document.getElementById("layer-imagery"); if(b)b.setAttribute("aria-pressed",true);} });
+  layer.imagery.addTo(map).bringToBack();
   renderChips(); renderStory(); goChapter(0);
 }
 function renderChips(){
@@ -154,8 +180,9 @@ function toggle(k,on){
   const b=document.getElementById("layer-"+k); if(b) b.setAttribute("aria-pressed",on); legend();
 }
 function setLayers(main){
-  for(const k of [...active]) if(k!=="satellite") toggle(k,false);
+  for(const k of [...active]) if(k!=="satellite"&&k!=="imagery") toggle(k,false);
   if(!active.has("satellite")) toggle("satellite",true);
+  if(layer.satellite) layer.satellite.setOpacity(active.has("imagery")&&DATA[city].block?0:1);
   if(DATA[city].block && layer.geometry && main!=="surfaces") toggle("geometry",true);
   if(main==="places"){toggle("heat",true);toggle("places",true);}
   else if(main==="sites"){toggle("hazard",true);toggle("sites",true);}
@@ -191,7 +218,7 @@ function renderStory(){
   const el=document.getElementById("story"); el.innerHTML="";
   CH[city].forEach((c,i)=>{
     const d=document.createElement("article"); d.className="ch"; d.id="ch-"+c.id; d.tabIndex=0;
-    d.innerHTML=`<div class="k">${String(i+1).padStart(2,"0")} · ${c.kicker}</div><h2>${c.title}</h2><p>${c.body}</p><div class="stats">${c.stat.map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("")}</div>${c.ribbon?ribbon():""}${c.list?`<div class="hotlist">${DATA[city].hot.map((h,j)=>`<button id="hot-${j}" data-i="${j}"><span class="n">${j+1}</span><span>${h.id?h.id+" · "+(h.exposure_context||"").split(",")[0]:(h.district||"")+" "+fmt(h.population)+" residents"}<br><small style="color:var(--mute)">${(h.recommended_action||h.actions||"").split(" + ")[0]}</small></span><span class="t">${fmt(h.LST_C,1)}°</span></button>`).join("")}</div>`:""}`;
+    d.innerHTML=`<div class="k">Step ${i+1} of ${CH[city].length} · ${c.kicker}</div><h2>${c.title}</h2><p>${c.body}</p>${c.hint?`<div class="hint">→ ${c.hint}</div>`:""}<div class="stats">${c.stat.map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("")}</div>${c.ribbon?ribbon():""}${c.list?`<div class="hotlist">${DATA[city].hot.map((h,j)=>`<button id="hot-${j}" data-i="${j}"><span class="n">${j+1}</span><span>${h.id?h.id+" · "+(h.exposure_context||"").split(",")[0]:(h.district||"")+" "+fmt(h.population)+" residents"}<br><small style="color:var(--mute)">${(h.recommended_action||h.actions||"").split(" + ")[0]}</small></span><span class="t">${fmt(h.LST_C,1)}°</span></button>`).join("")}</div>`:""}`;
     d.onclick=e=>{const hb=e.target.closest(".hotlist button"); if(hb){showHot(+hb.dataset.i);e.stopPropagation();return;} goChapter(i);};
     d.onkeydown=e=>{if(e.key==="Enter")goChapter(i)};
     el.appendChild(d);
@@ -200,9 +227,22 @@ function renderStory(){
 function goChapter(i){
   chapter=i; document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===i));
   const cur=document.querySelectorAll(".ch")[i]; const st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8;
-  setLayers(CH[city][i].layer); if(!CH[city][i].list) map.fitBounds(DATA[city].ov.bounds);
+  setLayers(CH[city][i].layer);
+  const v=CH[city][i].view; if(v) map.flyTo([v[0],v[1]],v[2],{duration:1.2}); else if(!CH[city][i].list) map.flyToBounds(DATA[city].ov.bounds,{duration:1.0});
+  renderStepper();
   if(CH[city][i].list && hotIdx===null) showHot(0); else if(!CH[city][i].list) cardIntro();
 }
+function renderStepper(){
+  const n=CH[city].length; document.getElementById("dots").innerHTML=CH[city].map((c,j)=>`<i class="${j===chapter?"on":""}" title="${c.kicker}" data-j="${j}"></i>`).join("");
+  document.getElementById("steplbl").textContent=`${chapter+1}/${n} · ${CH[city][chapter].kicker}`;
+  document.getElementById("prev").disabled=chapter===0; document.getElementById("next").textContent=chapter===n-1?"Restart":"Next";
+  document.querySelectorAll("#dots i").forEach(x=>x.onclick=()=>goChapter(+x.dataset.j));
+}
+document.getElementById("prev").onclick=()=>{if(chapter>0)goChapter(chapter-1)};
+document.getElementById("next").onclick=()=>goChapter(chapter<CH[city].length-1?chapter+1:0);
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")document.getElementById("next").click();if(e.key==="ArrowLeft")document.getElementById("prev").click();});
+document.getElementById("start").onclick=()=>{document.getElementById("intro").hidden=true;try{sessionStorage.setItem("qaydh-intro","1")}catch(e){}};
+try{ if(sessionStorage.getItem("qaydh-intro")) document.getElementById("intro").hidden=true; }catch(e){}
 function cardIntro(){
   const D=DATA[city]; document.getElementById("card").innerHTML=`<h3>${D.name}</h3><div class="empty">${D.sub}</div>
   <dl class="q"><dt>Where</dt><dd>Persistent summer hotspots at 300 m</dd><dt>When</dt><dd>Hours above 40 °C, from weather reanalysis</dd><dt>Why</dt><dd>Roof, road, sand or missing greenery, read from hyperspectral spectra</dd><dt>Who</dt><dd>Residents + people outdoors: mosque-goers, bus riders, delivery riders, workers, children</dd><dt>What next</dt><dd>One named action per hotspot, with estimated °C and confidence</dd></dl>
@@ -227,7 +267,7 @@ function blockCard(h,i){
   <div class="src">Hazard from Landsat (≈100 m). Surfaces from Sentinel-2 (10 m). Drivers are associations from a spatially validated model.</div>`;
 }
 function showSite(i){
-  const t=DATA[city].sites[i]; map.setView([t.lat,t.lon],17);
+  const t=DATA[city].sites[i]; map.flyTo([t.lat,t.lon],17,{duration:1.0});
   document.getElementById("card").innerHTML=`<div class="pills"><span class="pill ${t.priority==="Very high"?"urgent":"high"}">${t.priority}</span><span class="pill">${t.site}</span></div><h3>${t.site_id?t.site_id+" · ":""}${t.name}</h3>
   <dl class="q"><dt>Heat</dt><dd>P${t.heat_percentile} within 150 m</dd><dt>Green</dt><dd>${t.vegetation_pct}% vegetation · nearest green ${fmt(t.nearest_green_m)} m</dd><dt>Surface</dt><dd>${t.impervious_pct}% impervious</dd><dt>Context</dt><dd>${t.context}</dd></dl>
   <div><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RECOMMENDED</div><ul class="acts"><li>${t.action}</li></ul></div>`;
@@ -237,7 +277,7 @@ function showHot(i){
   if(chapter!==CH[city].length-1){chapter=CH[city].length-1;document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===chapter));setLayers("priority");}
   { const cur=document.querySelectorAll(".ch")[chapter], st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8; }
   document.querySelectorAll(".hotlist button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i));
-  map.setView([h.lat,h.lon],D.block?16:15);
+  map.flyTo([h.lat,h.lon],D.block?16:15,{duration:1.0});
   if(D.block){document.getElementById("card").innerHTML=blockCard(h,i);return;}
   const urg=(h.urgency||"").toUpperCase(), uc=urg==="URGENT"?"urgent":"high";
   const who=h.who_is_exposed||[`${fmt(h.population)} residents`,...["mosque","bus_stop","delivery","construction","vulnerable"].filter(k=>h[k]>0).map(k=>POI[k][1].toLowerCase()+"s")].join(", ");

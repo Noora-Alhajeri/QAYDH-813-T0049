@@ -569,5 +569,19 @@
       "2026-10-02T19:11:06Z"
     ],
     "licence": "ODbL \u00a9 OpenStreetMap contributors"
+  },
+  {
+    "source": "NOAA Integrated Surface Database (hourly)",
+    "collection": "ncei global-hourly",
+    "items": [
+      "41216099999",
+      "41217099999",
+      "40437099999"
+    ],
+    "dates": [
+      "2025-06-01",
+      "2025-08-31"
+    ],
+    "licence": "Public domain (NOAA)"
   }
 ]
