@@ -48,6 +48,9 @@ ICONS = os.path.join(PITCH, "icons")
 def icon(n, size=56, color="#ff6b2c"):
     svg = open(os.path.join(ICONS, n + ".svg")).read()
     return svg.replace('stroke="currentColor"', f'stroke="{color}"').replace('width="24"', f'width="{size}"').replace('height="24"', f'height="{size}"')
+def logo(f):
+    pth = os.path.join(PITCH, "logos", f); mt = "image/svg+xml" if f.endswith(".svg") else "image/png"
+    return f"data:{mt};base64," + base64.b64encode(open(pth, "rb").read()).decode()
 def img(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def fig(n): return img(os.path.join(OUT, n))
 h0 = MH.iloc[0]
@@ -100,6 +103,16 @@ slide(f'''<div class="kick">The problem we solve</div><h1 class="big">Heat maps 
 <div class="hl"><h3>{icon("shield-check", 40, "#43c6b4")} What QAYDH adds</h3><ul>
 <li>People: who is outside, at which hours</li><li>Surfaces: road, roof, sand, green at 10 m (F1 {mc[mbest]['test_macro_F1']:.2f})</li>
 <li>Every Gulf city, every summer, open data</li><li>One named action per hotspot, with its reason</li></ul></div></div>''')
+# 6a problem → answer (bilingual) with the five outputs
+outs = [("flame", "Hotspot map", "Where heat is high", crop(h0.lat, h0.lon, 700, ("sat", "haz"))),
+        ("scan", "Material map", "Road · roof material · sand · green", crop(h0.lat, h0.lon, 700, ("sat", "surf"))),
+        ("users", "Exposure score", "Who is outside, and when", crop(bus.lat, bus.lon, 700)),
+        ("target", "Intervention", "The fix that matches the material", crop(h0.lat, h0.lon, 350, ("sat", "geo"))),
+        ("chart-dots", "Priority ranking", "Where to act first", crop(h0.lat, h0.lon, 900, ("sat", "haz")))]
+slide(f'''<div class="pa"><div><div class="kick">The problem we solve</div>
+<h1 class="big" style="font-size:64px">We don't only map heat.<br><span class="o">We explain it and say what to do.</span></h1>
+<p class="ar">نحن لا نكتفي برسم خريطة للحرارة؛ بل نفسر أسبابها على مستوى المواد ونقترح التدخل المناسب</p></div>
+<div class="outs">{"".join(f'<figure><img src="{im}"><figcaption>{icon(i_, 26)}<b>{t}</b><span>{d_}</span></figcaption></figure>' for i_, t, d_, im in outs)}</div></div>''')
 # 6 collage
 slide(f'''<div class="kick">Musaffah, Abu Dhabi</div><h1 class="big">Real places, not pixels</h1>
 <div class="collage">{''.join(f'<figure><img src="{c[0]}"><figcaption><b>{c[1]}</b>{c[2]}</figcaption></figure>' for c in COL)}</div>
@@ -123,6 +136,14 @@ slide(f'''<div class="split"><div><h1 class="big">Data<br><span class="o">&amp; 
 <dl class="why"><dt>Data</dt><dd>Landsat 8/9 thermal · Sentinel-2 10 m · Planet Tanager hyperspectral · ESA WorldCover · OSM · Microsoft footprints · WorldPop · ERA5</dd>
 <dt>Tools</dt><dd>Python · Planetary Computer · scikit-learn · QGIS-ready GeoJSON · gIQ-ready dashboard</dd>
 <dt>Steps</dt><dd>Masks → annotation → training → spatial validation → priority → dashboard</dd></dl></div>''')
+# 9b open data we built on (logos)
+LOGOS = [("USGS_logo_green.svg", "Landsat 8/9 thermal + optical"), ("ESA_logo.svg", "Sentinel-1 radar · Sentinel-2 10 m · WorldCover"),
+         ("Planet_Labs_logo.svg", "Tanager hyperspectral (426 bands)"), ("NASA_logo.svg", "EMIT hyperspectral · Landsat"),
+         ("Openstreetmap_logo.svg", "Roads · bus stops · mosques · schools"), ("Microsoft_logo_2012.svg", "25,462 building footprints"),
+         ("WorldPop_logo.png", "Residents per 100 m"), ("ECMWF_logo.svg", "ERA5 hourly weather"), ("NOAA_logo.svg", "Station ground truth")]
+slide('<div class="kick">Open data we built on</div><h1 class="big">Nine open sources, one answer</h1><div class="logos">' +
+      "".join(f'<div><span class="lg"><img src="{logo(f)}"></span><b>{t}</b></div>' for f, t in LOGOS if os.path.exists(os.path.join(PITCH, "logos", f))) +
+      '</div><p class="credit">Logos identify data providers; no endorsement implied.</p>')
 # 10 approach (Ghaf: short-term / long-term)
 slide(f'''<div class="split"><div><h1 class="big">QAYDH<br><span class="o">Approach</span></h1></div>
 <dl class="why"><dt>Now · PoC</dt><dd>Musaffah at 10 m, end to end · hyperspectral proof on Riyadh (Tanager) · Abu Dhabi screening</dd>
@@ -135,6 +156,16 @@ screen(SC["m_what"], "What is physically there?", "Road · roof · sand · green
 screen(SC["m_labels"], "How we labelled it", "Objects with ID, box and label", f"{R['musaffah_objects']['buildings']:,} buildings labelled: roof class, heat zone, dark-roof flag, street. {R['musaffah_objects']['cool_roof_candidates']} are cool-roof candidates.", "03b")
 screen(SC["m_why"], "Why may it be hot?", "Asphalt and sand up, green down", f"Spatially validated: R² {f2(wm['Random Forest']['R2'])}, error {f1(wm['Random Forest']['MAE_C'])} °C. Shown as associations, not proof of cause.", "04")
 screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"{h0.actions}. Because {h0.why}.", "05")
+# 17b do now: material-matched actions
+rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
+ROWS = [("#4aa3df", "Metal sheet roofs", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs", ap.get("Metal sheet (bare / painted)", "")),
+        ("#a9a9a0", "Concrete roofs", f"{rmm.get('Concrete / cement', 0):.0f}% of roofs", ap.get("Concrete / cement", "")),
+        ("#2b2b2b", "Asphalt roads & car parks", f"{h0.road*100:.0f}% of hotspot {h0.id}", ap.get("road", "")),
+        ("#e9d8a6", "Open sand lots", f"{h0.sand*100:.0f}% of hotspot {h0.id}", ap.get("sand", "")),
+        ("#5cc8ff", "Bus stops", f"{len(MS[MS.site=='Bus stop'])} scored", ap.get("bus_stop", "")),
+        ("#ff6b2c", "Industrial outdoor work", "Musaffah M-sectors", ap.get("industrial", ""))]
+slide('<div class="kick">What to do now</div><h1>Every material gets its own fix</h1><div class="mrows">' +
+      "".join(f'<div><i style="background:{c}"></i><b>{n}</b><em>{w}</em><span>{a}</span></div>' for c, n, w, a in ROWS) + "</div>")
 # 16 hyperspectral proof + 17 Abu Dhabi screening
 screen(SC["r_why"], "Hyperspectral proof · Riyadh", "Tanager reads roof, road and sand", f"Full spectrum F1 {f2(hs[hk]['macro_F1'])} vs 6 bands {f2(hs[h6]['macro_F1'])} on unseen tiles, and +{f2(R['dR2_built'])} R² for heat.", "06")
 screen(SC["ad"], "Abu Dhabi screening", "The starter rule calls sand a city", f"NDBI says Masdar {ms['builtup_starter_NDBI_pct']:.0f}% built; WorldCover {ms['builtup_WorldCover_pct']:.0f}%. Musaffah: {mu['builtup_starter_NDBI_pct']:.0f}% vs {mu['builtup_WorldCover_pct']:.0f}%.", "07")
@@ -280,6 +311,13 @@ section:has(.filmstrip) .split{height:560px}
 .tiles b{font:800 40px/1.05 'Big Shoulders Display'} .tiles.four4 b{font-size:64px;color:#ff6b2c} .tiles span{font-size:20px;color:#cdbda4}
 .story8{display:grid;grid-template-columns:repeat(4,1fr);gap:14px} .story8 figure{margin:0} .story8 img{width:100%;border-radius:10px;display:block}
 .story8 figcaption{font:500 15px 'IBM Plex Mono';color:#ffb15c;margin-top:6px}
+.pa{display:grid;grid-template-columns:1fr;gap:26px}.ar{font:600 30px 'IBM Plex Sans Arabic';color:#ffcf9a;direction:rtl;text-align:left;margin:0}
+.outs{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.outs figure{margin:0}.outs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
+.outs figcaption{display:grid;grid-template-columns:30px 1fr;gap:2px 8px;margin-top:10px}.outs figcaption svg{grid-row:span 2}.outs b{font:800 26px 'Big Shoulders Display'}.outs span{font-size:15px;color:#cdbda4}
+.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.logos>div{display:grid;grid-template-columns:170px 1fr;gap:18px;align-items:center}
+.logos .lg{background:#fff;border-radius:12px;height:90px;display:grid;place-items:center;padding:12px}.logos img{max-width:140px;max-height:66px}.logos b{font-size:21px;font-weight:500;color:#e2d4bc}
+.mrows{display:flex;flex-direction:column;gap:14px}.mrows>div{display:grid;grid-template-columns:34px 300px 230px 1fr;gap:18px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:16px 20px}
+.mrows i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mrows b{font:800 28px 'Big Shoulders Display'}.mrows em{font-style:normal;font:500 16px 'IBM Plex Mono';color:#ffb15c}.mrows span{font-size:21px;color:#e2d4bc}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px}
 .nums b{display:block;font:800 108px/1 'Big Shoulders Display';color:#ff6b2c} .nums span{font-size:21px;color:#cdbda4;line-height:1.3}
 ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabic'} ul.ben li{border-bottom:1px solid #3a3027}

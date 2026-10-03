@@ -71,13 +71,26 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ember-2);outline-of
 .empty{color:var(--mute);font-size:14px}
 .src{font-size:11px;color:var(--mute);margin-top:auto}
 a{color:var(--ember-2)}
-.site-ico{width:22px;height:22px;border-radius:50%;color:#14110e;font:800 12px/22px var(--display);text-align:center;border:2px solid #14110e;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.site-ico{width:26px;height:26px;border-radius:50%;color:#14110e;font:800 12px/26px var(--display);display:grid;place-items:center;border:2px solid #14110e;box-shadow:0 0 0 2px rgba(255,255,255,.75),0 2px 6px rgba(0,0,0,.5)}
+.site-lbl span{position:absolute;left:16px;top:-9px;white-space:nowrap;font:600 11px var(--body);color:#fff;text-shadow:0 0 3px #000,0 0 3px #000}
+.rmix{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:6px 0}.rmix i{display:block}
+.plan{margin:0;padding-left:18px}.plan li{margin:4px 0}
 .hs-ico.wide{width:54px;border-radius:12px;font-size:12px;line-height:20px}
 .brief{background:#1d1712;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px}
 .brief b{color:var(--cool)}
 .hs-ico{width:26px;height:26px;border-radius:50%;background:var(--ember);color:#1b0d05;font:800 14px/26px var(--display);text-align:center;border:2px solid #fff3e0;box-shadow:0 0 0 4px rgba(255,107,44,.35)}
 .leaflet-container{font:13px var(--body);background:#0f0c0a}
-.leaflet-image-layer{image-rendering:pixelated;image-rendering:crisp-edges}
+.leaflet-image-layer{image-rendering:pixelated;image-rendering:crisp-edges;transition:opacity .6s ease}
+.leaflet-overlay-pane path{transition:fill-opacity .5s ease,stroke-opacity .5s ease}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,44,.7)}70%{box-shadow:0 0 0 14px rgba(255,107,44,0)}100%{box-shadow:0 0 0 0 rgba(255,107,44,0)}}
+.card>*{animation:rise .45s ease both}.card>*:nth-child(2){animation-delay:.05s}.card>*:nth-child(3){animation-delay:.1s}.card>*:nth-child(4){animation-delay:.15s}.card>*:nth-child(n+5){animation-delay:.2s}
+.ch[aria-current=true]{animation:rise .4s ease both}
+.hs-ico{animation:pulse 2s infinite}
+.progress{position:absolute;left:0;right:0;top:0;height:4px;z-index:700;background:rgba(255,255,255,.08)}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--ember-2));transition:width .6s ease}
+.banner{position:absolute;left:50%;transform:translateX(-50%);top:14px;z-index:650;background:rgba(20,17,14,.92);border:1px solid var(--line);border-left:4px solid var(--ember);border-radius:10px;padding:8px 14px;font-size:13px;max-width:min(560px,80%);animation:rise .5s ease both}
+.banner b{color:var(--ember-2);font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-right:8px}
+@media (prefers-reduced-motion:reduce){.card>*,.ch,.banner,.hs-ico{animation:none!important}}
 .stepper{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:600;display:flex;align-items:center;gap:8px;background:rgba(20,17,14,.92);border:1px solid var(--line);border-radius:999px;padding:6px 8px}
 .stepper button{font:600 13px var(--body);border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--sand);padding:6px 14px;cursor:pointer}
 .stepper button.primary{background:var(--ember);border-color:var(--ember);color:#1b0d05}
@@ -127,7 +140,7 @@ details.more summary{cursor:pointer;color:var(--ember-2);font-size:13px}
   </header>
   <div class="main">
     <nav class="story" id="story" aria-label="Story chapters"></nav>
-    <div class="map"><div id="map" role="region" aria-label="Map"></div><div class="legend" id="legend"></div>
+    <div class="map"><div class="progress"><i id="prog"></i></div><div class="banner" id="banner"></div><div id="map" role="region" aria-label="Map"></div><div class="legend" id="legend"></div>
       <div class="stepper"><button id="prev">Back</button><span class="dots" id="dots"></span><span class="lbl" id="steplbl"></span><button id="next" class="primary">Next</button></div></div>
     <aside class="card" id="card"></aside>
   </div>
@@ -152,8 +165,9 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeIntro();});
 const DATA = __DATA__;
 const CH = __CHAPTERS__;
 const POI = {mosque:["#7ee081","Mosque"],bus_stop:["#5cc8ff","Bus stop"],delivery:["#ffb15c","Rider hub"],construction:["#ff5a5a","Construction"],vulnerable:["#d58cff","School / clinic"]};
-const LAYERS = [["imagery","Hi-res imagery"],["annotation","Annotation"],["review","Review queue"],["objects","Building objects"],["segments","SAM segments"],["satellite","Satellite"],["geometry","Buildings & roads"],["growth","Growth"],["heat","Heat"],["hazard","Heat hazard"],["surfaces","Surfaces"],["confidence","Confidence"],["places","People places"],["informal","Informal-housing candidates"],["sites","Exposure sites"],["priority","Priority"]];
-const SITE = {"Bus stop":["B","#5cc8ff"],"Mosque":["M","#7ee081"],"School / clinic":["S","#d58cff"]};
+const LAYERS = [["imagery","Hi-res imagery"],["annotation","Annotation"],["review","Quality-check queue"],["objects","Building objects"],["segments","SAM segments"],["satellite","Satellite"],["geometry","Buildings & roads"],["growth","Growth"],["heat","Heat"],["hazard","Heat hazard"],["surfaces","Surfaces"],["confidence","Confidence"],["places","People places"],["informal","Informal-housing candidates"],["sites","Exposure sites"],["priority","Priority"]];
+const SITE = {"Bus stop":["B","#5cc8ff"],"Mosque":["M","#7ee081"],"School":["S","#d58cff"],"Kindergarten":["K","#f3a6ff"],"Clinic":["C","#ff8c8c"],"Hospital":["H","#ff5a5a"],"School / clinic":["S","#d58cff"]};
+const RM = {"Concrete / cement":"#a9a9a0","Metal sheet (bare / painted)":"#4aa3df","White / cool coating":"#f5f5f0","Bitumen / dark membrane":"#2b2b2b","Clay tile / brick":"#c0573e","Mixed / unsure":"#8c7f6e"};
 let city = DATA.musaffah ? "musaffah" : "riyadh", chapter = 0, map, layer = {}, active = new Set(), hotIdx = null;
 try { const c = localStorage.getItem("qaydh-city"); if (c && DATA[c]) city = c; } catch (e) {}
 
@@ -189,7 +203,9 @@ function build(){
   const D = DATA[city]; if(map){map.remove();} layer={};
   map = L.map("map",{zoomControl:true,attributionControl:true,preferCanvas:true}).setView(D.center,12);
   map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Planet Tanager CC-BY-4.0 · WorldPop · © OpenStreetMap");
-  const b = D.ov.bounds; map.fitBounds(b);
+  const b = D.ov.bounds; map.fitBounds(b,{padding:[0,0]});
+  if(D.block){ map.setMaxBounds(L.latLngBounds(b).pad(0.08)); map.setMinZoom(map.getBoundsZoom(b,true)); map.fitBounds(b,{padding:[0,0]}); }
+  map.on("zoomend",()=>{ if(!layer.siteLabels) return; if(map.getZoom()>=15 && active.has("sites")) layer.siteLabels.addTo(map); else map.removeLayer(layer.siteLabels); });
   for(const [k,o] of Object.entries(D.ov.layers)) layer[k]=L.imageOverlay(o.img,b,{opacity:k==="satellite"?1:.85});
   layer.imagery = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagery © Esri, Maxar, Earthstar Geographics"});
   if(D.block){
@@ -202,11 +218,14 @@ function build(){
     if(D.segments) layer.segments = L.geoJSON(D.segments,{style:f=>({color:"#fff",weight:1,fillColor:MC[f.properties.label],fillOpacity:.55,dashArray:f.properties.candidate?null:"3 3"}),
        onEachFeature:(f,l)=>l.bindTooltip(`<b>${f.properties.segment}</b><br>${f.properties.label} · purity ${f.properties.purity} · ${f.properties.LST_C} °C<br>${f.properties.candidate?"annotation candidate":"mixed: needs review"}`)});
     if(D.review) layer.review = L.geoJSON(D.review,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4,color:"#ff3df2",weight:2,fillOpacity:0}),
-       onEachFeature:(f,l)=>l.bindTooltip(`Review #${f.properties.rank}: model says ${f.properties.predicted} (confidence ${f.properties.confidence})`)});
+       onEachFeature:(f,l)=>l.bindTooltip(`Quality check #${f.properties.rank}: model says ${f.properties.predicted} (confidence ${f.properties.confidence})`)});
     if(D.informal) layer.informal = L.geoJSON(D.informal,{style:{color:"#00e5ff",weight:2,fillColor:"#00e5ff",fillOpacity:.18},
        onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>Informal / substandard-housing candidate</b><br>${p.buildings} buildings · median ${p.median_footprint_m2} m² · hot roofs ${p.hot_roof_pct}%<br>layout irregularity ${p.layout_irregularity} · ${p.lst_C} °C<br><i>for field verification</i>`);}});
-    layer.sites = L.layerGroup(D.sites.map((t,i)=>L.marker([t.lat,t.lon],{icon:L.divIcon({className:"",html:`<div class="site-ico" style="background:${SITE[t.site][1]}">${SITE[t.site][0]}</div>`,iconSize:[22,22]})})
-       .bindTooltip(`<b>${t.site_id||""} · ${t.name}</b><br>heat P${t.heat_percentile} · green ${t.vegetation_pct}% · ${t.priority}`).on("click",()=>showSite(i))));
+    layer.sites = L.layerGroup(D.sites.map((t,i)=>{const st=t.subtype||t.site, sc=SITE[st]||SITE["School / clinic"];
+       const mk=L.marker([t.lat,t.lon],{icon:L.divIcon({className:"",html:`<div class="site-ico" style="background:${sc[1]}">${(D.icons||{})[st]||sc[0]}</div>`,iconSize:[26,26]})})
+       .bindTooltip(`<b>${t.site_id||""} · ${t.title||t.name}</b>${t.name_ar?" · "+t.name_ar:""}<br>heat P${t.heat_percentile} · green ${t.vegetation_pct}% · ${t.priority}`,{direction:"top",offset:[0,-10]}).on("click",()=>showSite(i));
+       return mk;}));
+    layer.siteLabels = L.layerGroup(D.sites.filter(t=>t.priority!=="Moderate").map(t=>L.marker([t.lat,t.lon],{interactive:false,icon:L.divIcon({className:"site-lbl",html:`<span>${(t.title||t.name).split(" · ").slice(-1)[0]}</span>`,iconSize:[0,0]})})));
   } else {
   const vs=D.cells.features.map(f=>f.properties.HRPI).filter(v=>v!=null).sort((a,b)=>a-b), cut=vs[Math.floor(vs.length*.65)]||0;
   layer.priority = L.geoJSON(D.cells,{style:f=>{const v=f.properties.HRPI;return v>=cut?{fillColor:heatColor(v),fillOpacity:.25+.6*(v-cut)/(100-cut+1e-6),weight:0}:{fillOpacity:0,weight:0};},
@@ -250,9 +269,9 @@ function legend(){
   if(active.has("geometry")) h+=`<span class="sw"><i style="background:#f59e6b"></i>Buildings</span><span class="sw"><i style="background:#29292e"></i>Roads</span>`;
   if(active.has("objects")) h+=`<b>Roof material</b><div>${[["Metal sheet","#4aa3df"],["Bitumen","#2b2b2b"],["Concrete","#a9a9a0"],["White / cool","#f5f5f0"]].map(([n,c])=>`<span class="sw"><i style="background:${c}"></i>${n}</span>`).join("")}<span class="sw"><i style="border:2px solid #ff6b2c"></i>Cool-roof candidate</span></div>`;
   if(active.has("informal")) h+=`<span class="sw"><i style="background:#00e5ff"></i>Informal-housing candidate (field check)</span>`;
-  if(active.has("review")) h+=`<span class="sw"><i style="border:2px solid #ff3df2;border-radius:50%"></i>Review queue</span>`;
+  if(active.has("review")) h+=`<span class="sw"><i style="border:2px solid #ff3df2;border-radius:50%"></i>Quality-check queue</span>`;
   if(active.has("segments")) h+=`<span class="sw"><i style="background:#888;border:1px solid #fff"></i>SAM segment (solid = ≥80% pure)</span>`;
-  if(active.has("sites")) h+=`<div>${Object.entries(SITE).map(([n,[g,c]])=>`<span class="sw"><i style="background:${c};border-radius:50%"></i>${n}</span>`).join("")}</div>`;
+  if(active.has("sites")) h+=`<div>${Object.entries(SITE).filter(([n])=>n!=="School / clinic").map(([n,[g,c]])=>`<span class="sw"><i style="background:${c};border-radius:50%"></i>${n}</span>`).join("")}</div>`;
   if(active.has("growth")) h+=`<span class="sw"><i style="background:#ff00ff"></i>New urban 2014–2025</span>`;
   if(active.has("places")) h+=`<div>${Object.values(POI).map(([c,l])=>`<span class="sw"><i style="background:${c};border-radius:50%"></i>${l}</span>`).join("")}</div>`;
   el.innerHTML=h||"<b>Landsat 2025</b>";
@@ -278,11 +297,13 @@ function goChapter(i){
   chapter=i; document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===i));
   const cur=document.querySelectorAll(".ch")[i]; const st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8;
   setLayers(CH[city][i].layer);
-  const v=CH[city][i].view; if(v) map.flyTo([v[0],v[1]],v[2],{duration:1.2}); else if(!CH[city][i].list) map.flyToBounds(DATA[city].ov.bounds,{duration:1.0});
+  const v=CH[city][i].view; if(v) map.flyTo([v[0],v[1]],v[2],{duration:1.2}); else if(!CH[city][i].list) map.flyToBounds(DATA[city].ov.bounds,{duration:1.0,padding:[0,0]});
   renderStepper();
   if(CH[city][i].list && hotIdx===null) showHot(0); else if(!CH[city][i].list) cardIntro();
 }
 function renderStepper(){
+  const c=CH[city][chapter]; document.getElementById("prog").style.width=`${100*(chapter+1)/CH[city].length}%`;
+  const bn=document.getElementById("banner"); bn.innerHTML=`<b>Step ${chapter+1} · ${c.kicker}</b>${c.hint||c.title}`; bn.style.animation="none"; void bn.offsetWidth; bn.style.animation="";
   const n=CH[city].length; document.getElementById("dots").innerHTML=CH[city].map((c,j)=>`<i class="${j===chapter?"on":""}" title="${c.kicker}" data-j="${j}"></i>`).join("");
   document.getElementById("steplbl").textContent=`${chapter+1}/${n} · ${CH[city][chapter].kicker}`;
   document.getElementById("prev").disabled=chapter===0; document.getElementById("next").textContent=chapter===n-1?"Restart":"Next";
@@ -311,6 +332,10 @@ function blockCard(h,i){
   <dt>What</dt><dd>road ${fmt(100*h.road)}% · roof ${fmt(100*h.roof)}% · sand ${fmt(100*h.sand)}% · green ${fmt(100*h.veg,1)}% · nearest green ${fmt(h.dist_green_m)} m</dd>
   <dt>Why</dt><dd>${h.drivers||"mixed drivers"}</dd></dl>
   </details>
+  ${h.roof_mix?`<div class="blk"><div class="h">Roof materials within 300 m (${h.buildings_screened} buildings)</div>
+    <div class="rmix">${h.roof_mix.split(" · ").map(x=>{const m=x.match(/^(.*) (\d+)%$/);return m?`<i title="${x}" style="width:${m[2]}%;background:${RM[m[1]]||"#888"}"></i>`:""}).join("")}</div>
+    <div style="font-size:12px;color:var(--mute)">${h.roof_mix}</div></div>`:""}
+  ${h.plan?`<div class="blk"><div class="h">Do now · material-matched plan</div><ol class="plan">${h.plan.split(" | ").map(x=>`<li>${x.replace(/ \((.*)\)$/,' <span style="color:var(--mute)">($1)</span>')}</li>`).join("")}</ol></div>`:""}
   ${actionPlan(h)}
   <p style="font-size:12.5px;color:var(--mute);margin:0">Why here: ${h.why}</p>
   <div class="wif"><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RELATIVE INTERVENTION POTENTIAL · RISK (NOW = 1.00)</div>
@@ -321,15 +346,15 @@ function blockCard(h,i){
 }
 function showSite(i){
   const t=DATA[city].sites[i]; map.flyTo([t.lat,t.lon],17,{duration:1.0});
-  document.getElementById("card").innerHTML=`<div class="pills"><span class="pill ${t.priority==="Very high"?"urgent":"high"}">${t.priority}</span><span class="pill">${t.site}</span></div><h3>${t.site_id?t.site_id+" · ":""}${t.name}</h3>
+  document.getElementById("card").innerHTML=`<div class="pills"><span class="pill ${t.priority==="Very high"?"urgent":"high"}">${t.priority}</span><span class="pill">${t.subtype||t.site}</span></div><h3>${t.site_id?t.site_id+" · ":""}${t.title||t.name}</h3>${t.name_ar?`<div style="font-size:18px">${t.name_ar}</div>`:""}
   <dl class="q"><dt>Heat</dt><dd>P${t.heat_percentile} within 150 m</dd><dt>Green</dt><dd>${t.vegetation_pct}% vegetation · nearest green ${fmt(t.nearest_green_m)} m</dd><dt>Surface</dt><dd>${t.impervious_pct}% impervious</dd><dt>Context</dt><dd>${t.context}</dd></dl>
-  <div><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RECOMMENDED</div><ul class="acts"><li>${t.action}</li></ul></div>`;
+  <div><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RECOMMENDED</div><ul class="acts"><li>${t.action}</li></ul>${t.reason?`<p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Why: ${t.reason}.</p>`:""}</div>`;
 }
 function showHot(i){
   hotIdx=i; const D=DATA[city], h=D.hot[i]; if(!h) return;
   if(chapter!==CH[city].length-1){chapter=CH[city].length-1;document.querySelectorAll(".ch").forEach((d,j)=>d.setAttribute("aria-current",j===chapter));setLayers("priority");}
   { const cur=document.querySelectorAll(".ch")[chapter], st=document.getElementById("story"); if(cur&&st.scrollHeight>st.clientHeight) st.scrollTop=cur.offsetTop-st.offsetTop-8; }
-  document.querySelectorAll(".hotlist button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i));
+  document.querySelectorAll(".hotlist button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i)); renderStepper();
   map.flyTo([h.lat,h.lon],D.block?16:15,{duration:1.0});
   if(D.block){document.getElementById("card").innerHTML=blockCard(h,i);return;}
   const urg=(h.urgency||"").toUpperCase(), uc=urg==="URGENT"?"urgent":"high";

@@ -811,5 +811,110 @@
     "stations": [
       "station_check"
     ]
+  },
+  "action_plan": {
+    "catalogue": {
+      "Metal sheet (bare / painted)": "Reflective white coating (high SRI) + under-deck insulation",
+      "Concrete / cement": "High-albedo elastomeric roof coating (Estidama-aligned SRI)",
+      "Bitumen / dark membrane": "Replace with white cool-roof membrane",
+      "White / cool coating": "Keep: clean and recoat on schedule",
+      "Mixed / unsure": "Roof survey, then coat the darkest roofs first",
+      "road": "Cool-pavement coating on roads and car parks + street trees",
+      "sand": "Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation",
+      "bus_stop": "Shaded, ventilated bus shelter with cooling",
+      "mosque": "Shaded walkway (pergola) on the prayer approach + trees",
+      "industrial": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep)",
+      "school": "Shaded drop-off and play areas; cool roof on classrooms",
+      "clinic": "Shaded entrance and waiting area"
+    },
+    "hotspots": [
+      {
+        "id": "M-001",
+        "roof_mix": "Concrete / cement 61% \u00b7 Metal sheet (bare / painted) 18% \u00b7 White / cool coating 14%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 86
+      },
+      {
+        "id": "M-002",
+        "roof_mix": "Concrete / cement 58% \u00b7 Metal sheet (bare / painted) 24% \u00b7 White / cool coating 16%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 55
+      },
+      {
+        "id": "M-003",
+        "roof_mix": "Concrete / cement 62% \u00b7 Metal sheet (bare / painted) 22% \u00b7 White / cool coating 13%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 56
+      },
+      {
+        "id": "M-004",
+        "roof_mix": "Concrete / cement 58% \u00b7 Metal sheet (bare / painted) 20% \u00b7 White / cool coating 17%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 72
+      },
+      {
+        "id": "M-005",
+        "roof_mix": "Concrete / cement 45% \u00b7 Metal sheet (bare / painted) 26% \u00b7 White / cool coating 25%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 67
+      },
+      {
+        "id": "M-006",
+        "roof_mix": "Concrete / cement 46% \u00b7 Metal sheet (bare / painted) 32% \u00b7 White / cool coating 21%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 41
+      },
+      {
+        "id": "M-007",
+        "roof_mix": "Concrete / cement 51% \u00b7 Metal sheet (bare / painted) 25% \u00b7 White / cool coating 22%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 46
+      },
+      {
+        "id": "M-008",
+        "roof_mix": "Concrete / cement 47% \u00b7 White / cool coating 30% \u00b7 Metal sheet (bare / painted) 20%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 72
+      },
+      {
+        "id": "M-009",
+        "roof_mix": "Concrete / cement 69% \u00b7 Mixed / unsure 16% \u00b7 White / cool coating 8%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 131
+      },
+      {
+        "id": "M-010",
+        "roof_mix": "Concrete / cement 47% \u00b7 White / cool coating 31% \u00b7 Metal sheet (bare / painted) 18%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 92
+      }
+    ],
+    "sites_by_type": {
+      "Mosque": 46,
+      "Bus stop": 30,
+      "School": 29,
+      "Clinic": 21,
+      "Hospital": 13
+    }
   }
 }

@@ -106,7 +106,9 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
     th = R["musaffah_hazard_thresholds_C"]; top = R["musaffah_top_hotspot"]; sites = R["musaffah_sites"]
     DATA["musaffah"] = dict(name="Musaffah deep dive", sub="Abu Dhabi · 9 × 9 km at 10 m", center=[24.355, 54.50], ov=overlays("musaffah"), block=True,
                             cells=mcells, places=places(os.path.join(OUT, "musaffah_outdoor_places.csv")), hot=json.loads(mh.to_json(orient="records")),
-                            sites=json.loads(ms_.to_json(orient="records")))
+                            sites=json.loads(ms_.to_json(orient="records")),
+                            icons={k: open(os.path.join(ROOT, "pitch", "icons", f + ".svg")).read().replace('width="24"', 'width="15"').replace('height="24"', 'height="15"').replace('stroke="currentColor"', 'stroke="#14110e"').replace('stroke-width="2"', 'stroke-width="2.4"')
+                                   for k, f in {"Bus stop": "bus", "Mosque": "building-mosque", "School": "school", "Kindergarten": "baby-carriage", "Clinic": "first-aid-kit", "Hospital": "building-hospital"}.items()})
     if os.path.exists(os.path.join(D, "musaffah_ann_overlays.json")):
         a_ = overlays("musaffah_ann"); DATA["musaffah"]["ov"]["layers"]["annotation"] = a_["layers"]["annotation"]
         def gj(p, nd=6):
