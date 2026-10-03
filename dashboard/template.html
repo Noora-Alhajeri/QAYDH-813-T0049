@@ -149,7 +149,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeIntro();});
 const DATA = __DATA__;
 const CH = __CHAPTERS__;
 const POI = {mosque:["#7ee081","Mosque"],bus_stop:["#5cc8ff","Bus stop"],delivery:["#ffb15c","Rider hub"],construction:["#ff5a5a","Construction"],vulnerable:["#d58cff","School / clinic"]};
-const LAYERS = [["imagery","Hi-res imagery"],["annotation","Annotation"],["review","Review queue"],["objects","Building objects"],["segments","SAM segments"],["satellite","Satellite"],["geometry","Buildings & roads"],["growth","Growth"],["heat","Heat"],["hazard","Heat hazard"],["surfaces","Surfaces"],["confidence","Confidence"],["places","People places"],["sites","Exposure sites"],["priority","Priority"]];
+const LAYERS = [["imagery","Hi-res imagery"],["annotation","Annotation"],["review","Review queue"],["objects","Building objects"],["segments","SAM segments"],["satellite","Satellite"],["geometry","Buildings & roads"],["growth","Growth"],["heat","Heat"],["hazard","Heat hazard"],["surfaces","Surfaces"],["confidence","Confidence"],["places","People places"],["informal","Informal-housing candidates"],["sites","Exposure sites"],["priority","Priority"]];
 const SITE = {"Bus stop":["B","#5cc8ff"],"Mosque":["M","#7ee081"],"School / clinic":["S","#d58cff"]};
 let city = DATA.musaffah ? "musaffah" : "riyadh", chapter = 0, map, layer = {}, active = new Set(), hotIdx = null;
 try { const c = localStorage.getItem("qaydh-city"); if (c && DATA[c]) city = c; } catch (e) {}
@@ -174,12 +174,15 @@ function build(){
     const vs=D.cells.features.map(f=>f.properties.risk).filter(v=>v!=null).sort((a,b)=>a-b), cut=vs[Math.floor(vs.length*.65)]||0;
     layer.priority = L.geoJSON(D.cells,{style:f=>{const v=f.properties.risk;return v>=cut?{fillColor:heatColor(v),fillOpacity:.25+.6*(v-cut)/(100-cut+1e-6),weight:0}:{fillOpacity:0,weight:0};},
       onEachFeature:(f,l)=>l.bindTooltip(`Risk ${fmt(f.properties.risk)} · heat P${f.properties.heat_pct} · ${fmt(f.properties.LST_C,1)} °C<br>road ${fmt(100*f.properties.road)}% · roof ${fmt(100*f.properties.roof)}% · sand ${fmt(100*f.properties.sand)}% · green ${fmt(100*f.properties.veg,1)}%<br>confidence ${f.properties.conf}`)});
-    if(D.objects) layer.objects = L.geoJSON(D.objects,{style:f=>({color:f.properties.action==="Cool-roof candidate"?"#ffb15c":"#43c6b4",weight:f.properties.action==="Cool-roof candidate"?2:1,fillOpacity:.08}),
-       onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>${p.id}</b> · ${fmt(p.area_m2)} m² · ${p.street||""}<br>${p.surface_label} (p roof ${p.p_roof}) · ${p.dark_roof?"dark roof":"bright roof"}<br>heat zone: ${p.heat_zone} · ${p.LST_C} °C${p.new_since_2017?" · new since 2017":""}${p.action?"<br><b>"+p.action+"</b>":""}`);}});
+    const RMC={"Metal sheet (bare / painted)":"#4aa3df","Bitumen / dark membrane":"#2b2b2b","Concrete / cement":"#a9a9a0","White / cool coating":"#f5f5f0","Clay tile / brick":"#c0573e"};
+    if(D.objects) layer.objects = L.geoJSON(D.objects,{style:f=>{const m=RMC[f.properties.roof_material];const c=(f.properties.action||"").startsWith("Cool-roof");return m?{color:c?"#ff6b2c":"#14110e",weight:c?2.5:.6,fillColor:m,fillOpacity:.85}:{color:c?"#ffb15c":"#43c6b4",weight:c?2:1,fillOpacity:.08};},
+       onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>${p.id}</b> · ${fmt(p.area_m2)} m² · ${p.street||""}<br>${p.roof_material&&!p.roof_material.startsWith("small")?"<b>"+p.roof_material+"</b> · ":""}${p.surface_label} (p roof ${p.p_roof}) · ${p.dark_roof?"dark roof":"bright roof"}<br>heat zone: ${p.heat_zone} · ${p.LST_C} °C${p.new_since_2017?" · new since 2017":""}${p.action?"<br><b>"+p.action+"</b>":""}`);}});
     if(D.segments) layer.segments = L.geoJSON(D.segments,{style:f=>({color:"#fff",weight:1,fillColor:MC[f.properties.label],fillOpacity:.55,dashArray:f.properties.candidate?null:"3 3"}),
        onEachFeature:(f,l)=>l.bindTooltip(`<b>${f.properties.segment}</b><br>${f.properties.label} · purity ${f.properties.purity} · ${f.properties.LST_C} °C<br>${f.properties.candidate?"annotation candidate":"mixed: needs review"}`)});
     if(D.review) layer.review = L.geoJSON(D.review,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4,color:"#ff3df2",weight:2,fillOpacity:0}),
        onEachFeature:(f,l)=>l.bindTooltip(`Review #${f.properties.rank}: model says ${f.properties.predicted} (confidence ${f.properties.confidence})`)});
+    if(D.informal) layer.informal = L.geoJSON(D.informal,{style:{color:"#00e5ff",weight:2,fillColor:"#00e5ff",fillOpacity:.18},
+       onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>Informal / substandard-housing candidate</b><br>${p.buildings} buildings · median ${p.median_footprint_m2} m² · hot roofs ${p.hot_roof_pct}%<br>layout irregularity ${p.layout_irregularity} · ${p.lst_C} °C<br><i>for field verification</i>`);}});
     layer.sites = L.layerGroup(D.sites.map((t,i)=>L.marker([t.lat,t.lon],{icon:L.divIcon({className:"",html:`<div class="site-ico" style="background:${SITE[t.site][1]}">${SITE[t.site][0]}</div>`,iconSize:[22,22]})})
        .bindTooltip(`<b>${t.site_id||""} · ${t.name}</b><br>heat P${t.heat_percentile} · green ${t.vegetation_pct}% · ${t.priority}`).on("click",()=>showSite(i))));
   } else {
@@ -223,7 +226,8 @@ function legend(){
   if(active.has("priority")) h+=`<b>Heat-risk priority</b><div class="bar" style="background:linear-gradient(90deg,${heatColor(0)},${heatColor(50)},${heatColor(80)},${heatColor(100)})"></div><div class="row"><span>0</span><span>100</span></div>`;
   for(const k of ["hazard","confidence","annotation"]) if(active.has(k)){const o=D.ov.layers[k];h+=`<b>${o.label}</b><div>${o.classes.map((c,i)=>`<span class="sw"><i style="background:${o.colors[i]}"></i>${c}</span>`).join("")}</div>`;}
   if(active.has("geometry")) h+=`<span class="sw"><i style="background:#f59e6b"></i>Buildings</span><span class="sw"><i style="background:#29292e"></i>Roads</span>`;
-  if(active.has("objects")) h+=`<span class="sw"><i style="border:2px solid #ffb15c"></i>Cool-roof candidate</span><span class="sw"><i style="border:1px solid #43c6b4"></i>Building object</span>`;
+  if(active.has("objects")) h+=`<b>Roof material</b><div>${[["Metal sheet","#4aa3df"],["Bitumen","#2b2b2b"],["Concrete","#a9a9a0"],["White / cool","#f5f5f0"]].map(([n,c])=>`<span class="sw"><i style="background:${c}"></i>${n}</span>`).join("")}<span class="sw"><i style="border:2px solid #ff6b2c"></i>Cool-roof candidate</span></div>`;
+  if(active.has("informal")) h+=`<span class="sw"><i style="background:#00e5ff"></i>Informal-housing candidate (field check)</span>`;
   if(active.has("review")) h+=`<span class="sw"><i style="border:2px solid #ff3df2;border-radius:50%"></i>Review queue</span>`;
   if(active.has("segments")) h+=`<span class="sw"><i style="background:#888;border:1px solid #fff"></i>SAM segment (solid = ≥80% pure)</span>`;
   if(active.has("sites")) h+=`<div>${Object.entries(SITE).map(([n,[g,c]])=>`<span class="sw"><i style="background:${c};border-radius:50%"></i>${n}</span>`).join("")}</div>`;
@@ -290,7 +294,7 @@ function blockCard(h,i){
   <div class="wif"><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RELATIVE INTERVENTION POTENTIAL · RISK (NOW = 1.00)</div>
   <div class="r"><span>Now</span><span class="t"><i style="width:100%;background:var(--ember)"></i></span><span class="v" style="color:var(--ember)">1.00</span></div>
   ${rel.map(([n,v])=>`<div class="r"><span>${n}</span><span class="t"><i style="width:${Math.min(100,100*v)}%"></i></span><span class="v">${fmt(v,2)}</span></div>`).join("")}</div>
-  ${(DATA[city].briefs||{})[h.id]?`<details class="more"><summary>Planner brief (AI draft, fact-checked)</summary><div class="brief"><b>Planner brief</b> · ${DATA[city].briefs[h.id].check.startsWith("PASS")?"LLM draft, fact-checked":"verified template (LLM draft failed fact-check)"} · sign-off: ${DATA[city].briefs[h.id].signoff}<br>${DATA[city].briefs[h.id].text}</div></details>`:""}
+  ${(DATA[city].briefs||{})[h.id]?`<details class="more"><summary>Planner brief</summary><div class="brief"><b>Planner brief</b> · every number checked against the data · ${DATA[city].briefs[h.id].signoff==="pending"||!DATA[city].briefs[h.id].signoff?"awaiting planner sign-off":"signed off: "+DATA[city].briefs[h.id].signoff}<br>${DATA[city].briefs[h.id].text}</div></details>`:""}
   ${h.cool_roof_candidates_300m!=null?`<p style="font-size:13px;margin:0">${h.cool_roof_candidates_300m} dark-roof buildings within ~300 m are cool-roof candidates.</p>`:""}
   <div class="src">Hazard from Landsat (≈100 m). Surfaces from Sentinel-2 (10 m). Drivers are associations from a spatially validated model.</div>`;
 }

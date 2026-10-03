@@ -77,6 +77,18 @@ Open the notebook and choose the kernel **QAYDH (.venv)**, then *Run All*. Alway
 **Dashboard:** live at https://noora-alhajeri.github.io/QAYDH-813-T0049/, or open `dashboard/index.html` in a browser, or rebuild it with `python dashboard/build_dashboard.py`.
 **Deck:** `python pitch/build_deck.py` regenerates `pitch/QAYDH_T0049_pitch.pdf` from the results and dashboard.
 
+## Challenge coverage (sections 10f–10i)
+
+| Challenge line | Where |
+|---|---|
+| **Fuse 813/optical with SAR and thermal** | **10f** Sentinel-1 RTC VV/VH fused with Sentinel-2: built-up precision/recall/F1/IoU and the sand→roof confusion rate, with vs without radar, on held-out blocks. Radar ΔVV 2017→2025 independently confirms new buildings |
+| **Informal settlement detection, roofing materials** | **10g** roof materials from Tanager spectra (white/cool, bitumen, clay tile, concrete, metal sheet) with separability and thermal-physics checks plus OSM `roof:material`; Musaffah building-level roof screen. **10h** informal / substandard-housing candidates (density, small footprints, irregular layout, hot roofs, heat), validated by OSM-housing enrichment with a permutation test |
+| **Heat-island proxy + weather** | **10i** NDBI alone vs fused optical + SAR model (R², RMSE, MAE, spatial CV), daytime SUHII, danger hours from station-checked ERA5 |
+| Urban growth · land-use change · green space · population · OSM | sections 4, 5b, 7b, 10b |
+| 813 urban scenes | not released in the PoC phase; the pipeline is sensor-agnostic (Tanager and EMIT already plug in) |
+
+Run sections 10f–10i once (each is self-contained and cannot break Run All). Then run `python dashboard/build_dashboard.py` and `CHROME=<path to chrome> python pitch/build_deck.py` to put the new numbers and figures into the dashboard and deck.
+
 ## Do we need manual labelling?
 
 No, not for the PoC. Every class comes from an existing trusted layer, and the model only learns what those layers cannot say:

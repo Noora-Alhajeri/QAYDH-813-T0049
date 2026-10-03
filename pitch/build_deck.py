@@ -9,7 +9,7 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "qaydh_outputs"); D = os.path.join(OUT, "dashboard"); PITCH = os.path.join(ROOT, "pitch"); SHOTS = os.path.join(PITCH, "screens")
 os.makedirs(SHOTS, exist_ok=True)
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 R = json.load(open(os.path.join(OUT, "results.json")))
 MH = pd.read_csv(os.path.join(OUT, "musaffah_hotspots.csv")); MS = pd.read_csv(os.path.join(OUT, "musaffah_exposure_sites.csv"))
 
@@ -139,7 +139,7 @@ screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"
 screen(SC["r_why"], "Hyperspectral proof · Riyadh", "Tanager reads roof, road and sand", f"Full spectrum F1 {f2(hs[hk]['macro_F1'])} vs 6 bands {f2(hs[h6]['macro_F1'])} on unseen tiles, and +{f2(R['dR2_built'])} R² for heat.", "06")
 screen(SC["ad"], "Abu Dhabi screening", "The starter rule calls sand a city", f"NDBI says Masdar {ms['builtup_starter_NDBI_pct']:.0f}% built; WorldCover {ms['builtup_WorldCover_pct']:.0f}%. Musaffah: {mu['builtup_starter_NDBI_pct']:.0f}% vs {mu['builtup_WorldCover_pct']:.0f}%.", "07")
 # 18 annotation / detection image (Ghaf: segmentation model visual)
-slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Expert labels, honest tests</h1><img class="figw" src="{fig('11_musaffah_annotation_surfaces.png')}">''')
+slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Rule-based labels, honest tests</h1><img class="figw" src="{fig('11_musaffah_annotation_surfaces.png')}">''')
 slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>Segment, label, brief, then a person decides</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
 <div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div>
 <div><b>{R['llm_briefs']['llm_drafts_passing_fact_check']}/{R['llm_briefs']['n']}</b>LLM drafts passed the fact-check. The rest were caught and replaced</div></div>''')
@@ -203,6 +203,7 @@ slide('<div class="kick">See it work · animated walkthrough in the repo</div><h
       "".join(f'<figure><img src="{fb(f)}"><figcaption>{k+1} · {lab_[k]}</figcaption></figure>' for k, f in enumerate(frs[:8])) + "</div>")
 
 # 25 closing
+exec(open(os.path.join(PITCH, "judging_slides.py")).read())   # Q1 business problem · Q2 validation · Q3 delivery · coverage · SAR/roofs/informal/heat-proxy
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_geometry.png'))}">
 <div class="cover"><h1>QAYDH <span>القيظ</span></h1><h2>From “where is it hot?” to “where we act first, why, and how.”</h2>
 <div class="team">Musaffah → Abu Dhabi → UAE → Gulf cities</div></div>''', "dark")
@@ -283,7 +284,7 @@ section:has(.filmstrip) .split{height:560px}
 .nums b{display:block;font:800 108px/1 'Big Shoulders Display';color:#ff6b2c} .nums span{font-size:21px;color:#cdbda4;line-height:1.3}
 ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabic'} ul.ben li{border-bottom:1px solid #3a3027}
 """
-doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}</style></head><body>{''.join(S)}</body></html>"
+doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get("EXTRA_CSS", "")}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)
 pdf = os.path.join(PITCH, "QAYDH_T0049_pitch.pdf")
 subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=12000", f"--print-to-pdf={pdf}", "file://" + hp], capture_output=True, timeout=300)

@@ -115,6 +115,12 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
             for f_ in g["features"]: f_["geometry"]["coordinates"] = rnd(f_["geometry"]["coordinates"])
             return g
         DATA["musaffah"]["objects"] = gj(os.path.join(D, "musaffah_objects_near_hotspots.geojson"))
+        rmp = os.path.join(OUT, "musaffah_roof_materials.csv")          # 10g roof materials, joined by building id
+        if os.path.exists(rmp):
+            rm = dict(pd.read_csv(rmp).values)
+            for f_ in DATA["musaffah"]["objects"]["features"]: f_["properties"]["roof_material"] = rm.get(f_["properties"].get("id"), "")
+        ifp = os.path.join(OUT, "musaffah_informal_candidates.geojson")   # 10h informal-housing candidates
+        if os.path.exists(ifp): DATA["musaffah"]["informal"] = gj(ifp)
         DATA["musaffah"]["segments"] = gj(os.path.join(OUT, "musaffah_sam_segments.geojson"))
         DATA["musaffah"]["review"] = gj(os.path.join(OUT, "musaffah_annotation_review_queue.geojson"))
         br = pd.read_csv(os.path.join(OUT, "musaffah_planner_briefs.csv")); DATA["musaffah"]["briefs"] = {r.hotspot: dict(text=r.brief, check=r.fact_check, signoff=r.human_signoff) for r in br.itertuples()}
