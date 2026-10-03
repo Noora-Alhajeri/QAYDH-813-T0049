@@ -71,8 +71,11 @@ ov = R["hrpi_top20_overlap"]; cool = R["cooling_per_0p1_albedo_C"]
 
 S = []
 def slide(body, cls=""): S.append(f'<section class="{cls}">{body}</section>')
+STAGE_ICON = {"Where is heat high?": "flame", "Who may be exposed?": "users", "What is physically there?": "scan", "How we labelled it": "checklist",
+              "Why may it be hot?": "temperature", "What should be done?": "target"}
 def screen(src, kicker, title, quote, n):
-    slide(f'<img class="bleed" src="{src}"><div class="quote"><div class="qn">{n} · {kicker}</div><h2>{title}</h2><p>{quote}</p></div>', "screen")
+    ic = icon(STAGE_ICON.get(kicker, "eye"), 40)
+    slide(f'<img class="shotbig" src="{src}"><div class="capbar"><div class="cn">{ic}<span>{n}</span></div><div><div class="qn">{kicker}</div><h2>{title}</h2></div><p>{quote}</p></div>', "screen")
 
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
@@ -149,6 +152,13 @@ slide(f'''<div class="split"><div><h1 class="big">QAYDH<br><span class="o">Appro
 <dl class="why"><dt>Now · PoC</dt><dd>Musaffah at 10 m, end to end · hyperspectral proof on Riyadh (Tanager) · Abu Dhabi screening</dd>
 <dt>Next · MVP</dt><dd>Satellite 813 / MBZ-SAT over Abu Dhabi, Dubai, Al Ain · field-checked labels · gIQ</dd>
 <dt>Later</dt><dd>Every Gulf city, every summer: one brief, one map, one budget line</dd></dl></div>''')
+# 10b the product, start to finish (overview flow of the real dashboard)
+FLOW = [("flame", "1 · Where", "Heat hazard zones", SC["m_where"]), ("users", "2 · Who", "Named bus stops, mosques, clinics", SC["m_who"]),
+        ("scan", "3 · What", "Road · roof · sand · green at 10 m", SC["m_what"]), ("checklist", "4 · Labels", "25,462 buildings with ID and box", SC["m_labels"]),
+        ("temperature", "5 · Why", "Drivers, spatially validated", SC["m_why"]), ("target", "6 · Act", "Material-matched plan per hotspot", SC["m_act"])]
+slide('<div class="kick">The product, start to finish</div><h1>Open it, follow six steps, leave with a plan</h1><div class="flow6">' +
+      "".join(f'<figure><img src="{im}"><figcaption>{icon(i_, 28)}<b>{t}</b><span>{d_}</span></figcaption></figure>' + ('<em>→</em>' if k not in (2, 5) else '')
+              for k, (i_, t, d_, im) in enumerate(FLOW)) + "</div>")
 # 11-15 Musaffah story screens
 screen(SC["m_where"], "Where is heat high?", "Hazard zones, not fake street temperatures", f"Extreme ≥ {f1(th['P95'])} °C. Landsat gives the zone; buildings and places tell us what falls inside it.", "01")
 screen(SC["m_who"], "Who may be exposed?", f"{sites['n']} named outdoor sites", f"Each scored within 150 m: heat percentile, green, impervious cover, distance to shade.", "02")
@@ -284,6 +294,15 @@ section:has(.filmstrip) .split{height:560px}
 .lenses figure{margin:0;text-align:center} .lenses img{width:320px;height:320px;object-fit:cover;border-radius:16px;display:block}
 .lenses figcaption{font:800 34px 'Big Shoulders Display';color:#ffcf9a;margin-top:14px}
 .screen{padding:0}
+.shotbig{position:absolute;left:0;top:0;width:1600px;height:780px;object-fit:cover;object-position:top}
+.capbar{position:absolute;left:0;right:0;bottom:0;height:120px;background:#14110e;border-top:3px solid #ff6b2c;display:grid;grid-template-columns:120px 520px 1fr;gap:24px;align-items:center;padding:0 40px}
+.capbar .cn{display:flex;align-items:center;gap:10px;font:800 40px 'Big Shoulders Display';color:#ff6b2c}
+.capbar .qn{font:500 14px 'IBM Plex Mono';color:#ffb15c;letter-spacing:.14em;text-transform:uppercase}.capbar h2{font:800 36px/1.02 'Big Shoulders Display';margin:4px 0 0}
+.capbar p{font-size:20px;line-height:1.35;margin:0;color:#e2d4bc}
+.flow6{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:14px 6px;align-items:center}
+.flow6 figure{margin:0}.flow6 img{width:100%;border-radius:10px;border:1px solid #3a3027;display:block}
+.flow6 figcaption{display:grid;grid-template-columns:34px 1fr;gap:0 8px;margin-top:8px}.flow6 figcaption svg{grid-row:span 2}
+.flow6 b{font:800 24px 'Big Shoulders Display'}.flow6 span{font-size:15px;color:#cdbda4}.flow6 em{font:800 40px 'Big Shoulders Display';color:#ff6b2c;font-style:normal;text-align:center}
 .quote{position:absolute;left:400px;bottom:40px;width:640px;background:rgba(20,17,14,.95);border:1px solid #3a3027;border-left:6px solid #ff6b2c;border-radius:14px;padding:26px 30px}
 .quote .qn{font:500 14px 'IBM Plex Mono';color:#ffb15c;letter-spacing:.14em;text-transform:uppercase}
 .quote h2{font:800 40px/1.02 'Big Shoulders Display';margin:8px 0 12px} .quote p{font-size:20px;line-height:1.4;margin:0;color:#e2d4bc}

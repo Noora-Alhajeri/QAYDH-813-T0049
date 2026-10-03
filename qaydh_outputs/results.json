@@ -754,6 +754,32 @@
     },
     "hot_material_in_hot_zone": 49
   },
+  "roof_ground_truth": {
+    "labels": 122,
+    "labellers": 1,
+    "roofs_with_truth": 122,
+    "fleiss_kappa_people": NaN,
+    "rules_vs_truth_Musaffah": {
+      "n": 122,
+      "accuracy": 0.26229508196721313,
+      "cohen_kappa": 0.010899918926222885,
+      "per_class_F1": {
+        "Bitumen / dark membrane": 0.0,
+        "Concrete / cement": 0.357,
+        "Metal sheet (bare / painted)": 0.208,
+        "Mixed / unsure": 0.0,
+        "White / cool coating": 0.34
+      },
+      "macro_F1": 0.1809115412888998
+    },
+    "supervised_on_truth_Musaffah": {
+      "n": 93,
+      "validation": "leave-one-1km-block-out",
+      "accuracy": 0.5161290322580645,
+      "macro_F1": 0.4612042791362612,
+      "cohen_kappa": 0.2330951072017592
+    }
+  },
   "informal_screen": {
     "cells": 2150,
     "flagged": 215,
