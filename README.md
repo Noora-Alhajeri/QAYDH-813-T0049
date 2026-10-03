@@ -17,7 +17,10 @@ It runs on **east Riyadh** (the only Arab-region Tanager scene in the open archi
 
 ![QAYDH dashboard walkthrough: Musaffah](pitch/gifs/qaydh_musaffah_tour.gif)
 
-**Dashboard:** open `dashboard/index.html` and press **Start the tour**, then **Next**. The six steps are: where is heat high → who may be exposed → what is physically there → how it was labelled → why it may be hot → what should be done. Click any hotspot (M-001), site (S-001) or building (B-00001) for its evidence card.
+### ▶ Live dashboard: [**https://noora-alhajeri.github.io/QAYDH-813-T0049/**](https://noora-alhajeri.github.io/QAYDH-813-T0049/)
+Backup link that always works: [open the dashboard directly](https://raw.githack.com/Noora-Alhajeri/QAYDH-813-T0049/main/dashboard/index.html) · Pitch: [`pitch/QAYDH_T0049_pitch.pdf`](pitch/QAYDH_T0049_pitch.pdf)
+
+**Dashboard:** open the live link (or `dashboard/index.html` locally) and press **Start the tour**, then **Next**. The six steps are: where is heat high → who may be exposed → what is physically there → how it was labelled → why it may be hot → what should be done. Click any hotspot (M-001), site (S-001) or building (B-00001) for its evidence card.
 
 <!-- RESULTS_START -->
 ### Results (from `qaydh_outputs/results.json`)
@@ -41,7 +44,7 @@ East Riyadh: 470 km², 1,091,324 residents. Abu Dhabi: Musaffah 54.5 °C · Masd
 | Priorities robust | top-20 overlap | 4 alternative weightings | 60–100% |
 | Abu Dhabi transfer | built-up F1 | Spatial-block CV | **0.81** vs NDBI 0.43 |
 | Starter rule fails in desert cities | % built-up | NDBI vs WorldCover vs QAYDH | Masdar 80% vs 17% vs 35% · Musaffah 92% vs 70% vs 82% |
-| **Musaffah** surfaces at 10 m (road/roof/sand/veg/water) | macro-F1 | Expert annotation, 1 km blocks A–C train · D val · **E held-out test** | **0.91** vs starter index rules 0.47 (road F1 0.88 vs 0.00) |
+| **Musaffah** surfaces at 10 m (road/roof/sand/veg/water) | macro-F1 | Rule-based reference labels (OSM + Microsoft footprints + WorldCover, ≥80% purity), 1 km blocks A–C train · D val · **E held-out test** | **0.91** vs starter index rules 0.47 (road F1 0.88 vs 0.00) |
 | Annotation quality | labels removed | Confident learning (out-of-fold) | 1,718 of 64,643 flagged as noise; 300-point review queue exported |
 | **Musaffah** why-model | R² / MAE | 5-fold 1 km spatial CV, 100 m thermal cells | **R² 0.85**, MAE 1.2 °C (linear 0.81) |
 | **Musaffah** exposure sites | count | OSM sites scored within 150 m | 139 sites · 1 very high · 7 high |
@@ -71,7 +74,7 @@ Open the notebook and choose the kernel **QAYDH (.venv)**, then *Run All*. Alway
 - No credentials needed.
 - **Change city:** set `TANAGER_ID` and `COUNTRY_ISO3` in the configuration cell. The Abu Dhabi section (10) shows how to run any AOI without a Tanager scene.
 
-**Dashboard:** open `dashboard/index.html` in a browser, or rebuild it with `python dashboard/build_dashboard.py`.
+**Dashboard:** live at https://noora-alhajeri.github.io/QAYDH-813-T0049/, or open `dashboard/index.html` in a browser, or rebuild it with `python dashboard/build_dashboard.py`.
 **Deck:** `python pitch/build_deck.py` regenerates `pitch/QAYDH_T0049_pitch.pdf` from the results and dashboard.
 
 ## Do we need manual labelling?
