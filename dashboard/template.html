@@ -96,6 +96,8 @@ details.layers[open] .chips{position:absolute;right:0;top:38px;z-index:1500;back
 @media (max-width:1100px){.main{grid-template-columns:1fr;grid-template-rows:auto 60vh auto}.story,.card{border:0;overflow:visible}.map{min-height:60vh}html,body{height:auto}.app{height:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 [hidden]{display:none!important}
+.plan .ph{margin:6px 0}.plan .pt{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}.plan ol{margin:4px 0 0;padding-left:18px;font-size:13.5px}.plan li{margin:3px 0}
+.plan .gain{margin-top:8px;font-size:13px;color:var(--mute)}.plan .gain b{color:var(--cool)}
 .ch:not([aria-current=true]) p,.ch:not([aria-current=true]) .stats,.ch:not([aria-current=true]) .hint,.ch:not([aria-current=true]) .ribbon{display:none}
 .ch:not([aria-current=true]) h2{font-size:18px;margin:2px 0 0}
 .ch{padding:10px 16px}
@@ -161,6 +163,25 @@ function heatColor(v){ // 0..100 → sand→ember→red
 }
 const MC={"Road / dark pavement":"#50535f","Building / roof":"#9b7bff","Bare soil / sand":"#e8dcb0","Vegetation":"#22b573","Water":"#3ba3f0"};
 const MC2={road:"#50535f",roof:"#9b7bff",sand:"#e8dcb0",veg:"#22b573"};
+function actionPlan(h){ // expert-style 3-horizon plan built only from this hotspot's measured facts
+  const A=(h.actions||"").split(" + ").map(a=>a.trim()), has=k=>A.some(a=>a.toLowerCase().includes(k));
+  const who=(h.exposure_context||"").toLowerCase(), r=Math.round(100*(h.road||0)), rf=Math.round(100*(h.roof||0)), sd=Math.round(100*(h.sand||0)), g=(100*(h.veg||0)).toFixed(0);
+  const now=[], season=[], next=[];
+  if(who.includes("worker")) now.push("Enforce the 12:30–15:00 outdoor-work break; open a shaded rest node with water");
+  if(who.includes("rider")) now.push("Add a shaded rider waiting bay with water at the nearest restaurant cluster");
+  if(who.includes("pedestrian")||who.includes("bus")) now.push("Fit shade and a water point at the nearest bus stop / walking route");
+  if(!now.length) now.push("Post heat-hour warnings and a temporary shade structure on site");
+  if(r>=30||has("pavement")) season.push(`Cool-pavement coating on the ${r}% asphalt (sidewalks, yards, parking first)`);
+  if(rf>=30||has("roof")) season.push(`Cool-roof coating on the dark roofs (${rf}% roof cover${h.cool_roof_candidates_300m?`, ${h.cool_roof_candidates_300m} candidates within 300 m`:""})`);
+  if(!season.length) season.push("Fixed shade structures along the main walking route");
+  if(+g<10) next.push(`Street trees with drip irrigation (green is only ${g}%; budget the water)`);
+  if(sd>=30) next.push(`Stabilise and shade the ${sd}% open sand (gravel, shade sails or landscaping)`);
+  next.push("Re-measure next summer; move the hotspot off the list only when heat drops");
+  const best=[["Trees",h.dLST_trees_C],["Cool pavement",h.dLST_coolpave_C]].filter(x=>x[1]!=null).sort((a,b)=>a[1]-b[1])[0];
+  const col=(t,c,items)=>`<div class="ph"><div class="pt" style="color:${c}">${t}</div><ol>${items.map(i=>`<li>${i}</li>`).join("")}</ol></div>`;
+  return `<div class="blk plan"><div class="h">Action plan</div>${col("This week","#ff6b2c",now)}${col("This summer","#ffb15c",season)}${col("Next year","#43c6b4",next)}
+  ${best?`<div class="gain">Biggest estimated gain: <b>${best[0]}</b> ≈ ${best[1].toFixed(1)} °C surface</div>`:""}</div>`;
+}
 function mixBar(parts){const t=parts.reduce((a,p)=>a+(p[1]||0),0)||1;return `<div class="mix">${parts.map(([n,v,c])=>`<i style="width:${100*(v||0)/t}%;background:${c}" title="${n} ${Math.round(100*(v||0))}%"></i>`).join("")}</div><div class="mixl">${parts.map(([n,v,c])=>`<span style="--c:${c}">${n} ${Math.round(100*(v||0))}%</span>`).join("")}</div>`;}
 function fmt(n,d=0){return Number(n).toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d})}
 
@@ -290,12 +311,11 @@ function blockCard(h,i){
   <dt>What</dt><dd>road ${fmt(100*h.road)}% · roof ${fmt(100*h.roof)}% · sand ${fmt(100*h.sand)}% · green ${fmt(100*h.veg,1)}% · nearest green ${fmt(h.dist_green_m)} m</dd>
   <dt>Why</dt><dd>${h.drivers||"mixed drivers"}</dd></dl>
   </details>
-  <div><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">WHAT SHOULD BE DONE</div><ul class="acts">${h.actions.split(" + ").map(a=>`<li>${a}</li>`).join("")}</ul>
-  <p style="font-size:13px;color:var(--mute);margin:8px 0 0">Because: ${h.why}</p></div>
+  ${actionPlan(h)}
+  <p style="font-size:12.5px;color:var(--mute);margin:0">Why here: ${h.why}</p>
   <div class="wif"><div style="font:500 11px var(--mono);letter-spacing:.12em;color:var(--ember-2)">RELATIVE INTERVENTION POTENTIAL · RISK (NOW = 1.00)</div>
   <div class="r"><span>Now</span><span class="t"><i style="width:100%;background:var(--ember)"></i></span><span class="v" style="color:var(--ember)">1.00</span></div>
   ${rel.map(([n,v])=>`<div class="r"><span>${n}</span><span class="t"><i style="width:${Math.min(100,100*v)}%"></i></span><span class="v">${fmt(v,2)}</span></div>`).join("")}</div>
-  ${(DATA[city].briefs||{})[h.id]?`<details class="more"><summary>Planner brief</summary><div class="brief"><b>Planner brief</b> · every number checked against the data · ${DATA[city].briefs[h.id].signoff==="pending"||!DATA[city].briefs[h.id].signoff?"awaiting planner sign-off":"signed off: "+DATA[city].briefs[h.id].signoff}<br>${DATA[city].briefs[h.id].text}</div></details>`:""}
   ${h.cool_roof_candidates_300m!=null?`<p style="font-size:13px;margin:0">${h.cool_roof_candidates_300m} dark-roof buildings within ~300 m are cool-roof candidates.</p>`:""}
   <div class="src">Hazard from Landsat (≈100 m). Surfaces from Sentinel-2 (10 m). Drivers are associations from a spatially validated model.</div>`;
 }
