@@ -13,9 +13,24 @@ def b64(p, jpeg=False):
         from PIL import Image; import io
         b = io.BytesIO(); Image.open(p).convert("RGB").save(b, "JPEG", quality=85); return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
     return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+NEWPAL = {"#3a3a3a": "#50535f", "#e4572e": "#9b7bff", "#e9d8a6": "#e8dcb0", "#2e9e44": "#22b573", "#2b83ba": "#3ba3f0"}
+def recolor(path, old):
+    """Swap the class colours of a rendered class map for a clearly distinct, colour-blind-safer palette."""
+    from PIL import Image; import numpy as np, io
+    im = np.array(Image.open(path).convert("RGBA")).astype(int); rgb = im[..., :3]
+    o = np.array([[int(c[i:i + 2], 16) for i in (1, 3, 5)] for c in old]); n = np.array([[int(NEWPAL.get(c, c)[i:i + 2], 16) for i in (1, 3, 5)] for c in old])
+    d = ((rgb[..., None, :] - o[None, None]) ** 2).sum(-1); k = d.argmin(-1); hit = (d.min(-1) < 900) & (im[..., 3] > 0)
+    rgb[hit] = n[k[hit]]; im[..., :3] = rgb
+    b = io.BytesIO(); Image.fromarray(im.astype("uint8")).save(b, "PNG"); return "data:image/png;base64," + base64.b64encode(b.getvalue()).decode()
 def overlays(tag):
     m = json.load(open(os.path.join(D, f"{tag}_overlays.json")))
-    return dict(bounds=m["bounds"], layers={k: dict(img=b64(os.path.join(D, f"{tag}_{k}.png"), jpeg=(k == "satellite")), **v) for k, v in m["layers"].items()})
+    L_ = {}
+    for k, v in m["layers"].items():
+        p_ = os.path.join(D, f"{tag}_{k}.png")
+        if k in ("surfaces", "annotation") and v.get("colors"):
+            L_[k] = dict(v, img=recolor(p_, v["colors"])); L_[k]["colors"] = [NEWPAL.get(c, c) for c in v["colors"]]
+        else: L_[k] = dict(img=b64(p_, jpeg=(k == "satellite")), **v)
+    return dict(bounds=m["bounds"], layers=L_)
 def cells(path, keep):
     g = json.load(open(path))
     for f in g["features"]:
@@ -112,8 +127,8 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
         dict(id="who", layer="sites", view=[float(s0.lat), float(s0.lon), 15], hint="Click a lettered icon: B bus stop, M mosque, S school/clinic.", kicker="Who may be exposed?", title="Bus stops, mosques, clinics, labour camps",
              body=f"{sites['n']} named outdoor sites from OpenStreetMap, each scored within 150 m: heat percentile, vegetation, impervious cover, distance to green.",
              stat=[(f"{sites['very_high']}", "very-high sites"), (f"{sites['high']}", "high sites")]),
-        dict(id="what", layer="surfaces", view=[float(h0_.lat), float(h0_.lon), 15], hint="Grey road, orange roof, beige sand, green plants, blue water.", kicker="What is physically there?", title="Road, roof, sand, plants, water at 10 m",
-             body=f"Expert annotation: GIS candidates kept only at ≥80% purity, mixed pixels excluded, noisy labels removed, scored on held-out 1 km blocks.",
+        dict(id="what", layer="surfaces", view=[float(h0_.lat), float(h0_.lon), 15], hint="Grey road, violet roof, beige sand, green plants, blue water.", kicker="What is physically there?", title="Road, roof, sand, plants, water at 10 m",
+             body=f"Rule-based reference labels from OpenStreetMap, Microsoft footprints and WorldCover, kept only at ≥80% purity, mixed pixels excluded, noisy labels removed, scored on held-out 1 km blocks.",
              stat=[(f"{mc_[bestk]['test_macro_F1']:.2f}", "macro-F1, held-out blocks"), (f"{mc_[rules_]['test_macro_F1']:.2f}", "starter index rules")], conf=True),
         dict(id="labels", layer="annotation", view=[float(h0_.lat), float(h0_.lon), 16], hint="Hover a building outline to see its ID and labels. Orange outline = cool-roof candidate.", kicker="How we labelled it", title="Annotation, objects and AI segments",
              body=f"Reference labels at ≥80% purity (A–C train · D validate · E test), {R['musaffah_objects']['buildings']:,} building objects with ID and bounding box, SAM segments around hotspots, and a 300-point review queue for people to check.",
@@ -125,9 +140,10 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
              body="Ranked 100 m cells with the action, the reason in plain words, and the relative potential of trees, cool pavement and shaded stops.",
              stat=[(top["id"], "top hotspot"), (top["priority"], "priority")], list=True)]
 
-leaflet_css = urllib.request.urlopen("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css", timeout=60).read().decode()
+VEND = os.path.join(ROOT, "dashboard", "vendor")   # Leaflet 1.9.4 (BSD-2) vendored: the dashboard works offline and behind strict networks
+leaflet_css = open(os.path.join(VEND, "leaflet.css")).read(); leaflet_js = open(os.path.join(VEND, "leaflet.js")).read()
 tpl = open(os.path.join(ROOT, "dashboard", "template.html")).read()
-html = (tpl.replace("/*LEAFLET_CSS*/", leaflet_css)
+html = (tpl.replace("/*LEAFLET_CSS*/", leaflet_css).replace("/*LEAFLET_JS*/", leaflet_js)
            .replace("__DATA__", json.dumps(DATA, separators=(",", ":")))
            .replace("__CHAPTERS__", json.dumps(CH, separators=(",", ":"), ensure_ascii=False)))
 open(os.path.join(ROOT, "dashboard", "qaydh_heat_atlas.html"), "w").write(html)        # body-only version (for hosted artifact)
