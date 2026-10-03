@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QAYDH · Roof-material labelling</title>
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=IBM+Plex+Sans+Arabic:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--night:#14110e;--dune:#1f1a15;--line:#3a3027;--sand:#efe3cf;--mute:#b3a48e;--ember:#ff6b2c;--ember-2:#ffb15c;--cool:#43c6b4;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--night);color:var(--sand);font:15px/1.45 "IBM Plex Sans Arabic",system-ui,sans-serif;display:grid;grid-template-columns:1fr 360px;grid-template-rows:auto 1fr}
+header{grid-column:1/3;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--dune);border-bottom:1px solid var(--line)}
+header b{font:800 28px/1 "Big Shoulders Display",sans-serif}header span{color:var(--mute);font-size:13px}
+header a{margin-left:auto;color:var(--ember-2)}
+#map{background:#0f0c0a}
+aside{border-left:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+.k{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ember-2)}
+input,select{width:100%;background:#120f0c;color:var(--sand);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+.prog{height:10px;background:#2a231c;border-radius:5px;overflow:hidden}.prog i{display:block;height:100%;background:var(--cool);width:0}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btns button{display:flex;align-items:center;gap:8px;text-align:left;background:#1d1712;border:1px solid var(--line);border-radius:10px;color:var(--sand);padding:10px;cursor:pointer;font:600 14px inherit}
+.btns button:hover{border-color:var(--ember)}.btns button i{width:16px;height:16px;border-radius:4px;flex:none;border:1px solid #0006}
+.btns button kbd{margin-left:auto;font:500 11px "IBM Plex Mono";color:var(--mute)}
+.row{display:flex;gap:8px}.row button{flex:1;background:transparent;border:1px solid var(--line);color:var(--sand);border-radius:999px;padding:8px;cursor:pointer;font:600 13px inherit}
+.row button.p{background:var(--ember);border-color:var(--ember);color:#1b0d05}
+.help{font-size:13px;color:var(--mute)}.help b{color:var(--sand)}
+.done{color:var(--cool);font-weight:600}
+</style>
+</head>
+<body>
+<header><b>QAYDH</b><span>Roof-material ground truth · label what you see, not what you expect</span><a href="index.html">← back to the atlas</a></header>
+<div id="map"></div>
+<aside>
+  <div><div class="k">1 · Who is labelling?</div><input id="who" placeholder="Your name (e.g. Noura)"></div>
+  <div><div class="k">2 · Dataset</div><select id="ds"></select></div>
+  <div><div class="k">Progress</div><div class="prog"><i id="bar"></i></div><div id="cnt" class="help"></div></div>
+  <div><div class="k">3 · The outlined roof is…</div><div class="btns" id="btns"></div></div>
+  <div class="row"><button id="back">← Previous</button><button id="skip">Skip</button></div>
+  <div class="row"><button id="export" class="p">Download my labels (CSV)</button></div>
+  <div class="help"><b>How:</b> zoom is set for you. Judge the roof inside the orange outline only.
+  <b>Metal sheet</b>: corrugated lines, often blue, green or silver. <b>Concrete</b>: flat grey or beige slab, AC units on top.
+  <b>Clay tile</b>: red or brown tiles. <b>Bitumen</b>: very dark membrane. <b>White / cool</b>: bright white coating. Not sure? Press <b>Unsure</b>.
+  Labels save automatically in this browser. When done, download the CSV and put it in <code>qaydh_outputs/roof_labels/</code>, then re-run notebook cell <b>10g-b</b>.
+  The model's prediction is hidden on purpose (blind labelling).</div>
+</aside>
+<script src="vendor/leaflet.js"></script>
+<script>
+const CLASSES=[["Metal sheet (bare / painted)","#4aa3df"],["Concrete / cement","#a9a9a0"],["Clay tile / brick","#c0573e"],["Bitumen / dark membrane","#2b2b2b"],["White / cool coating","#f5f5f0"],["Unsure","#8c7f6e"]];
+const SETS={"Musaffah buildings (near hotspots)":"../qaydh_outputs/dashboard/musaffah_objects_near_hotspots.geojson",
+            "Riyadh roof pixels (Tanager, 30 m)":"../qaydh_outputs/roof_label_points_riyadh.geojson"};
+const map=L.map("map",{maxZoom:21}).setView([24.35,54.5],15);
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:21,maxNativeZoom:19,attribution:"Imagery © Esri, Maxar, Earthstar Geographics"}).addTo(map);
+let Q=[],i=0,cur=null,dsName=null,store={};
+const key=()=>"qaydh-roof-labels:"+dsName;
+function load(){try{store=JSON.parse(localStorage.getItem(key())||"{}")}catch(e){store={}}}
+function save(){try{localStorage.setItem(key(),JSON.stringify(store))}catch(e){}}
+function shuffle(a,seed=813){let s=seed;for(let k=a.length-1;k>0;k--){s=(s*16807)%2147483647;const j=s%(k+1);[a[k],a[j]]=[a[j],a[k]]}return a}
+function stratified(feats){const by={};feats.forEach(f=>{const c=f.properties.roof_material||f.properties.pred||"any";(by[c]=by[c]||[]).push(f)});
+  let out=[];Object.values(by).forEach(v=>out=out.concat(shuffle(v.slice()).slice(0,60)));return shuffle(out,4242).slice(0,300)}
+function show(){
+  if(cur) map.removeLayer(cur); const f=Q[i]; if(!f) return;
+  cur=L.geoJSON(f,{style:{color:"#ff6b2c",weight:3,fill:false},pointToLayer:(g,ll)=>L.circle(ll,{radius:15,color:"#ff6b2c",weight:3,fill:false})}).addTo(map);
+  const b=cur.getBounds(); map.fitBounds(b,{maxZoom:20,padding:[140,140]});
+  const n=Object.keys(store).length; document.getElementById("bar").style.width=(100*n/Q.length)+"%";
+  const id=f.properties.id; document.getElementById("cnt").innerHTML=`Roof ${i+1} of ${Q.length} · <b>${id}</b> · labelled ${n}${store[id]?` · <span class="done">you said: ${store[id].label}</span>`:""}`;
+}
+function label(c){const f=Q[i];if(!f)return;const who=document.getElementById("who").value.trim()||"anonymous";
+  const ll=cur.getBounds().getCenter(); store[f.properties.id]={id:f.properties.id,lat:ll.lat.toFixed(6),lon:ll.lng.toFixed(6),label:c,labeller:who,time:new Date().toISOString()};
+  save(); if(i<Q.length-1)i++; show();}
+async function pick(name){dsName=name;load();i=0;
+  try{const g=await (await fetch(SETS[name])).json();Q=stratified(g.features.filter(f=>f.properties&&f.properties.id));}
+  catch(e){Q=[];document.getElementById("cnt").textContent="This dataset is not generated yet: run notebook section 10g first.";return;}
+  const firstTodo=Q.findIndex(f=>!store[f.properties.id]); i=firstTodo<0?0:firstTodo; show();}
+const sel=document.getElementById("ds"); Object.keys(SETS).forEach(n=>{const o=document.createElement("option");o.textContent=n;sel.appendChild(o)}); sel.onchange=()=>pick(sel.value);
+const bt=document.getElementById("btns"); CLASSES.forEach(([c,col],k)=>{const b=document.createElement("button");b.innerHTML=`<i style="background:${col}"></i>${c.split(" (")[0]}<kbd>${k+1}</kbd>`;b.onclick=()=>label(c);bt.appendChild(b)});
+document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;const k=+e.key;if(k>=1&&k<=CLASSES.length)label(CLASSES[k-1][0]);if(e.key==="ArrowLeft"&&i>0){i--;show()}if(e.key==="ArrowRight"&&i<Q.length-1){i++;show()}});
+document.getElementById("back").onclick=()=>{if(i>0){i--;show()}};document.getElementById("skip").onclick=()=>{if(i<Q.length-1){i++;show()}};
+try{document.getElementById("who").value=localStorage.getItem("qaydh-labeller")||""}catch(e){}
+document.getElementById("who").onchange=e=>{try{localStorage.setItem("qaydh-labeller",e.target.value)}catch(_){}};
+document.getElementById("export").onclick=()=>{const rows=Object.values(store);if(!rows.length)return alert("No labels yet.");
+  const who=(document.getElementById("who").value.trim()||"anonymous").replace(/\W+/g,"_");
+  const csv="dataset,id,lat,lon,label,labeller,time\n"+rows.map(r=>[JSON.stringify(dsName),r.id,r.lat,r.lon,JSON.stringify(r.label),JSON.stringify(r.labeller),r.time].join(",")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`roof_labels_${who}.csv`;a.click();};
+pick(sel.value);
+</script>
+</body>
+</html>

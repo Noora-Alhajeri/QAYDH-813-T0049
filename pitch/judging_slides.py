@@ -40,6 +40,11 @@ _sar = R.get("sar_fusion")
 if _sar:
     _sc = {d["model"]: d for d in _sar["scores"]}; _a, _b = list(_sc)[0], list(_sc)[2]
     _rows.append(("Built-up with radar (S2 → S2+SAR)", "F1", _sc[_a]["built_F1"], _sc[_b]["built_F1"], f"held-out blocks · sand→roof {_sar['sand_called_roof_pct_s2']:.1f}% → {_sar['sand_called_roof_pct_fusion']:.1f}%"))
+_gt = R.get("roof_ground_truth", {})
+_gm = _gt.get("rules_vs_truth_Musaffah") or _gt.get("rules_vs_truth_Riyadh")
+if _gm and _gt.get("supervised_on_truth_Musaffah"):
+    _rows.append(("Roof materials vs human labels", "macro-F1", _gm["macro_F1"], _gt["supervised_on_truth_Musaffah"]["macro_F1"],
+                  f"{_gt['roofs_with_truth']} blind-labelled roofs · rules → trained model · people agree κ {_gt.get('fleiss_kappa_people', float('nan')):.2f}"))
 _bars = "".join(f'''<div class="r"><span class="n">{n}</span><span class="m">{m}</span>
 <span class="bars"><i class="b0" style="width:{max(2, 100*b0):.0f}%"></i><i class="b1" style="width:{max(2, 100*b1):.0f}%"></i></span>
 <span class="v"><s>{b0:.2f}</s> → <b>{b1:.2f}</b></span><span class="how">{h}</span></div>''' for n, m, b0, b1, h in _rows)
@@ -75,7 +80,7 @@ _cov = [("Quantify urban growth", f"+{R['growth_pct']:.0f}% built-up 2014→2025
         ("Fuse optical + SAR + thermal", "Sentinel-1 VV/VH + Sentinel-2 + Landsat TIRS", "10f · 10i"),
         ("Green space mapping", "vegetation class, distance to green, parks per 10k people", "5b · 7b"),
         ("Heat proxy + weather", f"NDBI r = {R['ndbi_lst_r_builtup']:.2f} → fused model; ERA5 checked vs NOAA stations", "5b · 10d · 10i"),
-        ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs; informal-housing candidates", "10g · 10h"),
+        ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs, scored vs blind human labels; informal-housing candidates", "10g · 10g-b · 10h"),
         ("Population & OSM", "WorldPop residents; OSM + Microsoft buildings, roads, mosques, stops", "7b · 10b"),
         ("813 urban scenes", "not released in the PoC phase; pipeline is sensor-agnostic (Tanager, EMIT tested)", "incubation")]
 slide('<div class="kick">Challenge coverage</div><h1>Every challenge line, answered</h1><div class="cov">' +

@@ -83,6 +83,7 @@ Open the notebook and choose the kernel **QAYDH (.venv)**, then *Run All*. Alway
 |---|---|
 | **Fuse 813/optical with SAR and thermal** | **10f** Sentinel-1 RTC VV/VH fused with Sentinel-2: built-up precision/recall/F1/IoU and the sand→roof confusion rate, with vs without radar, on held-out blocks. Radar ΔVV 2017→2025 independently confirms new buildings |
 | **Informal settlement detection, roofing materials** | **10g** roof materials from Tanager spectra (white/cool, bitumen, clay tile, concrete, metal sheet) with separability and thermal-physics checks plus OSM `roof:material`; Musaffah building-level roof screen. **10h** informal / substandard-housing candidates (density, small footprints, irregular layout, hot roofs, heat), validated by OSM-housing enrichment with a permutation test |
+| **Roof-material ground truth** | **10g-b** blind human labels from `dashboard/label.html` (VHR imagery): Fleiss' κ between labellers, rules scored against the majority vote (accuracy, per-class F1, Cohen's κ), and a Random Forest trained on the labels (leave-one-1 km-block-out) |
 | **Heat-island proxy + weather** | **10i** NDBI alone vs fused optical + SAR model (R², RMSE, MAE, spatial CV), daytime SUHII, danger hours from station-checked ERA5 |
 | Urban growth · land-use change · green space · population · OSM | sections 4, 5b, 7b, 10b |
 | 813 urban scenes | not released in the PoC phase; the pipeline is sensor-agnostic (Tanager and EMIT already plug in) |
