@@ -661,5 +661,155 @@
       "landsat_days": 22,
       "LST_minus_air_C": 10.7
     }
-  ]
+  ],
+  "sar_fusion": {
+    "data": "Sentinel-1 RTC VV/VH, 12 scenes (ascending), summer 2025, 10 m",
+    "validation": "held-out 1 km test blocks (E), same labels as 10b",
+    "scores": [
+      {
+        "model": "Sentinel-2 only (10b best)",
+        "built_precision": 0.845,
+        "built_recall": 0.864,
+        "built_F1": 0.854,
+        "built_IoU": 0.745,
+        "macro_F1": 0.906,
+        "accuracy": 0.903,
+        "sand_called_roof_pct": 10.567
+      },
+      {
+        "model": "SAR only (VV, VH, ratio, texture)",
+        "built_precision": 0.687,
+        "built_recall": 0.805,
+        "built_F1": 0.741,
+        "built_IoU": 0.589,
+        "macro_F1": 0.528,
+        "accuracy": 0.524,
+        "sand_called_roof_pct": 10.533
+      },
+      {
+        "model": "Sentinel-2 + SAR (fusion)",
+        "built_precision": 0.886,
+        "built_recall": 0.888,
+        "built_F1": 0.887,
+        "built_IoU": 0.796,
+        "macro_F1": 0.919,
+        "accuracy": 0.916,
+        "sand_called_roof_pct": 7.767
+      }
+    ],
+    "built_F1_gain": 0.03300000000000003,
+    "macro_F1_gain": 0.013000000000000012,
+    "sand_called_roof_pct_s2": 10.567,
+    "sand_called_roof_pct_fusion": 7.767,
+    "median_vv_db_by_class": {
+      "Road / dark pavement": -7.8,
+      "Building / roof": -0.5,
+      "Bare soil / sand": -10.5,
+      "Vegetation": -8.9,
+      "Water": -15.8
+    },
+    "growth_check": {
+      "dVV_new_buildings_db": 1.04512357711792,
+      "dVV_existing_buildings_db": 1.5281641483306885,
+      "scenes_2017": 12
+    }
+  },
+  "roof_materials_riyadh": {
+    "method": "Tanager diagnostic-feature rules (albedo, 1730 nm hydrocarbon, Fe3+ 880 nm, Al-OH 2200 nm, carbonate 2330 nm, SWIR flatness)",
+    "share_pct": {
+      "White / cool coating": 8.0,
+      "Bitumen / dark membrane": 0.0,
+      "Clay tile / brick": 0.0,
+      "Concrete / cement": 25.5,
+      "Metal sheet (bare / painted)": 38.2,
+      "Mixed / unsure": 28.3
+    },
+    "silhouette": 0.09968849271535873,
+    "median_LST_C": {
+      "White / cool coating": 52.0,
+      "Concrete / cement": 50.9,
+      "Metal sheet (bare / painted)": 52.2
+    },
+    "osm_check": {
+      "pixels": 0,
+      "osm_ways": 0,
+      "note": "too few OSM roof:material tags in this AOI for a score"
+    }
+  },
+  "roof_materials_musaffah": {
+    "buildings_screened": 12365,
+    "share_pct": {
+      "Concrete / cement": 56.6,
+      "White / cool coating": 24.5,
+      "Metal sheet (bare / painted)": 11.1,
+      "Mixed / unsure": 7.7,
+      "Bitumen / dark membrane": 0.1
+    },
+    "median_LST_C": {
+      "Bitumen / dark membrane": 45.599998474121094,
+      "Concrete / cement": 54.900001525878906,
+      "Metal sheet (bare / painted)": 53.599998474121094,
+      "Mixed / unsure": 55.099998474121094,
+      "White / cool coating": 54.70000076293945
+    },
+    "hot_material_in_hot_zone": 49
+  },
+  "informal_screen": {
+    "cells": 2150,
+    "flagged": 215,
+    "osm_housing_points": 851,
+    "enrichment_ratio": 1.4215686274509804,
+    "permutation_p": 0.023,
+    "flagged_profile": {
+      "n": 15.0,
+      "med_area": 138.167,
+      "spread": 0.014,
+      "hot_roof": 0.0,
+      "ndvi": 0.045,
+      "lst": 53.967
+    },
+    "other_profile": {
+      "n": 7.0,
+      "med_area": 417.85,
+      "spread": 0.001,
+      "hot_roof": 0.0,
+      "ndvi": 0.035,
+      "lst": 54.748
+    }
+  },
+  "heat_island_proxy": {
+    "scale": "100 m cells, Musaffah, built-up \u226530%",
+    "ndbi_r": 0.40181524746357566,
+    "scores": [
+      {
+        "model": "NDBI alone (starter proxy)",
+        "r": 0.402,
+        "R2": -0.009,
+        "RMSE_C": 1.784,
+        "MAE_C": 1.305
+      },
+      {
+        "model": "Optical surfaces (S2)",
+        "r": NaN,
+        "R2": 0.314,
+        "RMSE_C": 1.471,
+        "MAE_C": 1.032
+      },
+      {
+        "model": "Optical + SAR (fused)",
+        "r": NaN,
+        "R2": 0.352,
+        "RMSE_C": 1.43,
+        "MAE_C": 0.996
+      }
+    ],
+    "SUHII_C": 8.792800903320312,
+    "weather_link": {
+      "danger_window": "11:00\u201320:00",
+      "heat_hours_ge40_per_day": 8.26086956521739
+    },
+    "stations": [
+      "station_check"
+    ]
+  }
 }
