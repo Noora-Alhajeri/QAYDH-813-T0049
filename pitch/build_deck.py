@@ -75,6 +75,7 @@ mc = {d["approach"]: d for d in R["musaffah_classifier"]["scores"]}; mbest = R["
 wm = {d["model"]: d for d in R["musaffah_why_model"]["scores"]}; th = R["musaffah_hazard_thresholds_C"]; ann = R["musaffah_annotation"]; sites = R["musaffah_sites"]
 hs = {d["approach"]: d for d in R["material_classifier"]["scores"]}; hk = [k for k in hs if k.startswith("Full")][0]; h6 = [k for k in hs if k.startswith("6")][0]
 w = R["weather"]; ad = R["abudhabi"]; dist = {d["district"]: d for d in ad["districts"]}; mu, ms = dist["Musaffah industrial"], dist["Masdar City"]
+mc_h = [d for d in R['material_classifier']['scores'] if d['approach'].startswith('Full')][0]['macro_F1']
 ov = R["hrpi_top20_overlap"]; cool = R["cooling_per_0p1_albedo_C"]
 
 S = []
@@ -183,6 +184,14 @@ screen(SC["m_what"], "What is physically there?", "Road · roof · sand · green
 screen(SC["m_labels"], "How we labelled it", "Objects with ID, box and label", f"{R['musaffah_objects']['buildings']:,} buildings labelled: roof class, heat zone, dark-roof flag, street. {R['musaffah_objects']['cool_roof_candidates']} are cool-roof candidates.", "03b")
 screen(SC["m_why"], "Why may it be hot?", "Asphalt and sand up, green down", f"Spatially validated: R² {f2(wm['Random Forest']['R2'])}, error {f1(wm['Random Forest']['MAE_C'])} °C. Shown as associations, not proof of cause.", "04")
 screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"{h0.actions}. Because {h0.why}.", "05")
+# 17a hyperspectral evidence: Riyadh (Tanager) + Abu Dhabi (EMIT)
+_em = R.get("emit")
+slide(f'''<div class="kick">Hyperspectral · Planet Tanager 426 bands</div><h1>Narrow bands read the material, not just the colour</h1>
+<div class="hyp"><figure><img src="{fig('03_hyperspectral_materials.png')}"><figcaption><b>Riyadh · Tanager</b> solar albedo · asphalt at 1730 nm · concrete at 2330 nm · material clusters</figcaption></figure>
+<div class="hn"><div><b>+{R['dR2_built']:.2f}</b>R² for heat when Tanager is added (built-up, spatial CV)</div>
+<div><b>{mc_h:.2f}</b>surface F1 on unseen tiles (road · roof · sand · green)</div>
+<div><b>r {R['coreg_r_after']:.2f}</b>Tanager ↔ Landsat albedo after co-registration</div>
+<div><b>{"Abu Dhabi · EMIT" if _em else "Abu Dhabi"}</b>{f"Musaffah heat model R² {_em['r2_without']:.2f} → {_em['r2_with']:.2f} with NASA EMIT hyperspectral" if _em else "NASA EMIT: 33 hyperspectral passes over Musaffah, wired into the pipeline"}</div></div></div>''')
 # 17b do now: material-matched actions
 rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
 ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs"),
@@ -358,6 +367,8 @@ section:has(.filmstrip) .split{height:560px}
 .cov2 img,.cov2 .ph{width:100%;height:120px;object-fit:cover;display:grid;place-items:center;background:#fff}.cov2 .todo .ph{background:#2a231c}
 .cov2 b{display:flex;align-items:center;gap:8px;font:800 22px 'Big Shoulders Display';padding:8px 12px 2px}.cov2 span{display:block;font-size:13px;color:#cdbda4;padding:0 12px}
 .dstrip{font-size:19px;color:#cdbda4;margin:0;border-left:4px solid #43c6b4;padding-left:12px}.dstrip b{color:#43c6b4}
+.hyp{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start}.hyp figure{margin:0}.hyp img{width:100%;background:#fff;border-radius:12px}.hyp figcaption{font-size:17px;color:#cdbda4;margin-top:8px}.hyp figcaption b{color:#ffb15c}
+.hn{display:flex;flex-direction:column;gap:18px}.hn b{display:block;font:800 52px/1 'Big Shoulders Display';color:#ff6b2c}.hn div{font-size:18px;color:#cdbda4}
 .mtab{display:flex;flex-direction:column;gap:10px}.mtab>div{display:grid;grid-template-columns:34px 230px 300px 300px 1fr 150px;gap:16px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:14px 18px}
 .mtab .mh{background:none;border:0;font:500 13px 'IBM Plex Mono';color:#ffb15c;text-transform:uppercase;letter-spacing:.1em;padding:0 18px}
 .mtab i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mtab b{font:800 26px 'Big Shoulders Display'}.mtab span{font-size:17px;color:#cdbda4}.mtab em{font-style:normal;font-size:19px;color:#43c6b4;font-weight:600}.mtab small{font:500 14px 'IBM Plex Mono';color:#ffb15c}
