@@ -100,7 +100,7 @@ def screen(src, kicker, title, quote, n):
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
 <div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 2</div><h1>QAYDH <span>القيظ</span></h1>
-<h2>Urban heat risk, through the eyes of satellites</h2><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
+<h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 2 · Urban Expansion, Land Use Change &amp; Heat Risk</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
 # 2 agenda
 slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">From where it is hot<br>to where we act first</h1></div>
 <ol class="agenda"><li>Team</li><li>The heat problem</li><li>QAYDH</li><li>Approach &amp; tools</li><li>The Musaffah story</li><li>Proof</li><li>Impact &amp; value</li><li>Closing</li></ol></div>''')
@@ -280,12 +280,12 @@ slide(f'''<div class="kick">Proof</div><h1 class="big">Every claim has a number<
 <div><b>{f0(min(ov.values())*100)}–{f0(max(ov.values())*100)}%</b><span>priorities stable<br>under re-weighting</span></div></div>''')
 # 23 who benefits (users with logos, as in the Ghaf Root deck)
 def lgs(fs): return "".join(('<span class="tx">' + f[4:] + '</span>') if f.startswith('txt:') else ('<span><img src="' + logo(f) + '"></span>') for f in fs if f.startswith('txt:') or os.path.exists(os.path.join(PITCH, 'logos', f)))
-BEN = [("Municipalities & planners", "Ranked hotspots, matched actions, summer briefs", ["DmLogo-new.svg", "txt:Abu Dhabi DMT", "txt:Sharjah Municipality"]),
-       ("Transport authorities", "Which bus stops to shade and cool first", ["Dubai_Roads_and_Transport_Authority_logo.png", "txt:Abu Dhabi ITC", "txt:Sharjah RTA"]),
+BEN = [("Municipalities & planners", "Ranked hotspots, matched actions, summer briefs", ["DmLogo-new.svg"]),
+       ("Transport authorities", "Which bus stops to shade and cool first", ["Dubai_Roads_and_Transport_Authority_logo.png"]),
        ("Developers & new districts", "Heat-aware master plans before roofs lock in", ["Emaar_logo.svg", "Aldar_Properties_Logo_2016.png", "Nakheel_Properties_logo.svg", "Masdar_City_logo.svg"]),
        ("Delivery & mobility platforms", "Rider cooling points and safe hours", ["Talabat_New_Brand_Logo-Colour_-3-.png", "Careem_logo_new_2023.png", "Deliveroo_logo.svg"]),
-       ("Research centres & universities", "Open, reproducible urban-heat evidence", ["Khalifa_University_New_Logo.png", "United_Arab_Emirates_University_logo_2026.jpg", "NYU_Abu_Dhabi_Logo-cropped-.jpg", "txt:American University of Sharjah"]),
-       ("Space & EO programmes", "A ready urban use-case for Satellite 813", ["Mohammed_Bin_Rashid_Space_Centre_logo.svg", "txt:UAE Space Agency", "txt:Space42"])]
+       ("Research centres & universities", "Open, reproducible urban-heat evidence", ["Khalifa_University_New_Logo.png", "United_Arab_Emirates_University_logo_2026.jpg", "NYU_Abu_Dhabi_Logo-cropped-.jpg"]),
+       ("Space & EO programmes", "A ready urban use-case for Satellite 813", ["Mohammed_Bin_Rashid_Space_Centre_logo.svg"])]
 slide('<div class="kick">Who benefits</div><h1>Built for the people who decide where shade goes</h1><div class="benl">' +
       "".join(f'<div><div class="lgs">{lgs(fs)}</div><b>{t}</b><span class="d">{d_}</span></div>' for t, d_, fs in BEN) +
       '</div><p class="credit">Logos show example target users; no partnership or endorsement implied.</p>')
@@ -413,7 +413,8 @@ section:has(.filmstrip) .split{height:560px}
 .gtr{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.gtr>div{background:#1f1a15;border:1px solid #3a3027;border-top:4px solid #43c6b4;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:8px}
 .gtr b{font:800 28px/1.05 'Big Shoulders Display'}.gtr span{font-size:17px;color:#cdbda4}.gtr em{font-style:normal;font:800 52px 'Big Shoulders Display';color:#ff6b2c;margin-top:auto}
 .benl{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.benl>div{background:#1f1a15;border:1px solid #3a3027;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
-.lgs{display:flex;gap:10px;flex-wrap:wrap;min-height:80px}.lgs span{background:#fff;border-radius:10px;height:76px;flex:1;min-width:110px;display:grid;place-items:center;padding:8px}.lgs .tx{font:700 15px 'IBM Plex Sans Arabic';color:#14110e;text-align:center}.lgs img{max-width:100%;max-height:60px}
+.lgs{display:flex;gap:10px;flex-wrap:wrap;min-height:80px}.lgs span{background:#fff;border-radius:10px;height:76px;flex:1;min-width:110px;display:grid;place-items:center;padding:8px}.theme{display:inline-block;font:600 26px 'IBM Plex Sans Arabic';color:#14110e;background:#ff6b2c;border-radius:999px;padding:8px 22px;margin:-8px 0 22px}
+.lgs .tx{font:700 15px 'IBM Plex Sans Arabic';color:#14110e;text-align:center}.lgs img{max-width:100%;max-height:60px}
 .benl b{font:800 30px 'Big Shoulders Display'}.benl .d{font-size:18px;color:#cdbda4}
 .chain{display:flex;gap:10px;align-items:stretch}.chain>div{flex:1;background:#1f1a15;border:1px solid #3a3027;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px}
 .chain b{font:800 28px 'Big Shoulders Display'}.chain span{font-size:17px;color:#cdbda4}.chain em{align-self:center;font:800 40px 'Big Shoulders Display';color:#ff6b2c;font-style:normal}
