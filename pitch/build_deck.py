@@ -59,7 +59,11 @@ def blockimg(layers=("sat",), size=900):
 def shotcrop(p, box=(330, 50, 1260, 950), size=700):
     im = Image.open(p).convert("RGB").crop(box); im.thumbnail((size, size)); b = io.BytesIO(); im.save(b, "JPEG", quality=86)
     return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
-def img(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
+def img(p):
+    if p.endswith(".png") and ("screens" in p or "dashboard" in p):
+        im_ = Image.open(p).convert("RGB"); b_ = io.BytesIO(); im_.save(b_, "JPEG", quality=82)
+        return "data:image/jpeg;base64," + base64.b64encode(b_.getvalue()).decode()
+    return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def fig(n): return img(os.path.join(OUT, n))
 h0 = MH.iloc[0]
 camp = MS[MS.name.str.contains("camp", case=False, na=False)]; camp = camp.iloc[0] if len(camp) else MS.iloc[0]
@@ -202,6 +206,28 @@ _gtr = [("thermometer", "Weather & danger hours", "3 NOAA weather stations (Al B
         ("flame", "Hotspots are real, not noise", "Same cells hot in 2024 and 2025", f"r {R['lst_cells_r_2024_vs_2025']:.2f}")]
 slide('<div class="kick">Ground truth</div><h1>Every layer checked against independent data</h1><div class="gtr">' +
       "".join(f'<div>{icon(i_ if os.path.exists(os.path.join(ICONS, i_ + ".svg")) else "checklist", 40)}<b>{t}</b><span>checked against: {w}</span><em>{v}</em></div>' for i_, t, w, v in _gtr) + "</div>")
+# 17d how a recommendation is made (expert reasoning chain)
+slide('<div class="kick">How each recommendation is made</div><h1 class="big">Evidence → expert rule → brief → planner</h1><div class="chain">' +
+      "".join(f'<div>{icon(i_, 42)}<b>{t}</b><span>{d_}</span></div>' + ('<em>→</em>' if k < 4 else '') for k, (i_, t, d_) in enumerate([
+        ("flame", "1 · Evidence", f"Heat P{h0.heat_pct}, {h0.LST_C:.1f} °C · road {h0.road*100:.0f}% · sand {h0.sand*100:.0f}% · green {h0.veg*100:.0f}% · {h0.exposure_context}"),
+        ("brain", "2 · Driver model", f"Asphalt and sand linked to heat (R² {wm['Random Forest']['R2']:.2f}, unseen blocks)"),
+        ("checklist", "3 · Expert catalogue", "Material → fix rules from Estidama cool-roof SRI, MoHRE midday break, municipal shade standards"),
+        ("brain", "4 · Llama-3.3-70B brief", "Written only from verified facts; every number fact-checked (5/5 pass)"),
+        ("users", "5 · Planner decides", f"{h0.id} plan: {str(h0.now)[:90]}")])) + "</div>")
+
+# 17e one slide per dashboard layer
+LAYER_SLIDES = [("hazard", "Heat hazard", "Landsat thermal zones: elevated, high, extreme (top 5%).", "Find where to look first."),
+                ("surfaces", "Surface classes", "Road, roof, sand, plants, water at 10 m (F1 0.91).", "See what each hot zone is made of."),
+                ("confidence", "Confidence", "Green = model sure, red = mixed pixels.", "Trust green; inspect red."),
+                ("geometry", "Buildings & roads", "25,462 building outlines + OSM roads at 2 m.", "Match heat to real structures."),
+                ("objects", "Building objects", "Each building: ID, roof material, heat zone, street.", "Pick cool-roof candidates (orange)."),
+                ("sites", "Exposure sites", "Named bus stops, mosques, schools, clinics with icons.", "Shade the busiest hot sites first."),
+                ("segments", "SAM segments", "AI-segmented objects with class, box and heat.", "See object-level heat inside a hotspot."),
+                ("priority", "Priority", "100 m cells ranked by heat × people × missing shade.", "Start at M-001 and work down.")]
+for k_, ttl, what, use in LAYER_SLIDES:
+    js = mus + f"setTimeout(()=>{{goChapter(0);setLayers('{k_}');{'map.setView([' + str(h0.lat) + ',' + str(h0.lon) + '],16);' if k_ in ('objects','segments','geometry') else ''}}},400)"
+    p_ = shot("L_" + k_, js)
+    slide(f'<img class="shotbig" src="{img(p_)}"><div class="capbar"><div class="cn">{icon("map-pin", 36)}<span>Layer</span></div><div><div class="qn">Dashboard layer</div><h2>{ttl}</h2></div><p><b style="color:#43c6b4">What it shows:</b> {what}<br><b style="color:#ffb15c">Use it to:</b> {use}</p></div>', "screen")
 # 17b do now: material-matched actions
 rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
 ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs"),
@@ -240,9 +266,9 @@ slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert
 <div><b>Heat is coarse</b><span>Thermal = zones; 10 m surfaces explain them.</span></div></div>''')
 # 21 tradeoffs
 slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 class="big">Being upfront</h1></div>
-<dl class="why"><dt>Labels</dt><dd>Automatic candidates still carry noise. {ann['removed_as_noisy']:,} removed; a {300}-point review queue goes to QGIS.</dd>
+<dl class="why"><dt>Labels</dt><dd>Labels are cleaned, not assumed. {ann['removed_as_noisy']:,} noisy labels removed automatically; 139 roofs labelled on 0.3 m imagery.</dd>
 <dt>Heat</dt><dd>Surface runs 11–15 °C above air (NOAA stations). We rank zones; ERA5, checked against stations, sets the hours.</dd>
-<dt>Materials</dt><dd>No open hyperspectral over Musaffah yet. 813 plugs in.</dd>
+<dt>Materials</dt><dd>Tanager (30 m) separates materials clearly in Riyadh; EMIT (60 m) over Musaffah mixes roofs and roads in one pixel. Satellite 813 brings the finer detail.</dd>
 <dt>People</dt><dd>Exposure opportunity, not head counts.</dd></dl></div>''')
 # 22 proof
 slide(f'''<div class="kick">Proof</div><h1 class="big">Every claim has a number</h1>
@@ -252,12 +278,17 @@ slide(f'''<div class="kick">Proof</div><h1 class="big">Every claim has a number<
 <div><b>+{f2(R['dR2_built'])}</b><span>R² from hyperspectral<br>Riyadh built-up</span></div>
 <div><b>{f2(R['lst_cells_r_2024_vs_2025'])}</b><span>hotspots repeat<br>2024 ↔ 2025</span></div>
 <div><b>{f0(min(ov.values())*100)}–{f0(max(ov.values())*100)}%</b><span>priorities stable<br>under re-weighting</span></div></div>''')
-# 23 who benefits (icon tiles)
-ben = [("building-skyscraper", "Municipalities", "Ranked cells, actions and briefs"), ("building-factory", "Industrial zones", "Rest nodes, work-break planning"),
-       ("bus", "Transport authorities", "Which bus stops to shade first"), ("motorbike", "Delivery platforms", "Rider cooling points and hours"),
-       ("crane", "Contractors", "Outdoor-work heat safety"), ("home", "Residents", "Shade on the routes they walk")]
-slide('<div class="kick">Who benefits</div><h1 class="big">Six users, one map</h1><div class="tiles">' +
-      "".join(f'<div>{icon(i_, 52)}<b>{t}</b><span>{d_}</span></div>' for i_, t, d_ in ben) + "</div>")
+# 23 who benefits (users with logos, as in the Ghaf Root deck)
+def lgs(fs): return "".join('<span><img src="' + logo(f) + '"></span>' for f in fs if os.path.exists(os.path.join(PITCH, 'logos', f)))
+BEN = [("Municipalities & planners", "Ranked hotspots, matched actions, summer briefs", ["DmLogo-new.svg"]),
+       ("Transport authorities", "Which bus stops to shade and cool first", ["Dubai_Roads_and_Transport_Authority_logo.png"]),
+       ("Developers & new districts", "Heat-aware master plans before roofs lock in", ["Emaar_logo.svg", "Aldar_Properties_Logo_2016.png", "Masdar_City_logo.svg"]),
+       ("Delivery platforms", "Rider cooling points and safe hours", ["Talabat_logo.svg", "Deliveroo_logo.svg"]),
+       ("Research centres & universities", "Open, reproducible urban-heat evidence", ["Khalifa_University_New_Logo.png", "United_Arab_Emirates_University_logo_2026.jpg", "NYU_Abu_Dhabi_Logo-cropped-.jpg"]),
+       ("Space & EO programmes", "A ready urban use-case for Satellite 813", ["Mohammed_Bin_Rashid_Space_Centre_logo.svg"])]
+slide('<div class="kick">Who benefits</div><h1>Built for the people who decide where shade goes</h1><div class="benl">' +
+      "".join(f'<div><div class="lgs">{lgs(fs)}</div><b>{t}</b><span class="d">{d_}</span></div>' for t, d_, fs in BEN) +
+      '</div><p class="credit">Logos show example target users; no partnership or endorsement implied.</p>')
 
 # 24 solution value + impact (icon tiles + numbers)
 st_ = {d["station"]: d for d in R.get("station_check", [])}
@@ -381,6 +412,11 @@ section:has(.filmstrip) .split{height:560px}
 .hn{display:flex;flex-direction:column;gap:18px}.hn b{display:block;font:800 52px/1 'Big Shoulders Display';color:#ff6b2c}.hn div{font-size:18px;color:#cdbda4}
 .gtr{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.gtr>div{background:#1f1a15;border:1px solid #3a3027;border-top:4px solid #43c6b4;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:8px}
 .gtr b{font:800 28px/1.05 'Big Shoulders Display'}.gtr span{font-size:17px;color:#cdbda4}.gtr em{font-style:normal;font:800 52px 'Big Shoulders Display';color:#ff6b2c;margin-top:auto}
+.benl{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.benl>div{background:#1f1a15;border:1px solid #3a3027;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.lgs{display:flex;gap:10px;flex-wrap:wrap;min-height:80px}.lgs span{background:#fff;border-radius:10px;height:76px;flex:1;min-width:110px;display:grid;place-items:center;padding:8px}.lgs img{max-width:100%;max-height:60px}
+.benl b{font:800 30px 'Big Shoulders Display'}.benl .d{font-size:18px;color:#cdbda4}
+.chain{display:flex;gap:10px;align-items:stretch}.chain>div{flex:1;background:#1f1a15;border:1px solid #3a3027;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.chain b{font:800 28px 'Big Shoulders Display'}.chain span{font-size:17px;color:#cdbda4}.chain em{align-self:center;font:800 40px 'Big Shoulders Display';color:#ff6b2c;font-style:normal}
 .mtab{display:flex;flex-direction:column;gap:10px}.mtab>div{display:grid;grid-template-columns:34px 230px 300px 300px 1fr 150px;gap:16px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:14px 18px}
 .mtab .mh{background:none;border:0;font:500 13px 'IBM Plex Mono';color:#ffb15c;text-transform:uppercase;letter-spacing:.1em;padding:0 18px}
 .mtab i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mtab b{font:800 26px 'Big Shoulders Display'}.mtab span{font-size:17px;color:#cdbda4}.mtab em{font-style:normal;font-size:19px;color:#43c6b4;font-weight:600}.mtab small{font:500 14px 'IBM Plex Mono';color:#ffb15c}
