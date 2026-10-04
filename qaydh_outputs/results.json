@@ -662,6 +662,47 @@
       "LST_minus_air_C": 10.7
     }
   ],
+  "emit": {
+    "granule": "EMIT_L2A_RFL_001_20230625T075714_2317605_020",
+    "date": "2023-06-25",
+    "r2_without": 0.8228922878527091,
+    "r2_with": 0.8389125555482486,
+    "dR2": 0.016020267695539547,
+    "mae_without": 1.251013401148172,
+    "mae_with": 1.1431441953270631,
+    "hydrocarbon_index_by_surface": {
+      "road": 0.001846048515290022,
+      "roof": 0.002114584669470787,
+      "sand": 0.0014355604071170092,
+      "vegetation": 0.001453846925869584
+    },
+    "roof_types": [
+      {
+        "roof_type": 0,
+        "cells": 757,
+        "albedo": 0.2724408507347107,
+        "bd2330": 0.02953939326107502,
+        "mean_LST_C": 54.361915588378906,
+        "name": "Dark roofs (cool-roof first)"
+      },
+      {
+        "roof_type": 1,
+        "cells": 87,
+        "albedo": 0.29488062858581543,
+        "bd2330": 0.029843110591173172,
+        "mean_LST_C": 54.03670120239258,
+        "name": "Mid roofs"
+      },
+      {
+        "roof_type": 2,
+        "cells": 729,
+        "albedo": 0.31634068489074707,
+        "bd2330": 0.028082353994250298,
+        "mean_LST_C": 54.42580795288086,
+        "name": "Bright roofs"
+      }
+    ]
+  },
   "sar_fusion": {
     "data": "Sentinel-1 RTC VV/VH, 12 scenes (ascending), summer 2025, 10 m",
     "validation": "held-out 1 km test blocks (E), same labels as 10b",

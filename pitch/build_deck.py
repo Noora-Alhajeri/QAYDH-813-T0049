@@ -187,7 +187,8 @@ screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"
 # 17a hyperspectral evidence: Riyadh (Tanager) + Abu Dhabi (EMIT)
 _em = R.get("emit")
 slide(f'''<div class="kick">Hyperspectral · Planet Tanager 426 bands</div><h1>Narrow bands read the material, not just the colour</h1>
-<div class="hyp"><figure><img src="{fig('03_hyperspectral_materials.png')}"><figcaption><b>Riyadh · Tanager</b> solar albedo · asphalt at 1730 nm · concrete at 2330 nm · material clusters</figcaption></figure>
+<div class="hyp"><div><figure><img src="{fig('03_hyperspectral_materials.png')}"><figcaption><b>Riyadh · Planet Tanager</b> solar albedo · asphalt 1730 nm · concrete 2330 nm · material clusters</figcaption></figure>
+{f'<figure><img src="{fig("15_musaffah_emit_hyperspectral.png")}"><figcaption><b>Abu Dhabi · Musaffah · NASA EMIT</b> asphalt signature 1730 nm · roof spectral types · roof heat</figcaption></figure>' if os.path.exists(os.path.join(OUT, "15_musaffah_emit_hyperspectral.png")) else ""}</div>
 <div class="hn"><div><b>+{R['dR2_built']:.2f}</b>R² for heat when Tanager is added (built-up, spatial CV)</div>
 <div><b>{mc_h:.2f}</b>surface F1 on unseen tiles (road · roof · sand · green)</div>
 <div><b>r {R['coreg_r_after']:.2f}</b>Tanager ↔ Landsat albedo after co-registration</div>
