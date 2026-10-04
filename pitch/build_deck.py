@@ -130,7 +130,7 @@ outs = [("flame", "Hotspot map", "Heat zones across Musaffah", blockimg(("sat", 
         ("chart-dots", "Priority ranking", "Ranked hotspots M-001…M-010", shotcrop(SC["m_act"], (0, 60, 330, 400)))]
 slide(f'''<div class="pa"><div><div class="kick">The problem we solve</div>
 <h1 class="big" style="font-size:64px">We don't only map heat.<br><span class="o">We explain it and say what to do.</span></h1>
-<p class="dstrip"><b>Hyperspectral:</b> Planet Tanager 426 bands · <b>Thermal:</b> Landsat 8/9 · <b>10 m:</b> Sentinel-2 + Sentinel-1 radar · <b>Places:</b> OSM + 25,462 footprints · <b>People:</b> WorldPop · <b>Truth:</b> NOAA stations</p>
+<p class="dstrip"><b>Hyperspectral:</b> Planet Tanager 426 bands (Riyadh) + NASA EMIT 285 bands (Abu Dhabi) · <b>Thermal:</b> Landsat 8/9 · <b>10 m:</b> Sentinel-2 + Sentinel-1 radar · <b>Places:</b> OSM + 25,462 footprints · <b>People:</b> WorldPop · <b>Truth:</b> NOAA stations</p>
 <p class="ar">نحن لا نكتفي برسم خريطة للحرارة؛ بل نفسر أسبابها على مستوى المواد ونقترح التدخل المناسب</p></div>
 <div class="outs">{"".join(f'<figure><img src="{im}"><figcaption>{icon(i_, 26)}<b>{t}</b><span>{d_}</span></figcaption></figure>' for i_, t, d_, im in outs)}</div></div>''')
 # 6 collage
@@ -159,7 +159,7 @@ slide(f'''<div class="split"><div><h1 class="big">Data<br><span class="o">&amp; 
 <dt>Steps</dt><dd>Masks → annotation → training → spatial validation → priority → dashboard</dd></dl></div>''')
 # 9b open data we built on (logos)
 LOGOS = [("USGS_logo_green.svg", "Landsat 8/9 thermal + optical"), ("ESA_logo.svg", "Sentinel-1 radar · Sentinel-2 10 m · WorldCover"),
-         ("Planet_Labs_logo.svg", "Tanager hyperspectral (426 bands)"), ("NASA_logo.svg", "EMIT hyperspectral · Landsat"),
+         ("Planet_Labs_logo.svg", "Tanager hyperspectral (426 bands)"), ("NASA_logo.svg", "EMIT hyperspectral over Musaffah"),
          ("Openstreetmap_logo.svg", "Roads · bus stops · mosques · schools"), ("Microsoft_logo_2012.svg", "25,462 building footprints"),
          ("WorldPop_logo.png", "Residents per 100 m"), ("ECMWF_logo.svg", "ERA5 hourly weather"), ("NOAA_logo.svg", "Station ground truth")]
 slide('<div class="kick">Open data we built on</div><h1 class="big">Nine open sources, one answer</h1><div class="logos">' +
@@ -193,6 +193,15 @@ slide(f'''<div class="kick">Hyperspectral · Planet Tanager 426 bands</div><h1>N
 <div><b>{mc_h:.2f}</b>surface F1 on unseen tiles (road · roof · sand · green)</div>
 <div><b>r {R['coreg_r_after']:.2f}</b>Tanager ↔ Landsat albedo after co-registration</div>
 <div><b>{"Abu Dhabi · EMIT" if _em else "Abu Dhabi"}</b>{f"Musaffah heat model R² {_em['r2_without']:.2f} → {_em['r2_with']:.2f} with NASA EMIT hyperspectral" if _em else "NASA EMIT: 33 hyperspectral passes over Musaffah, wired into the pipeline"}</div></div></div>''')
+# 17c ground truth: every layer checked against independent data
+_gtr = [("thermometer", "Weather & danger hours", "3 NOAA weather stations (Al Bateen, Abu Dhabi Intl, Riyadh)", f"r {min(d['era5_vs_station_r'] for d in R['station_check']):.2f}–{max(d['era5_vs_station_r'] for d in R['station_check']):.2f}"),
+        ("map-pin", "Built-up map", "Impact Observatory LULC 2023 (independent map, other year)", f"F1 {R['indep2023_built_f1_rf']:.2f}"),
+        ("scan", "Surfaces (road · roof · sand · green)", "OSM + Microsoft footprints + WorldCover, unseen 1 km blocks", f"F1 {mc[mbest]['test_macro_F1']:.2f}"),
+        ("satellite", "Tanager placement", "Landsat albedo, same ground", f"r {R['coreg_r_after']:.2f}"),
+        ("temperature", "Heat drivers", "Landsat surface temperature, unseen blocks", f"R² {wm['Random Forest']['R2']:.2f}"),
+        ("flame", "Hotspots are real, not noise", "Same cells hot in 2024 and 2025", f"r {R['lst_cells_r_2024_vs_2025']:.2f}")]
+slide('<div class="kick">Ground truth</div><h1>Every layer checked against independent data</h1><div class="gtr">' +
+      "".join(f'<div>{icon(i_ if os.path.exists(os.path.join(ICONS, i_ + ".svg")) else "checklist", 40)}<b>{t}</b><span>checked against: {w}</span><em>{v}</em></div>' for i_, t, w, v in _gtr) + "</div>")
 # 17b do now: material-matched actions
 rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
 ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs"),
@@ -370,6 +379,8 @@ section:has(.filmstrip) .split{height:560px}
 .dstrip{font-size:19px;color:#cdbda4;margin:0;border-left:4px solid #43c6b4;padding-left:12px}.dstrip b{color:#43c6b4}
 .hyp{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start}.hyp figure{margin:0}.hyp img{width:100%;background:#fff;border-radius:12px}.hyp figcaption{font-size:17px;color:#cdbda4;margin-top:8px}.hyp figcaption b{color:#ffb15c}
 .hn{display:flex;flex-direction:column;gap:18px}.hn b{display:block;font:800 52px/1 'Big Shoulders Display';color:#ff6b2c}.hn div{font-size:18px;color:#cdbda4}
+.gtr{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.gtr>div{background:#1f1a15;border:1px solid #3a3027;border-top:4px solid #43c6b4;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.gtr b{font:800 28px/1.05 'Big Shoulders Display'}.gtr span{font-size:17px;color:#cdbda4}.gtr em{font-style:normal;font:800 52px 'Big Shoulders Display';color:#ff6b2c;margin-top:auto}
 .mtab{display:flex;flex-direction:column;gap:10px}.mtab>div{display:grid;grid-template-columns:34px 230px 300px 300px 1fr 150px;gap:16px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:14px 18px}
 .mtab .mh{background:none;border:0;font:500 13px 'IBM Plex Mono';color:#ffb15c;text-transform:uppercase;letter-spacing:.1em;padding:0 18px}
 .mtab i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mtab b{font:800 26px 'Big Shoulders Display'}.mtab span{font-size:17px;color:#cdbda4}.mtab em{font-style:normal;font-size:19px;color:#43c6b4;font-weight:600}.mtab small{font:500 14px 'IBM Plex Mono';color:#ffb15c}
