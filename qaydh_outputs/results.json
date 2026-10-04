@@ -622,9 +622,9 @@
     }
   },
   "llm_briefs": {
-    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "model": "meta-llama/Llama-3.3-70B-Instruct",
     "n": 5,
-    "llm_drafts_passing_fact_check": 0,
+    "llm_drafts_passing_fact_check": 5,
     "policy": "LLM drafts only from verified facts; unit-aware fact-check; failed drafts replaced by the verified template; human sign-off required"
   },
   "station_check": [

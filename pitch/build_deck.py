@@ -217,8 +217,8 @@ screen(SC["r_why"], "Hyperspectral proof · Riyadh", "Tanager reads roof, road a
 screen(SC["ad"], "Abu Dhabi screening", "The starter rule calls sand a city", f"NDBI says Masdar {ms['builtup_starter_NDBI_pct']:.0f}% built; WorldCover {ms['builtup_WorldCover_pct']:.0f}%. Musaffah: {mu['builtup_starter_NDBI_pct']:.0f}% vs {mu['builtup_WorldCover_pct']:.0f}%.", "07")
 # 18 annotation / detection image (Ghaf: segmentation model visual)
 slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Rule-based labels, honest tests</h1><img class="figw" src="{fig('11_musaffah_annotation_surfaces.png')}">''')
-slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>SAM segments every object around each hotspot</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
-<div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div>
+slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>Open AI models: SAM segments, Llama writes the brief</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
+<div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div><div><b>{R['llm_briefs']['llm_drafts_passing_fact_check']}/{R['llm_briefs']['n']}</b>Llama-3.3-70B planner briefs passed the number-by-number fact-check</div>
 </div>''')
 # 19 architecture (icon diagram)
 def col(title, items, cls=""):
