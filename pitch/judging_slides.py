@@ -77,10 +77,10 @@ _cov = [("Quantify urban growth", f"+{R['growth_pct']:.0f}% built-up 2014→2025
         ("Heat proxy + weather", f"NDBI r = {R['ndbi_lst_r_builtup']:.2f} → fused model; ERA5 checked vs NOAA stations", "5b · 10d · 10i"),
         ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs, from spectra; informal-housing screening", "10g · 10g-b · 10h"),
         ("Population & OSM", "WorldPop residents; OSM + Microsoft buildings, roads, mosques, stops", "7b · 10b"),
-        ("813 urban scenes", "not released in the PoC phase; pipeline is sensor-agnostic (Tanager, EMIT tested)", "incubation")]
+        ("Hyperspectral materials", "Planet Tanager over Riyadh + NASA EMIT over Musaffah; same pipeline takes Satellite 813", "10e")]
 _thumb = {"4": "01_urban_expansion.png", "4 · 10f": "15_sar_fusion.png", "5 · 8 · 10i": "02_heat_hazard.png", "10f · 10i": "15_sar_fusion.png",
           "5b · 7b": "08_when_persistence_green.png", "5b · 10d · 10i": "14_station_validation.png", "10g · 10g-b · 10h": "16_roof_materials.png",
-          "7b · 10b": "07_people_exposure.png"}
+          "7b · 10b": "07_people_exposure.png", "10e": "15_musaffah_emit_hyperspectral.png"}
 def _th(w_):
     f_ = _thumb.get(w_); pth = _os.path.join(OUT, f_) if f_ else None
     if not pth or not _os.path.exists(pth): return ""
