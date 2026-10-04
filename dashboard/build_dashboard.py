@@ -145,7 +145,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
              body=f"A spatially cross-validated model links each 100 m cell's surface mix to its heat. Drivers are shown as associations, not proof of cause.",
              stat=[(f"{wm['Random Forest']['R2']:.2f}", "R², spatial CV"), (f"{wm['Random Forest']['MAE_C']:.1f} °C", "mean error")]),
         dict(id="act", layer="priority", hint="Pick a hotspot from the list to see its card.", kicker="What should be done?", title="Where to act first in Musaffah",
-             body="Ranked 100 m cells with the action, the reason in plain words, and the relative potential of trees, cool pavement and shaded stops.",
+             body="M-001 = Musaffah hotspot #1, ranked by heat × people × missing shade. Ranked 100 m cells with the action, the reason in plain words, and the relative potential of trees, cool pavement and shaded stops.",
              stat=[(top["id"], "top hotspot"), (top["priority"], "priority")], list=True)]
 
 VEND = os.path.join(ROOT, "dashboard", "vendor")   # Leaflet 1.9.4 (BSD-2) vendored: the dashboard works offline and behind strict networks

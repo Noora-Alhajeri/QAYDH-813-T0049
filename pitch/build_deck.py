@@ -51,6 +51,14 @@ def icon(n, size=56, color="#ff6b2c"):
 def logo(f):
     pth = os.path.join(PITCH, "logos", f); mt = "image/svg+xml" if f.endswith(".svg") else "image/png"
     return f"data:{mt};base64," + base64.b64encode(open(pth, "rb").read()).decode()
+def blockimg(layers=("sat",), size=900):
+    base = SAT.copy()
+    for l in layers[1:]: base = Image.alpha_composite(base, {"geo": GEO, "haz": HAZ, "surf": SURF}[l].resize(base.size))
+    base = base.convert("RGB"); base.thumbnail((size, size)); b = io.BytesIO(); base.save(b, "JPEG", quality=86)
+    return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
+def shotcrop(p, box=(330, 50, 1260, 950), size=700):
+    im = Image.open(p).convert("RGB").crop(box); im.thumbnail((size, size)); b = io.BytesIO(); im.save(b, "JPEG", quality=86)
+    return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
 def img(p): return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def fig(n): return img(os.path.join(OUT, n))
 h0 = MH.iloc[0]
@@ -73,9 +81,16 @@ S = []
 def slide(body, cls=""): S.append(f'<section class="{cls}">{body}</section>')
 STAGE_ICON = {"Where is heat high?": "flame", "Who may be exposed?": "users", "What is physically there?": "scan", "How we labelled it": "checklist",
               "Why may it be hot?": "temperature", "What should be done?": "target"}
+GUIDE = {"Where is heat high?": [(560, 110, "① Red = extreme heat zone (top 5%)"), (40, 460, "② Steps 1→6 on the left"), (560, 690, "③ Next / Back to move")],
+         "Who may be exposed?": [(700, 300, "① Icons = bus stop · mosque · school · clinic"), (1270, 120, "② Card: heat %, green, action")],
+         "What is physically there?": [(620, 300, "① Grey road · violet roof · beige sand · green · blue water"), (40, 300, "② Accuracy on unseen blocks")],
+         "How we labelled it": [(600, 300, "① Hover a building: ID B-00001, material, heat zone"), (600, 380, "② Orange outline = cool-roof candidate")],
+         "Why may it be hot?": [(40, 360, "① Model links surfaces to heat (R² 0.85)"), (600, 300, "② Red where asphalt + sand, no green")],
+         "What should be done?": [(40, 300, "① M-001 = Musaffah hotspot #1 (rank by risk)"), (1250, 520, "② Do-now plan matched to materials"), (600, 520, "③ Click any M-label on the map")]}
 def screen(src, kicker, title, quote, n):
     ic = icon(STAGE_ICON.get(kicker, "eye"), 40)
-    slide(f'<img class="shotbig" src="{src}"><div class="capbar"><div class="cn">{ic}<span>{n}</span></div><div><div class="qn">{kicker}</div><h2>{title}</h2></div><p>{quote}</p></div>', "screen")
+    pops = "".join(f'<div class="pop" style="left:{x}px;top:{y}px">{t}</div>' for x, y, t in GUIDE.get(kicker, []))
+    slide(f'<img class="shotbig" src="{src}">{pops}<div class="capbar"><div class="cn">{ic}<span>{n}</span></div><div><div class="qn">{kicker}</div><h2>{title}</h2></div><p>{quote}</p></div>', "screen")
 
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
@@ -89,14 +104,14 @@ slide('''<div class="kick">Team T0049</div><h1 class="big">Three people, one cit
 <div class="three team3"><div><b>انتصار الحبسي</b><span>Team lead</span></div><div><b>نورة الهاجري</b><span>Team member</span></div><div><b>مريم البني</b><span>Team member</span></div></div>''')
 # 4 title
 slide(f'''<div class="split"><div><div class="kick">QAYDH · القيظ</div><h1 class="big">The fierce heat of summer,<br>mapped where people live and work</h1>
-<p class="lead">Heat · surfaces · people · action, from open satellite data.</p></div><img class="photo" src="{COL[0][0]}"></div>''')
+<p class="lead">Heat · surfaces · people · action, from open satellite data.</p></div><figure class="phf"><img class="photo" src="{blockimg(("sat", "haz"))}"><figcaption>Musaffah, Abu Dhabi · summer 2025 heat hazard zones on Sentinel-2 10 m</figcaption></figure></div>''')
 # 5 why + impact (Ghaf: challenge / significance / impact / solution)
 slide(f'''<div class="split"><div><h1 class="big">Why QAYDH as a solution?<br><span class="o">What is its impact?</span></h1></div>
 <dl class="why"><dt>Challenge</dt><dd>Surfaces pass 55 °C. Cooling budgets are spent case by case.</dd>
 <dt>Significance</dt><dd>Workers, riders, worshippers and bus riders are outside {w['danger_window_local']}.</dd>
 <dt>Impact</dt><dd>Shade, cool surfaces and trees go first where people are exposed.</dd>
 <dt>Solution</dt><dd>Thermal + hyperspectral + 10 m surfaces + OSM → one ranked action map.</dd></dl></div>
-<div class="filmstrip">{''.join(f'<img src="{c[0]}">' for c in COL)}</div>''')
+<div class="filmstrip">{''.join(f'<img src="{crop(r.lat, r.lon, 500, ("sat", "geo"))}">' for r in MH.iloc[[2, 5, 8, 11]].itertuples())}</div>''')
 # 5b problem · what exists · gap
 slide(f'''<div class="kick">The problem we solve</div><h1 class="big">Heat maps exist. Decisions don't.</h1>
 <div class="cmp"><div><h3>{icon("eye", 40, "#b3a48e")} What exists today</h3><ul>
@@ -107,11 +122,11 @@ slide(f'''<div class="kick">The problem we solve</div><h1 class="big">Heat maps 
 <li>People: who is outside, at which hours</li><li>Surfaces: road, roof, sand, green at 10 m (F1 {mc[mbest]['test_macro_F1']:.2f})</li>
 <li>Every Gulf city, every summer, open data</li><li>One named action per hotspot, with its reason</li></ul></div></div>''')
 # 6a problem → answer (bilingual) with the five outputs
-outs = [("flame", "Hotspot map", "Where heat is high", crop(h0.lat, h0.lon, 700, ("sat", "haz"))),
-        ("scan", "Material map", "Road · roof material · sand · green", crop(h0.lat, h0.lon, 700, ("sat", "surf"))),
-        ("users", "Exposure score", "Who is outside, and when", crop(bus.lat, bus.lon, 700)),
-        ("target", "Intervention", "The fix that matches the material", crop(h0.lat, h0.lon, 350, ("sat", "geo"))),
-        ("chart-dots", "Priority ranking", "Where to act first", crop(h0.lat, h0.lon, 900, ("sat", "haz")))]
+outs = [("flame", "Hotspot map", "Heat zones across Musaffah", blockimg(("sat", "haz"), 600)),
+        ("scan", "Material map", "Road · roof · sand · green, whole block", blockimg(("sat", "surf"), 600)),
+        ("users", "Exposure score", "Named bus stops, mosques, clinics", shotcrop(SC["m_who"], (330, 120, 1000, 790))),
+        ("target", "Intervention", f"Hotspot {h0.id} card: do-now plan", shotcrop(SC["m_act"], (1260, 60, 1600, 400))),
+        ("chart-dots", "Priority ranking", "Ranked hotspots M-001…M-010", shotcrop(SC["m_act"], (0, 60, 330, 400)))]
 slide(f'''<div class="pa"><div><div class="kick">The problem we solve</div>
 <h1 class="big" style="font-size:64px">We don't only map heat.<br><span class="o">We explain it and say what to do.</span></h1>
 <p class="ar">نحن لا نكتفي برسم خريطة للحرارة؛ بل نفسر أسبابها على مستوى المواد ونقترح التدخل المناسب</p></div>
@@ -121,19 +136,20 @@ slide(f'''<div class="kick">Musaffah, Abu Dhabi</div><h1 class="big">Real places
 <div class="collage">{''.join(f'<figure><img src="{c[0]}"><figcaption><b>{c[1]}</b>{c[2]}</figcaption></figure>' for c in COL)}</div>
 <p class="credit">Sentinel-2 10 m · buildings: Microsoft + OSM · roads: OSM · heat: Landsat</p>''')
 # 7 solution overview: five questions, step by step, with icons and real crops
-steps = [("flame", "Where is heat high?", "Landsat hazard zones · 3 summers · danger hours", crop(h0.lat, h0.lon, 700, ("sat", "haz"))),
-         ("users", "Who may be exposed?", "Bus stops · mosques · clinics · camps · residents", crop(bus.lat, bus.lon, 700)),
-         ("scan", "What is there?", "Road · roof · sand · green at 10 m", crop(h0.lat, h0.lon, 700, ("sat", "surf"))),
-         ("temperature", "Why may it be hot?", f"Driver model R² {wm['Random Forest']['R2']:.2f}", crop(h0.lat, h0.lon, 700, ("sat", "geo"))),
-         ("target", "What should be done?", "Ranked action + reason + brief", crop(h0.lat, h0.lon, 350, ("sat", "geo", "haz")))]
+steps = [("flame", "Where is heat high?", "Landsat hazard zones · 3 summers · danger hours", shotcrop(SC["m_where"])),
+         ("users", "Who may be exposed?", "Bus stops · mosques · clinics · camps · residents", shotcrop(SC["m_who"])),
+         ("scan", "What is there?", "Road · roof · sand · green at 10 m", shotcrop(SC["m_what"])),
+         ("temperature", "Why may it be hot?", f"Driver model R² {wm['Random Forest']['R2']:.2f}", shotcrop(SC["m_why"])),
+         ("target", "What should be done?", "Ranked action + reason + plan", shotcrop(SC["m_act"], (1260, 50, 1600, 950)))]
 slide('<div class="kick">Solution overview</div><h1 class="big">Five questions, answered step by step</h1><div class="steps5">' +
       "".join(f'<div><div class="ic">{icon(i_, 44)}</div><i>{k+1}</i><b>{t}</b><span>{d_}</span><img src="{im}"></div>' for k, (i_, t, d_, im) in enumerate(steps)) + "</div>")
 
 # 8 splash with three lenses (Ghaf: GreenScope · Palm / Ghaf / Mangrove)
 slide(f'''<h1 class="splash">QAYDH <span>القيظ</span></h1><div class="lenses">
-<figure><img src="{crop(h0.lat, h0.lon, 900, ("sat", "haz"))}"><figcaption>Heat</figcaption></figure>
-<figure><img src="{crop(h0.lat, h0.lon, 900, ("sat", "surf"))}"><figcaption>Surfaces</figcaption></figure>
-<figure><img src="{crop(h0.lat, h0.lon, 900, ("sat", "geo"))}"><figcaption>People &amp; places</figcaption></figure></div>''', "dark")
+<figure><img src="{crop(MH.iloc[6].lat, MH.iloc[6].lon, 600, ("sat", "haz"))}"><figcaption>Heat</figcaption></figure>
+<figure><img src="{crop(MH.iloc[6].lat, MH.iloc[6].lon, 600, ("sat", "surf"))}"><figcaption>Materials</figcaption></figure>
+<figure><img src="{shotcrop(SC["m_who"], (330, 120, 1000, 790))}"><figcaption>People &amp; places</figcaption></figure>
+<figure><img src="{shotcrop(SC["m_act"], (1260, 50, 1600, 560))}"><figcaption>Action</figcaption></figure></div>''', "dark")
 # 9 data & tools (Ghaf: data / tools / application steps)
 slide(f'''<div class="split"><div><h1 class="big">Data<br><span class="o">&amp; tools</span></h1></div>
 <dl class="why"><dt>Data</dt><dd>Landsat 8/9 thermal · Sentinel-2 10 m · Planet Tanager hyperspectral · ESA WorldCover · OSM · Microsoft footprints · WorldPop · ERA5</dd>
@@ -168,22 +184,22 @@ screen(SC["m_why"], "Why may it be hot?", "Asphalt and sand up, green down", f"S
 screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"{h0.actions}. Because {h0.why}.", "05")
 # 17b do now: material-matched actions
 rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
-ROWS = [("#4aa3df", "Metal sheet roofs", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs", ap.get("Metal sheet (bare / painted)", "")),
-        ("#a9a9a0", "Concrete roofs", f"{rmm.get('Concrete / cement', 0):.0f}% of roofs", ap.get("Concrete / cement", "")),
-        ("#2b2b2b", "Asphalt roads & car parks", f"{h0.road*100:.0f}% of hotspot {h0.id}", ap.get("road", "")),
-        ("#e9d8a6", "Open sand lots", f"{h0.sand*100:.0f}% of hotspot {h0.id}", ap.get("sand", "")),
-        ("#5cc8ff", "Bus stops", f"{len(MS[MS.site=='Bus stop'])} scored", ap.get("bus_stop", "")),
-        ("#ff6b2c", "Industrial outdoor work", "Musaffah M-sectors", ap.get("industrial", ""))]
-slide('<div class="kick">What to do now</div><h1>Every material gets its own fix</h1><div class="mrows">' +
-      "".join(f'<div><i style="background:{c}"></i><b>{n}</b><em>{w}</em><span>{a}</span></div>' for c, n, w, a in ROWS) + "</div>")
+ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs"),
+        ("#a9a9a0", "Concrete / cement roof", "carbonate dip at 2330 nm, mid albedo", "Stores heat, releases it after sunset", "Elastomeric cool-roof coating (Estidama SRI ≥ 78)", f"{rmm.get('Concrete / cement', 0):.0f}% of roofs"),
+        ("#2b2b2b", "Asphalt road / car park", "hydrocarbon dip at 1730 nm, albedo < 0.12", "Darkest surface; hot into the night", "Cool-pavement seal coat + street trees", f"{h0.road*100:.0f}% of {h0.id}"),
+        ("#e9d8a6", "Bare sand lot", "bright, Fe³⁺ slope 500–900 nm, no green", "Radiates heat to the air around it", "Shade sails + Ghaf / Sidr on TSE drip", f"{h0.sand*100:.0f}% of {h0.id}"),
+        ("#f5f5f0", "White / cool roof", "albedo > 0.45", "Already reflective", "Keep: clean and recoat", f"{rmm.get('White / cool coating', 0):.0f}% of roofs"),
+        ("#2e9e44", "Vegetation", "red edge 705–750 nm, NDVI > 0.3", "Cools 5.3 °C vs built-up (Riyadh)", "Protect and extend into hotspots", "the coolant")]
+slide('<div class="kick">Material → cause → fix</div><h1>Every material gets its own fix</h1><div class="mtab"><div class="mh"><span></span><span>Material</span><span>How satellites see it</span><span>Why it is hot</span><span>Replace / treat with</span><span>Where</span></div>' +
+      "".join(f'<div><i style="background:{c}"></i><b>{n}</b><span>{sig}</span><span>{why}</span><em>{fix}</em><small>{w}</small></div>' for c, n, sig, why, fix, w in ROWS) + "</div>")
 # 16 hyperspectral proof + 17 Abu Dhabi screening
 screen(SC["r_why"], "Hyperspectral proof · Riyadh", "Tanager reads roof, road and sand", f"Full spectrum F1 {f2(hs[hk]['macro_F1'])} vs 6 bands {f2(hs[h6]['macro_F1'])} on unseen tiles, and +{f2(R['dR2_built'])} R² for heat.", "06")
 screen(SC["ad"], "Abu Dhabi screening", "The starter rule calls sand a city", f"NDBI says Masdar {ms['builtup_starter_NDBI_pct']:.0f}% built; WorldCover {ms['builtup_WorldCover_pct']:.0f}%. Musaffah: {mu['builtup_starter_NDBI_pct']:.0f}% vs {mu['builtup_WorldCover_pct']:.0f}%.", "07")
 # 18 annotation / detection image (Ghaf: segmentation model visual)
 slide(f'''<div class="kick">Annotation &amp; surface model</div><h1>Rule-based labels, honest tests</h1><img class="figw" src="{fig('11_musaffah_annotation_surfaces.png')}">''')
-slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>Segment, label, brief, then a person decides</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
+slide(f'''<div class="kick">Open AI models · SAM + LLM</div><h1>SAM segments every object around each hotspot</h1><img class="figw" style="height:520px" src="{fig('13_musaffah_sam_objects.png')}">
 <div class="strip" style="bottom:40px"><div><b>{R['sam']['segments']}</b>SAM segments, each with class, box and heat</div><div><b>{R['sam']['annotation_candidates']}</b>≥80% pure → annotation candidates</div>
-<div><b>{R['llm_briefs']['llm_drafts_passing_fact_check']}/{R['llm_briefs']['n']}</b>LLM drafts passed the fact-check. The rest were caught and replaced</div></div>''')
+</div>''')
 # 19 architecture (icon diagram)
 def col(title, items, cls=""):
     return f'<div class="acol {cls}"><h4>{title}</h4>' + "".join(f'<div class="aitem">{icon(i_, 30, "#ffb15c" if not cls else "#0d1f1c")}<span>{t}</span></div>' for i_, t in items) + "</div>"
@@ -194,7 +210,7 @@ slide('<div class="kick">Architecture</div><h1>From open satellites to a decisio
       f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
       col("Answers", [("flame", "Hazard zones"), ("road", "Surface mix"), ("users", "Exposure sites"), ("temperature", "Heat drivers"), ("target", "Priority + action")]) +
       f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
-      col("Delivery", [("world", "Story dashboard"), ("database", "GeoJSON / API"), ("checklist", "Planner brief + sign-off"), ("clock", "Summer alerts")], "go") + "</div>")
+      col("Delivery", [("world", "Story dashboard"), ("database", "GeoJSON / API"), ("checklist", "Planner brief per hotspot"), ("clock", "Summer alerts")], "go") + "</div>")
 
 # 20 why it fits
 slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert city</h1>
@@ -290,10 +306,12 @@ section:has(.filmstrip) .split{height:560px}
 .mods div{display:grid;grid-template-columns:52px 1fr;gap:4px 14px} .mods i{grid-row:span 2;font:800 52px/1 'Big Shoulders Display';color:#ff6b2c;font-style:normal}
 .mods b{font:800 32px/1.05 'Big Shoulders Display'} .mods span{font-size:20px;color:#cdbda4}
 .splash{font:800 190px/1 'Big Shoulders Display';text-align:center;margin:40px 0 50px} .splash span{color:#ff6b2c;font-family:'IBM Plex Sans Arabic'}
-.lenses{display:grid;grid-template-columns:repeat(3,320px);gap:40px;justify-content:center}
-.lenses figure{margin:0;text-align:center} .lenses img{width:320px;height:320px;object-fit:cover;border-radius:16px;display:block}
+.lenses{display:grid;grid-template-columns:repeat(4,300px);gap:40px;justify-content:center}
+.lenses figure{margin:0;text-align:center} .lenses img{width:300px;height:300px;object-fit:cover;border-radius:16px;display:block}
 .lenses figcaption{font:800 34px 'Big Shoulders Display';color:#ffcf9a;margin-top:14px}
 .screen{padding:0}
+.pop{position:absolute;z-index:5;background:#43c6b4;color:#0d1f1c;font:600 17px 'IBM Plex Sans Arabic';padding:8px 14px;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.6);max-width:360px}
+.phf{margin:0}.phf figcaption{font:500 14px 'IBM Plex Mono';color:#ffb15c;margin-top:8px}
 .shotbig{position:absolute;left:0;top:0;width:1600px;height:780px;object-fit:cover;object-position:top}
 .capbar{position:absolute;left:0;right:0;bottom:0;height:120px;background:#14110e;border-top:3px solid #ff6b2c;display:grid;grid-template-columns:120px 520px 1fr;gap:24px;align-items:center;padding:0 40px}
 .capbar .cn{display:flex;align-items:center;gap:10px;font:800 40px 'Big Shoulders Display';color:#ff6b2c}
@@ -335,6 +353,12 @@ section:has(.filmstrip) .split{height:560px}
 .outs figcaption{display:grid;grid-template-columns:30px 1fr;gap:2px 8px;margin-top:10px}.outs figcaption svg{grid-row:span 2}.outs b{font:800 26px 'Big Shoulders Display'}.outs span{font-size:15px;color:#cdbda4}
 .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.logos>div{display:grid;grid-template-columns:170px 1fr;gap:18px;align-items:center}
 .logos .lg{background:#fff;border-radius:12px;height:90px;display:grid;place-items:center;padding:12px}.logos img{max-width:140px;max-height:66px}.logos b{font-size:21px;font-weight:500;color:#e2d4bc}
+.cov2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.cov2>div{background:#1f1a15;border:1px solid #3a3027;border-radius:14px;overflow:hidden;padding-bottom:10px}
+.cov2 img,.cov2 .ph{width:100%;height:120px;object-fit:cover;display:grid;place-items:center;background:#fff}.cov2 .todo .ph{background:#2a231c}
+.cov2 b{display:flex;align-items:center;gap:8px;font:800 22px 'Big Shoulders Display';padding:8px 12px 2px}.cov2 span{display:block;font-size:13px;color:#cdbda4;padding:0 12px}
+.mtab{display:flex;flex-direction:column;gap:10px}.mtab>div{display:grid;grid-template-columns:34px 230px 300px 300px 1fr 150px;gap:16px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:14px 18px}
+.mtab .mh{background:none;border:0;font:500 13px 'IBM Plex Mono';color:#ffb15c;text-transform:uppercase;letter-spacing:.1em;padding:0 18px}
+.mtab i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mtab b{font:800 26px 'Big Shoulders Display'}.mtab span{font-size:17px;color:#cdbda4}.mtab em{font-style:normal;font-size:19px;color:#43c6b4;font-weight:600}.mtab small{font:500 14px 'IBM Plex Mono';color:#ffb15c}
 .mrows{display:flex;flex-direction:column;gap:14px}.mrows>div{display:grid;grid-template-columns:34px 300px 230px 1fr;gap:18px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:16px 20px}
 .mrows i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mrows b{font:800 28px 'Big Shoulders Display'}.mrows em{font-style:normal;font:500 16px 'IBM Plex Mono';color:#ffb15c}.mrows span{font-size:21px;color:#e2d4bc}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px}

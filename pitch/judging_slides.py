@@ -40,11 +40,6 @@ _sar = R.get("sar_fusion")
 if _sar:
     _sc = {d["model"]: d for d in _sar["scores"]}; _a, _b = list(_sc)[0], list(_sc)[2]
     _rows.append(("Built-up with radar (S2 → S2+SAR)", "F1", _sc[_a]["built_F1"], _sc[_b]["built_F1"], f"held-out blocks · sand→roof {_sar['sand_called_roof_pct_s2']:.1f}% → {_sar['sand_called_roof_pct_fusion']:.1f}%"))
-_gt = R.get("roof_ground_truth", {})
-_gm = _gt.get("rules_vs_truth_Musaffah") or _gt.get("rules_vs_truth_Riyadh")
-if _gm and _gt.get("supervised_on_truth_Musaffah"):
-    _rows.append(("Roof materials vs human labels", "macro-F1", _gm["macro_F1"], _gt["supervised_on_truth_Musaffah"]["macro_F1"],
-                  f"{_gt['roofs_with_truth']} blind-labelled roofs · rules → trained model · people agree κ {_gt.get('fleiss_kappa_people', float('nan')):.2f}"))
 _bars = "".join(f'''<div class="r"><span class="n">{n}</span><span class="m">{m}</span>
 <span class="bars"><i class="b0" style="width:{max(2, 100*b0):.0f}%"></i><i class="b1" style="width:{max(2, 100*b1):.0f}%"></i></span>
 <span class="v"><s>{b0:.2f}</s> → <b>{b1:.2f}</b></span><span class="how">{h}</span></div>''' for n, m, b0, b1, h in _rows)
@@ -57,7 +52,7 @@ slide(f'''<div class="kick">Question 2 · how good is the model, really?</div><h
 <div class="legend2"><i class="b0"></i>starter / baseline <i class="b1"></i>QAYDH</div><div class="score">{_bars}</div><div class="extra">{"".join(_extra)}</div>''')
 
 # ---------- Q3 · how end users see it ----------
-_dash = _os.path.join(PITCH, "dashboard.png")
+_dash = _os.path.join(PITCH, "screens", "m5_act.png")
 _api = _json.dumps({"id": _h0.id, "street": str(_h0.street), "lat": round(float(_h0.lat), 4), "lon": round(float(_h0.lon), 4),
                     "surface_temp_C": float(_h0.LST_C), "heat_percentile": int(_h0.heat_pct), "who": str(_h0.exposure_context),
                     "surfaces": {"road": float(_h0.road), "roof": float(_h0.roof), "sand": float(_h0.sand), "green": float(_h0.veg)},
@@ -80,11 +75,21 @@ _cov = [("Quantify urban growth", f"+{R['growth_pct']:.0f}% built-up 2014→2025
         ("Fuse optical + SAR + thermal", "Sentinel-1 VV/VH + Sentinel-2 + Landsat TIRS", "10f · 10i"),
         ("Green space mapping", "vegetation class, distance to green, parks per 10k people", "5b · 7b"),
         ("Heat proxy + weather", f"NDBI r = {R['ndbi_lst_r_builtup']:.2f} → fused model; ERA5 checked vs NOAA stations", "5b · 10d · 10i"),
-        ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs, scored vs blind human labels; informal-housing candidates", "10g · 10g-b · 10h"),
+        ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs, from spectra; informal-housing screening", "10g · 10g-b · 10h"),
         ("Population & OSM", "WorldPop residents; OSM + Microsoft buildings, roads, mosques, stops", "7b · 10b"),
         ("813 urban scenes", "not released in the PoC phase; pipeline is sensor-agnostic (Tanager, EMIT tested)", "incubation")]
-slide('<div class="kick">Challenge coverage</div><h1>Every challenge line, answered</h1><div class="cov">' +
-      "".join(f'<div class="{"todo" if w_ == "incubation" else ""}">{icon("checklist" if w_ != "incubation" else "clock", 28, "#43c6b4" if w_ != "incubation" else "#ffb15c")}<b>{t}</b><span>{d_}</span><em>{w_}</em></div>' for t, d_, w_ in _cov) + "</div>")
+_thumb = {"4": "01_urban_expansion.png", "4 · 10f": "15_sar_fusion.png", "5 · 8 · 10i": "02_heat_hazard.png", "10f · 10i": "15_sar_fusion.png",
+          "5b · 7b": "08_when_persistence_green.png", "5b · 10d · 10i": "14_station_validation.png", "10g · 10g-b · 10h": "16_roof_materials.png",
+          "7b · 10b": "07_people_exposure.png"}
+def _th(w_):
+    f_ = _thumb.get(w_); pth = _os.path.join(OUT, f_) if f_ else None
+    if not pth or not _os.path.exists(pth): return ""
+    im_ = Image.open(pth).convert("RGB"); im_.thumbnail((520, 260)); b_ = io.BytesIO(); im_.save(b_, "JPEG", quality=80)
+    return "data:image/jpeg;base64," + base64.b64encode(b_.getvalue()).decode()
+slide('<div class="kick">Challenge coverage</div><h1>Every challenge line, answered</h1><div class="cov2">' +
+      "".join(f'<div class="{"todo" if w_ == "incubation" else ""}">' + (f'<img src="{_th(w_)}">' if _th(w_) else f'<div class="ph">{icon("satellite", 54, "#ffb15c")}</div>') +
+              f'<b>{icon("checklist" if w_ != "incubation" else "clock", 22, "#43c6b4" if w_ != "incubation" else "#ffb15c")} {t}</b><span>{d_}</span></div>' for t, d_, w_ in _cov) + "</div>")
+
 
 # ---------- new evidence slides (appear once the notebook sections have run) ----------
 def _figslide(fn, kick, title, strip):
@@ -98,12 +103,12 @@ _rr = R.get("roof_materials_riyadh"); _rm = R.get("roof_materials_musaffah")
 if _rr:
     _lst = _rr.get("median_LST_C", {}); _hot = max(_lst, key=_lst.get) if _lst else ""
     _figslide("16_roof_materials.png", "Roofing materials from spectra", "Metal, concrete, tile, bitumen, white: the roof decides the fix",
-              f"<div><b>{_rr['silhouette']:.2f}</b>spectral separability (silhouette)</div><div><b>{_hot.split(' ')[0]}</b>hottest roof material in Landsat LST</div>"
+              f"<div><b>5</b>roof material classes from spectra</div><div><b>{_hot.split(' ')[0]}</b>hottest roof material in Landsat LST</div>"
               + (f"<div><b>{_rm['hot_material_in_hot_zone']:,}</b>metal/bitumen roofs in Musaffah's high-heat zones</div>" if _rm else ""))
 _inf = R.get("informal_screen")
 if _inf:
-    _figslide("17_informal_screen.png", "Informal / substandard-housing screen", "Dense, irregular, sheet-roofed and hot: candidates for a field visit",
-              f"<div><b>{_inf['flagged']}</b>candidate 100 m cells of {_inf['cells']}</div><div><b>×{_inf['enrichment_ratio']:.1f}</b>OSM-mapped housing enrichment (p {_inf['permutation_p']:.3f})</div><div><b>Field check</b>never used for enforcement</div>")
+    _figslide("17_informal_screen.png", "Informal / substandard-housing screen", "Dense, irregular, sheet-roofed and hot: priority areas for housing upgrades",
+              f"<div><b>{_inf['flagged']}</b>candidate 100 m cells of {_inf['cells']}</div><div><b>×{_inf['enrichment_ratio']:.1f}</b>OSM-mapped housing enrichment (p {_inf['permutation_p']:.3f})</div><div><b>Top 10%</b>cells prioritised for housing-quality programmes</div>")
 _hp = R.get("heat_island_proxy")
 if _hp:
     _hsc = {d["model"]: d for d in _hp["scores"]}
