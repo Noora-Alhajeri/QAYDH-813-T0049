@@ -129,6 +129,7 @@ outs = [("flame", "Hotspot map", "Heat zones across Musaffah", blockimg(("sat", 
         ("chart-dots", "Priority ranking", "Ranked hotspots M-001…M-010", shotcrop(SC["m_act"], (0, 60, 330, 400)))]
 slide(f'''<div class="pa"><div><div class="kick">The problem we solve</div>
 <h1 class="big" style="font-size:64px">We don't only map heat.<br><span class="o">We explain it and say what to do.</span></h1>
+<p class="dstrip"><b>Hyperspectral:</b> Planet Tanager 426 bands · <b>Thermal:</b> Landsat 8/9 · <b>10 m:</b> Sentinel-2 + Sentinel-1 radar · <b>Places:</b> OSM + 25,462 footprints · <b>People:</b> WorldPop · <b>Truth:</b> NOAA stations</p>
 <p class="ar">نحن لا نكتفي برسم خريطة للحرارة؛ بل نفسر أسبابها على مستوى المواد ونقترح التدخل المناسب</p></div>
 <div class="outs">{"".join(f'<figure><img src="{im}"><figcaption>{icon(i_, 26)}<b>{t}</b><span>{d_}</span></figcaption></figure>' for i_, t, d_, im in outs)}</div></div>''')
 # 6 collage
@@ -356,6 +357,7 @@ section:has(.filmstrip) .split{height:560px}
 .cov2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.cov2>div{background:#1f1a15;border:1px solid #3a3027;border-radius:14px;overflow:hidden;padding-bottom:10px}
 .cov2 img,.cov2 .ph{width:100%;height:120px;object-fit:cover;display:grid;place-items:center;background:#fff}.cov2 .todo .ph{background:#2a231c}
 .cov2 b{display:flex;align-items:center;gap:8px;font:800 22px 'Big Shoulders Display';padding:8px 12px 2px}.cov2 span{display:block;font-size:13px;color:#cdbda4;padding:0 12px}
+.dstrip{font-size:19px;color:#cdbda4;margin:0;border-left:4px solid #43c6b4;padding-left:12px}.dstrip b{color:#43c6b4}
 .mtab{display:flex;flex-direction:column;gap:10px}.mtab>div{display:grid;grid-template-columns:34px 230px 300px 300px 1fr 150px;gap:16px;align-items:center;background:#1f1a15;border:1px solid #3a3027;border-radius:12px;padding:14px 18px}
 .mtab .mh{background:none;border:0;font:500 13px 'IBM Plex Mono';color:#ffb15c;text-transform:uppercase;letter-spacing:.1em;padding:0 18px}
 .mtab i{width:30px;height:30px;border-radius:8px;border:2px solid #efe3cf}.mtab b{font:800 26px 'Big Shoulders Display'}.mtab span{font-size:17px;color:#cdbda4}.mtab em{font-style:normal;font-size:19px;color:#43c6b4;font-weight:600}.mtab small{font:500 14px 'IBM Plex Mono';color:#ffb15c}
