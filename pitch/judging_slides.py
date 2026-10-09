@@ -27,7 +27,7 @@ _cust = [("building-skyscraper", "Municipal planners", "One-off consultant studi
 slide(f'''<div class="kick">Question 1 · the business problem</div><h1 class="big">Who loses when a city heats up, and what do they do today?</h1>
 <div class="q1">{"".join(f'<div class="c">{icon(i_, 46)}<b>{t}</b><div class="tag bad">Today</div><p>{a}</p><div class="tag good">With QAYDH</div><p class="g">{b}</p></div>' for i_, t, a, b in _cust)}</div>
 <div class="cost"><div><b>{_w["heat_hours_ge40_per_day"]:.1f} h</b>a day above 40 °C air</div><div><b>{_w["days_air_ge_40"]}/{_w["n_days"]}</b>summer days at 40 °C+</div>
-<div><b>+{(_st[0]["LST_minus_air_C"] if _st else 15):.0f} °C</b>ground above air at 10:40</div><div><b>{R["residents_hot20"]:,.0f}</b>residents in the hottest fifth (Riyadh)</div></div>
+<div><b>+{(_st[0]["LST_minus_air_C"] if _st else 15):.0f} °C</b>surface–air difference at 10:40 (descriptive)</div><div><b>{R["residents_hot20"]:,.0f}</b>residents in the hottest fifth (Riyadh)</div></div>
 <p class="biz">Business model · per-city subscription: dashboard + API + summer report · open-data core keeps cost near zero · upgrades to Satellite 813 / MBZ-SAT hyperspectral in incubation</p>''')
 
 # ---------- Q2 · how good is it, really? ----------
@@ -40,10 +40,14 @@ _sar = R.get("sar_fusion")
 if _sar:
     _sc = {d["model"]: d for d in _sar["scores"]}; _a, _b = list(_sc)[0], list(_sc)[2]
     _rows.append(("Built-up with radar (S2 → S2+SAR)", "F1", _sc[_a]["built_F1"], _sc[_b]["built_F1"], f"held-out blocks · sand→roof {_sar['sand_called_roof_pct_s2']:.1f}% → {_sar['sand_called_roof_pct_fusion']:.1f}%"))
+_ic = R.get("independent_check")
+if _ic:
+    _rows.append(("Independent check vs people (60 random points)", "accuracy", _ic["majority_class_baseline"]["accuracy"], _ic["accuracy"],
+                  f"baseline = always '{_ic['majority_class_baseline']['class_'].split(' /')[0]}' · 95% CI {_ic['accuracy_CI95'][0]:.2f}–{_ic['accuracy_CI95'][1]:.2f} · κ people {_ic['inter_rater']['fleiss_kappa']:.2f}"))
 _bars = "".join(f'''<div class="r"><span class="n">{n}</span><span class="m">{m}</span>
 <span class="bars"><i class="b0" style="width:{max(2, 100*b0):.0f}%"></i><i class="b1" style="width:{max(2, 100*b1):.0f}%"></i></span>
 <span class="v"><s>{b0:.2f}</s> → <b>{b1:.2f}</b></span><span class="how">{h}</span></div>''' for n, m, b0, b1, h in _rows)
-_extra = [f"<div><b>r {min(d['era5_vs_station_r'] for d in _st):.2f}–{max(d['era5_vs_station_r'] for d in _st):.2f}</b>weather vs 3 NOAA stations · MAE ≈{_st[0]['MAE_C']:.1f} °C</div>" if _st else "",
+_extra = [f"<div><b>r {min(d['era5_vs_station_r'] for d in _st):.2f}–{max(d['era5_vs_station_r'] for d in _st):.2f}</b>ERA5 vs 3 NOAA stations, air temp, hourly n≈2,000 · MAE ≈{_st[0]['MAE_C']:.1f} °C</div>" if _st else "",
           f"<div><b>{R['cv_built_iou_rf']:.2f}</b>built-up IoU (Riyadh)</div>",
           f"<div><b>r {R['lst_cells_r_2024_vs_2025']:.2f}</b>hotspots repeat 2024 ↔ 2025</div>",
           f"<div><b>{min(R['hrpi_top20_overlap'].values())*100:.0f}–{max(R['hrpi_top20_overlap'].values())*100:.0f}%</b>top-20 stable under 4 weightings</div>"]

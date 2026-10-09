@@ -198,13 +198,13 @@ slide(f'''<div class="kick">Hyperspectral · Planet Tanager 426 bands</div><h1>N
 <div><b>r {R['coreg_r_after']:.2f}</b>Tanager ↔ Landsat albedo after co-registration</div>
 <div><b>{"Abu Dhabi · EMIT" if _em else "Abu Dhabi"}</b>{f"Musaffah heat model R² {_em['r2_without']:.2f} → {_em['r2_with']:.2f} with NASA EMIT hyperspectral" if _em else "NASA EMIT: 33 hyperspectral passes over Musaffah, wired into the pipeline"}</div></div></div>''')
 # 17c ground truth: every layer checked against independent data
-_gtr = [("thermometer", "Weather & danger hours", "3 NOAA weather stations (Al Bateen, Abu Dhabi Intl, Riyadh)", f"r {min(d['era5_vs_station_r'] for d in R['station_check']):.2f}–{max(d['era5_vs_station_r'] for d in R['station_check']):.2f}"),
+_gtr = [("thermometer", "Weather & danger hours", "3 NOAA stations, air temperature, hourly (≈2,000 h each)", f"r {min(d['era5_vs_station_r'] for d in R['station_check']):.2f}–{max(d['era5_vs_station_r'] for d in R['station_check']):.2f}"),
         ("map-pin", "Built-up map", "Impact Observatory LULC 2023 (independent map, other year)", f"F1 {R['indep2023_built_f1_rf']:.2f}"),
         ("scan", "Surfaces (road · roof · sand · green)", "OSM + Microsoft footprints + WorldCover, unseen 1 km blocks", f"F1 {mc[mbest]['test_macro_F1']:.2f}"),
         ("satellite", "Tanager placement", "Landsat albedo, same ground", f"r {R['coreg_r_after']:.2f}"),
         ("temperature", "Heat drivers", "Landsat surface temperature, unseen blocks", f"R² {wm['Random Forest']['R2']:.2f}"),
         ("flame", "Hotspots are real, not noise", "Same cells hot in 2024 and 2025", f"r {R['lst_cells_r_2024_vs_2025']:.2f}")]
-slide('<div class="kick">Ground truth</div><h1>Every layer checked against independent data</h1><div class="gtr">' +
+slide('<div class="kick">Ground truth</div><h1>Every layer checked against data it was not built from</h1><div class="gtr">' +
       "".join(f'<div>{icon(i_ if os.path.exists(os.path.join(ICONS, i_ + ".svg")) else "checklist", 40)}<b>{t}</b><span>checked against: {w}</span><em>{v}</em></div>' for i_, t, w, v in _gtr) + "</div>")
 # 17d how a recommendation is made (expert reasoning chain)
 slide('<div class="kick">How each recommendation is made</div><h1 class="big">Evidence → expert rule → brief → planner</h1><div class="chain">' +

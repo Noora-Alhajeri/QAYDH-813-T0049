@@ -34,20 +34,23 @@ input,select{width:100%;background:#120f0c;color:var(--sand);border:1px solid va
   <div><div class="k">1 · Who is labelling?</div><input id="who" placeholder="Your name (e.g. Noura)"></div>
   <div><div class="k">2 · Dataset</div><select id="ds"></select></div>
   <div><div class="k">Progress</div><div class="prog"><i id="bar"></i></div><div id="cnt" class="help"></div></div>
-  <div><div class="k">3 · The outlined roof is…</div><div class="btns" id="btns"></div></div>
+  <div><div class="k">3 · Inside the orange outline is…</div><div class="btns" id="btns"></div></div>
   <div class="row"><button id="back">← Previous</button><button id="skip">Skip</button></div>
   <div class="row"><button id="export" class="p">Download my labels (CSV)</button></div>
   <div class="help"><b>How:</b> zoom is set for you. Judge the roof inside the orange outline only.
   <b>Metal sheet</b>: corrugated lines, often blue, green or silver. <b>Concrete</b>: flat grey or beige slab, AC units on top.
   <b>Clay tile</b>: red or brown tiles. <b>Bitumen</b>: very dark membrane. <b>White / cool</b>: bright white coating. Not sure? Press <b>Unsure</b>.
-  Labels save automatically in this browser. When done, download the CSV and put it in <code>qaydh_outputs/roof_labels/</code>, then re-run notebook cell <b>10g-b</b>.
+  Labels save automatically in this browser. When done, download the CSV. <b>Accuracy check</b> files go in <code>validation/labels/</code>, then run <code>python validation/score_independent.py</code>. Roof files go in <code>qaydh_outputs/roof_labels/</code> (re-run notebook cell 10g-b). For the accuracy check, choose the class covering most of the 10 m square.
   The model's prediction is hidden on purpose (blind labelling).</div>
 </aside>
 <script src="vendor/leaflet.js"></script>
 <script>
-const CLASSES=[["Metal sheet (bare / painted)","#4aa3df"],["Concrete / cement","#a9a9a0"],["Clay tile / brick","#c0573e"],["Bitumen / dark membrane","#2b2b2b"],["White / cool coating","#f5f5f0"],["Unsure","#8c7f6e"]];
-const SETS={"Musaffah buildings (near hotspots)":"../qaydh_outputs/dashboard/musaffah_objects_near_hotspots.geojson",
-            "Riyadh roof pixels (Tanager, 30 m)":"../qaydh_outputs/roof_label_points_riyadh.geojson"};
+const ROOFS=[["Metal sheet (bare / painted)","#4aa3df"],["Concrete / cement","#a9a9a0"],["Clay tile / brick","#c0573e"],["Bitumen / dark membrane","#2b2b2b"],["White / cool coating","#f5f5f0"],["Unsure","#8c7f6e"]];
+const SURF=[["Road / dark pavement","#50535f"],["Building / roof","#9b7bff"],["Bare soil / sand","#e8dcb0"],["Vegetation","#22b573"],["Water","#3ba3f0"],["Unsure","#8c7f6e"]];
+const SETS={"Accuracy check · 60 random points (surface class)":["../validation/independent_points.geojson",SURF,"square"],
+            "Musaffah buildings (near hotspots) · roof material":["../qaydh_outputs/dashboard/musaffah_objects_near_hotspots.geojson",ROOFS,"poly"],
+            "Riyadh roof pixels (Tanager, 30 m) · roof material":["../qaydh_outputs/roof_label_points_riyadh.geojson",ROOFS,"poly"]};
+let CLASSES=SURF;
 const map=L.map("map",{maxZoom:21}).setView([24.35,54.5],15);
 L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:21,maxNativeZoom:19,attribution:"Imagery © Esri, Maxar, Earthstar Geographics"}).addTo(map);
 let Q=[],i=0,cur=null,dsName=null,store={};
@@ -59,20 +62,22 @@ function stratified(feats){const by={};feats.forEach(f=>{const c=f.properties.ro
   let out=[];Object.values(by).forEach(v=>out=out.concat(shuffle(v.slice()).slice(0,60)));return shuffle(out,4242).slice(0,300)}
 function show(){
   if(cur) map.removeLayer(cur); const f=Q[i]; if(!f) return;
-  cur=L.geoJSON(f,{style:{color:"#ff6b2c",weight:3,fill:false},pointToLayer:(g,ll)=>L.circle(ll,{radius:15,color:"#ff6b2c",weight:3,fill:false})}).addTo(map);
+  const sq=SETS[dsName][2]==="square";
+  cur=L.geoJSON(f,{style:{color:"#ff6b2c",weight:3,fill:false},pointToLayer:(g,ll)=>{if(!sq)return L.circle(ll,{radius:15,color:"#ff6b2c",weight:3,fill:false});
+     const dLat=5/111320, dLon=5/(111320*Math.cos(ll.lat*Math.PI/180)); return L.rectangle([[ll.lat-dLat,ll.lng-dLon],[ll.lat+dLat,ll.lng+dLon]],{color:"#ff6b2c",weight:3,fill:false});}}).addTo(map);
   const b=cur.getBounds(); map.fitBounds(b,{maxZoom:20,padding:[140,140]});
   const n=Object.keys(store).length; document.getElementById("bar").style.width=(100*n/Q.length)+"%";
-  const id=f.properties.id; document.getElementById("cnt").innerHTML=`Roof ${i+1} of ${Q.length} · <b>${id}</b> · labelled ${n}${store[id]?` · <span class="done">you said: ${store[id].label}</span>`:""}`;
+  const id=f.properties.id; document.getElementById("cnt").innerHTML=`Item ${i+1} of ${Q.length} · <b>${id}</b>${f.properties.set?" · "+f.properties.set:""} · labelled ${n}${store[id]?` · <span class="done">you said: ${store[id].label}</span>`:""}`;
 }
 function label(c){const f=Q[i];if(!f)return;const who=document.getElementById("who").value.trim()||"anonymous";
   const ll=cur.getBounds().getCenter(); store[f.properties.id]={id:f.properties.id,lat:ll.lat.toFixed(6),lon:ll.lng.toFixed(6),label:c,labeller:who,time:new Date().toISOString()};
   save(); if(i<Q.length-1)i++; show();}
-async function pick(name){dsName=name;load();i=0;
-  try{const g=await (await fetch(SETS[name])).json();Q=stratified(g.features.filter(f=>f.properties&&f.properties.id));}
+async function pick(name){dsName=name;load();i=0;CLASSES=SETS[name][1];drawButtons();
+  try{const g=await (await fetch(SETS[name][0])).json();const fs=g.features.filter(f=>f.properties&&f.properties.id);Q=SETS[name][2]==="square"?fs:stratified(fs);}
   catch(e){Q=[];document.getElementById("cnt").textContent="This dataset is not generated yet: run notebook section 10g first.";return;}
   const firstTodo=Q.findIndex(f=>!store[f.properties.id]); i=firstTodo<0?0:firstTodo; show();}
 const sel=document.getElementById("ds"); Object.keys(SETS).forEach(n=>{const o=document.createElement("option");o.textContent=n;sel.appendChild(o)}); sel.onchange=()=>pick(sel.value);
-const bt=document.getElementById("btns"); CLASSES.forEach(([c,col],k)=>{const b=document.createElement("button");b.innerHTML=`<i style="background:${col}"></i>${c.split(" (")[0]}<kbd>${k+1}</kbd>`;b.onclick=()=>label(c);bt.appendChild(b)});
+function drawButtons(){const bt=document.getElementById("btns");bt.innerHTML="";CLASSES.forEach(([c,col],k)=>{const b=document.createElement("button");b.innerHTML=`<i style="background:${col}"></i>${c.split(" (")[0]}<kbd>${k+1}</kbd>`;b.onclick=()=>label(c);bt.appendChild(b)});}
 document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;const k=+e.key;if(k>=1&&k<=CLASSES.length)label(CLASSES[k-1][0]);if(e.key==="ArrowLeft"&&i>0){i--;show()}if(e.key==="ArrowRight"&&i<Q.length-1){i++;show()}});
 document.getElementById("back").onclick=()=>{if(i>0){i--;show()}};document.getElementById("skip").onclick=()=>{if(i<Q.length-1){i++;show()}};
 try{document.getElementById("who").value=localStorage.getItem("qaydh-labeller")||""}catch(e){}
@@ -80,7 +85,7 @@ document.getElementById("who").onchange=e=>{try{localStorage.setItem("qaydh-labe
 document.getElementById("export").onclick=()=>{const rows=Object.values(store);if(!rows.length)return alert("No labels yet.");
   const who=(document.getElementById("who").value.trim()||"anonymous").replace(/\W+/g,"_");
   const csv="dataset,id,lat,lon,label,labeller,time\n"+rows.map(r=>[JSON.stringify(dsName),r.id,r.lat,r.lon,JSON.stringify(r.label),JSON.stringify(r.labeller),r.time].join(",")).join("\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`roof_labels_${who}.csv`;a.click();};
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=(SETS[dsName][2]==="square"?"independent_check_":"roof_labels_")+`${who}.csv`;a.click();};
 pick(sel.value);
 </script>
 </body>

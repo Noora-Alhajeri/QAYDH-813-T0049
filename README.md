@@ -50,11 +50,25 @@ For every hotspot, QAYDH answers five questions:
 | Built-up with Sentinel-1 radar | Held-out blocks | **F1 0.89** | optical only 0.85 |
 | Heat drivers, Musaffah | Landsat LST, unseen blocks | **R² 0.85**, MAE 1.2 °C | NDBI alone r 0.40 |
 | Hyperspectral adds value (Tanager, Riyadh) | Spatial CV with/without | **+0.13 R²** (built-up) | — |
-| Weather and danger hours | 3 NOAA stations (Al Bateen, Abu Dhabi Intl, Riyadh) | **r 0.95–0.99** | — |
+| Weather and danger hours (air temperature) | ERA5 vs 3 NOAA stations (Al Bateen, Abu Dhabi Intl, Riyadh), **hourly, ≈2,000 h per station**, summer 2025 | **r 0.95–0.99**, MAE 1.4–1.5 °C | — |
+| Surface vs air (descriptive, not a validation) | Landsat LST minus station air at overpass, 10–22 Landsat days per station | surface–air difference **+10.7 to +15.5 °C** | LST is a different physical quantity from air temperature, so this is reported as a difference, not a bias, and is not used to validate absolute LST |
 | Hotspots are stable | Same cells 2024 vs 2025 | **r 0.90** | — |
 | Priorities are robust | 4 alternative weightings | 60–100% top-20 overlap | — |
 | Cool roofs cool | Block-bootstrap regression | **−0.70 °C per +0.10 albedo** (95% CI −0.85 to −0.56) | — |
 | Planner briefs | Number-by-number fact-check | **5/5 pass** (Llama-3.3-70B) | — |
+| **Independent accuracy check (people on the ground imagery)** | 60 simple-random points, Musaffah; 20 labelled by all three of us (inter-rater κ), 40 by one; `validation/score_independent.py` | *filled in by the script once labelled* | majority-class baseline reported beside it |
+
+All numbers above except the last row are agreement with reference maps the model learned from or was tuned against. The independent check is the one number measured against people looking at very-high-resolution imagery, so we expect it to be lower than 0.91 and report it as it comes out.
+
+### Example output
+
+The notebook writes all of these into `qaydh_outputs/` (committed). Three of them:
+
+![Musaffah: heat hazard, surfaces, exposure and priority](qaydh_outputs/12_musaffah_heat_surface_exposure_priority.png)
+
+![Heat-Risk Priority Index, east Riyadh](qaydh_outputs/06_heat_risk_priority.png)
+
+![Sentinel-1 radar fusion: built-up map with and without SAR](qaydh_outputs/15_sar_fusion.png)
 
 ## 5 · How the labels were built
 
@@ -80,6 +94,15 @@ Planet Tanager (CC-BY-4.0) · NASA EMIT · Landsat 8/9 (USGS) · Sentinel-1 and 
 
 ## 8 · Run it
 
+**Fresh Google Colab (what a reviewer does):**
+```
+!git clone https://github.com/Noora-Alhajeri/QAYDH-813-T0049.git
+%cd QAYDH-813-T0049
+!pip install -r requirements.txt
+```
+then *Runtime → Restart session* → *Run all*. All paths are relative to the repo; every random step uses `SEED = 813`; the exact input scenes are listed in [`example_input/README.md`](example_input/README.md) and the Tanager STAC item is read from `example_input/`.
+
+**Local:**
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt

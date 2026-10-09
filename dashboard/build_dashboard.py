@@ -101,6 +101,7 @@ CH = dict(
 if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
     mh = pd.read_csv(os.path.join(OUT, "musaffah_hotspots.csv")).head(10); ms_ = pd.read_csv(os.path.join(OUT, "musaffah_exposure_sites.csv"))
     mcells = json.load(open(os.path.join(OUT, "musaffah_cells_100m.geojson")))
+    for k_, f_ in enumerate(mcells["features"]): f_["properties"]["block"] = f"C-{k_+1:04d}"     # 100 m thermal block id
     for f_ in mcells["features"]: f_["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in ring] for ring in f_["geometry"]["coordinates"]]
     mc_ = {d["approach"]: d for d in R["musaffah_classifier"]["scores"]}; wm = {d["model"]: d for d in R["musaffah_why_model"]["scores"]}
     th = R["musaffah_hazard_thresholds_C"]; top = R["musaffah_top_hotspot"]; sites = R["musaffah_sites"]
@@ -121,6 +122,22 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
         if os.path.exists(rmp):
             rm = dict(pd.read_csv(rmp).values)
             for f_ in DATA["musaffah"]["objects"]["features"]: f_["properties"]["roof_material"] = rm.get(f_["properties"].get("id"), "")
+        # Each building inherits the value of the 100 m thermal block it sits in (Dr D. Francis, KU review):
+        # one block -> one number for every building in it, block id shown, never a per-building temperature.
+        from shapely.geometry import shape as _shape
+        from shapely.strtree import STRtree
+        _polys = [_shape(f_["geometry"]) for f_ in mcells["features"]]; _tree = STRtree(_polys)
+        _count = {}
+        for f_ in DATA["musaffah"]["objects"]["features"]:
+            c_ = _shape(f_["geometry"]).centroid; hit = [j for j in _tree.query(c_) if _polys[j].contains(c_)]
+            pr_ = f_["properties"]; pr_.pop("LST_C", None)
+            if hit:
+                cp = mcells["features"][hit[0]]["properties"]; pr_["block"] = cp["block"]; pr_["block_LST_C"] = cp["LST_C"]; pr_["block_heat_pct"] = cp["heat_pct"]
+                _count[cp["block"]] = _count.get(cp["block"], 0) + 1
+        for f_ in DATA["musaffah"]["objects"]["features"]: f_["properties"]["block_n"] = _count.get(f_["properties"].get("block"), 0)
+        _lsm = [d for d in json.load(open(os.path.join(OUT, "data_provenance.json"))) if "Landsat" in d["source"] and "Musaffah" in d["source"]]
+        DATA["musaffah"]["acq"] = (f"Landsat 8/9 TIRS · median of {len(_lsm[0]['dates'])} clear scenes {_lsm[0]['dates'][0]} → {_lsm[0]['dates'][-1]} · ~10:40 local · native ≈100 m"
+                                   if _lsm else "Landsat 8/9 TIRS, summer 2025, ~10:40 local, native ≈100 m")
         ifp = os.path.join(OUT, "musaffah_informal_candidates.geojson")   # 10h informal-housing candidates
         if os.path.exists(ifp): DATA["musaffah"]["informal"] = gj(ifp)
         DATA["musaffah"]["segments"] = gj(os.path.join(OUT, "musaffah_sam_segments.geojson"))
@@ -129,7 +146,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
     rules_ = [k for k in mc_ if k.startswith("Index")][0]; bestk = R["musaffah_classifier"]["chosen"]
     s0 = ms_.iloc[0]; h0_ = mh.iloc[0]
     CH["musaffah"] = [
-        dict(id="where", layer="hazard", hint="Red = extreme heat zone. Press Next to see who is there.", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
+        dict(id="where", layer="blocks", hint="Red = extreme heat zone. Press Next to see who is there.", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
              body=f"Landsat thermal (≈100 m) shows zones: elevated ≥ {th['P75']:.1f} °C, high ≥ {th['P90']:.1f} °C, extreme ≥ {th['P95']:.1f} °C. It never pretends to know one bus stop's exact temperature.",
              stat=[(f"{th['P95']:.1f} °C", "extreme threshold (P95)"), (f"{th['median']:.1f} °C", "block median")]),
         dict(id="who", layer="sites", view=[float(s0.lat), float(s0.lon), 15], hint="Click a lettered icon: B bus stop, M mosque, S school/clinic.", kicker="Who may be exposed?", title="Bus stops, mosques, clinics, labour camps",
@@ -141,7 +158,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
         dict(id="labels", layer="annotation", view=[float(h0_.lat), float(h0_.lon), 16], hint="Hover a building outline to see its ID and labels. Orange outline = cool-roof candidate.", kicker="How we labelled it", title="Annotation, objects and AI segments",
              body=f"Reference labels at ≥80% purity (A–C train · D validate · E test), {R['musaffah_objects']['buildings']:,} building objects with ID and bounding box, SAM segments around hotspots, and a 300-point review queue for people to check.",
              stat=[(f"{R['musaffah_objects']['buildings']:,}", "labelled building objects"), (f"{R['sam']['annotation_candidates']}", "SAM annotation candidates")]),
-        dict(id="why", layer="hazard", hint="Drivers are shown in each hotspot card in the last step.", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
+        dict(id="why", layer="blocks", hint="Drivers are shown in each hotspot card in the last step.", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
              body=f"A spatially cross-validated model links each 100 m cell's surface mix to its heat. Drivers are shown as associations, not proof of cause.",
              stat=[(f"{wm['Random Forest']['R2']:.2f}", "R², spatial CV"), (f"{wm['Random Forest']['MAE_C']:.1f} °C", "mean error")]),
         dict(id="act", layer="priority", hint="Pick a hotspot from the list to see its card.", kicker="What should be done?", title="Where to act first in Musaffah",
