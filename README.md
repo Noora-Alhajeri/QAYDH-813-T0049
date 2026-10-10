@@ -149,10 +149,7 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 
 ## 10 · Team, licence and attribution
 
-**Team T0049 (UAE):**
-- Entesar Al Habsi (انتصار الحبسي): team lead, story and README
-- Noora Al Hajeri (نورة الهاجري): notebook, data and dashboard
-- Maryam Al Bunni (مريم البني): slides, licences and checks
+**Team T0049 (UAE):** Entesar Al Habsi (انتصار الحبسي), lead, story and README · Noura Al Hajeri (نورة الهاجري), notebook, data and dashboard · Maryam Al Bonni (مريم البني), deck, licences and checks.
 
 **Licence:** code under MIT ([`LICENSE`](LICENSE)). Each dataset keeps its own licence (table in §4).
 
@@ -161,5 +158,8 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 - © OpenStreetMap contributors (ODbL); Microsoft Building Footprints (ODbL).
 - Contains modified Copernicus Sentinel data 2025; ERA5 © ECMWF / Copernicus Climate Change Service.
 - Landsat courtesy of USGS; EMIT courtesy of NASA LP DAAC; WorldPop; ESA WorldCover; Impact Observatory.
-- Built with Llama (Llama-3.3-70B, Llama 3.3 Community License). Segment Anything (Meta, Apache-2.0). Basemap imagery © Esri, Maxar.
-- Organised by the UAE Space Agency and Space42 (Arab Youth Space Hackathon 2026).
+- Built with Llama (Llama-3.3-70B, Meta Llama 3.3 Community License). Segment Anything (Meta, Apache-2.0). Basemap imagery © Esri, Maxar.
+- Organised by the UAE Space Agency and Space42 for the Arab Youth Space Hackathon 2026.
+
+> The code in this repository is released under the MIT License. Data products derived from
+ODbL sources remain subject to those sources' terms.
