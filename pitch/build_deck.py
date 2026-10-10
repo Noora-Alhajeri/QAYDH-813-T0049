@@ -60,8 +60,8 @@ def shotcrop(p, box=(330, 50, 1260, 950), size=700):
     im = Image.open(p).convert("RGB").crop(box); im.thumbnail((size, size)); b = io.BytesIO(); im.save(b, "JPEG", quality=86)
     return "data:image/jpeg;base64," + base64.b64encode(b.getvalue()).decode()
 def img(p):
-    if p.endswith(".png") and ("screens" in p or "dashboard" in p):
-        im_ = Image.open(p).convert("RGB"); b_ = io.BytesIO(); im_.save(b_, "JPEG", quality=82)
+    if p.endswith(".png") and ("screens" in p or "dashboard" in p or os.path.getsize(p) > 400_000):
+        im_ = Image.open(p).convert("RGB"); im_.thumbnail((2400, 2400)); b_ = io.BytesIO(); im_.save(b_, "JPEG", quality=80)
         return "data:image/jpeg;base64," + base64.b64encode(b_.getvalue()).decode()
     return "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
 def fig(n): return img(os.path.join(OUT, n))
@@ -86,11 +86,11 @@ S = []
 def slide(body, cls=""): S.append(f'<section class="{cls}">{body}</section>')
 STAGE_ICON = {"Where is heat high?": "flame", "Who may be exposed?": "users", "What is physically there?": "scan", "How we labelled it": "checklist",
               "Why may it be hot?": "temperature", "What should be done?": "target"}
-GUIDE = {"Where is heat high?": [(560, 110, "① Red = extreme heat zone (top 5%)"), (40, 460, "② Steps 1→6 on the left"), (560, 690, "③ Next / Back to move")],
+GUIDE = {"Where is heat high?": [(560, 110, "① Dark red = extreme heat zone (top 5%)"), (980, 640, "② Orange / red = elevated / high"), (40, 460, "③ Steps 1→6 on the left")],
          "Who may be exposed?": [(700, 300, "① Icons = bus stop · mosque · school · clinic"), (1270, 120, "② Card: heat %, green, action")],
          "What is physically there?": [(620, 300, "① Grey road · violet roof · beige sand · green · blue water"), (40, 300, "② Accuracy on unseen blocks")],
          "How we labelled it": [(600, 300, "① Hover a building: ID B-00001, material, heat zone"), (600, 380, "② Orange outline = cool-roof candidate")],
-         "Why may it be hot?": [(40, 360, "① Model links surfaces to heat (R² 0.85)"), (600, 300, "② Red where asphalt + sand, no green")],
+         "Why may it be hot?": [(40, 360, "① Model links surfaces to heat (R² 0.85)"), (600, 250, "② Each 100 m block = its summer surface °C"), (600, 650, "③ Darker = hotter; asphalt + sand, no green")],
          "What should be done?": [(40, 300, "① M-001 = Musaffah hotspot #1 (rank by risk)"), (1250, 520, "② Do-now plan matched to materials"), (600, 520, "③ Click any M-label on the map")]}
 def screen(src, kicker, title, quote, n):
     ic = icon(STAGE_ICON.get(kicker, "eye"), 40)
@@ -216,16 +216,15 @@ slide('<div class="kick">How each recommendation is made</div><h1 class="big">Ev
         ("users", "5 · Planner decides", f"{h0.id} plan: {str(h0.now)[:90]}")])) + "</div>")
 
 # 17e one slide per dashboard layer
-LAYER_SLIDES = [("hazard", "Heat hazard", "Landsat thermal zones: elevated, high, extreme (top 5%).", "Find where to look first."),
-                ("surfaces", "Surface classes", "Road, roof, sand, plants, water at 10 m (F1 0.91).", "See what each hot zone is made of."),
-                ("confidence", "Confidence", "Green = model sure, red = mixed pixels.", "Trust green; inspect red."),
-                ("geometry", "Buildings & roads", "25,462 building outlines + OSM roads at 2 m.", "Match heat to real structures."),
-                ("objects", "Building objects", "Each building: ID, roof material, heat zone, street.", "Pick cool-roof candidates (orange)."),
-                ("sites", "Exposure sites", "Named bus stops, mosques, schools, clinics with icons.", "Shade the busiest hot sites first."),
-                ("segments", "SAM segments", "AI-segmented objects with class, box and heat.", "See object-level heat inside a hotspot."),
-                ("priority", "Priority", "100 m cells ranked by heat × people × missing shade.", "Start at M-001 and work down.")]
+LAYER_SLIDES = [("hazard", "Heat hazard zones", "Landsat summer surface heat in 3 zones: orange = elevated (top 25%), red = high (top 10%), dark red = extreme (top 5%).", "Find where to look first."),
+                ("surfaces", "Surface classes (10 m)", "Grey = road, violet = roof, beige = sand, green = plants, blue = water. Held-out macro-F1 0.91 on pure pixels.", "See what each hot zone is made of."),
+                ("confidence", "Model confidence", "Green = the model is sure; orange/red = mixed or uncertain pixels.", "Trust green; check red on the ground."),
+                ("objects", "Building objects", "Each outline is one building with ID, roof material, heat zone and street; orange outline = cool-roof candidate.", "Pick cool-roof candidates."),
+                ("sites", "Exposure sites", "B = bus stop, M = mosque, S = school / clinic; colour = heat around the site.", "Shade the busiest hot sites first."),
+                ("segments", "AI segments (SAM)", "Objects cut out by Segment Anything, coloured by surface class; dashed = mixed, needs review.", "See object-level detail inside a hotspot."),
+                ("priority", "Priority ranking", "100 m cells ranked by heat × people outside × missing shade; labels M-001, M-002 … = order to act.", "Start at M-001 and work down.")]
 for k_, ttl, what, use in LAYER_SLIDES:
-    js = mus + f"setTimeout(()=>{{goChapter(0);setLayers('{k_}');{'map.setView([' + str(h0.lat) + ',' + str(h0.lon) + '],16);' if k_ in ('objects','segments','geometry') else ''}}},400)"
+    js = mus + f"setTimeout(()=>{{goChapter(0);setLayers('{k_}');{'map.setView([' + str(h0.lat) + ',' + str(h0.lon) + '],17);' if k_ in ('objects','segments') else ''}}},400)"
     p_ = shot("L_" + k_, js)
     slide(f'<img class="shotbig" src="{img(p_)}"><div class="capbar"><div class="cn">{icon("map-pin", 36)}<span>Layer</span></div><div><div class="qn">Dashboard layer</div><h2>{ttl}</h2></div><p><b style="color:#43c6b4">What it shows:</b> {what}<br><b style="color:#ffb15c">Use it to:</b> {use}</p></div>', "screen")
 # 17b do now: material-matched actions
@@ -441,10 +440,41 @@ slide('''<div class="kick">Credits &amp; attribution</div><h1 class="big">Built 
 <dt>AI models</dt><dd>Built with Llama (Llama-3.3-70B, Llama 3.3 Community License) · Segment Anything, Meta (Apache-2.0).</dd>
 <dt>Code</dt><dd>MIT licence · Team T0049: Entesar Alhebsi, Noora Alhajeri, Maryam Albonni.</dd></dl>''')
 slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">Supporting detail<br><span class="o">dashboard tour, layers, methods</span></h1></div><div></div></div>''')
-# Spine = the nine sections the submission guide asks for, in order; everything else follows as the appendix
-NXT, ATT, APP = len(S) - 3, len(S) - 2, len(S) - 1
-ORDER = [0,  5,  44,  11, 20,  36,  13, 19,  45, 38,  41,  NXT,  ATT, 52,
-         APP, 2, 7, 40, 32, 8, 14, 15, 16, 17, 18, 23, 24, 25, 26, 27, 28, 29, 30, 31, 49, 50, 42]
+# Notebook figures with legends: each gets its own explained slide
+def figslide(fn, kick, title, pts):
+    slide(f'''<div class="kick">{kick}</div><h1>{title}</h1><img class="figw" style="height:560px" src="{fig(fn)}">
+<div class="strip" style="bottom:36px">{"".join(f"<div>{p_}</div>" for p_ in pts)}</div>''')
+figslide("12_musaffah_heat_surface_exposure_priority.png", "Example output · notebook figure 12", "Musaffah in four maps: heat → surface → people → priority",
+         ["<b>1 Heat</b>orange / red = elevated, high, extreme surface heat (Landsat, 10 summer scenes)", "<b>2 Surface · 3 People</b>road, roof, sand, green at 10 m; bus stops, mosques, schools, workers", "<b>4 Priority</b>stars M-001…M-005 = where to act first"])
+figslide("02_heat_hazard.png", "Notebook figure 2 · heat hazard", "Where the ground burns, summer after summer",
+         ["<b>Colour</b>surface temperature at ~10:40, median of clear summer scenes", "<b>Zones</b>top 25 / 10 / 5 % = elevated / high / extreme", "<b>Use</b>pick districts, then zoom to hotspots"])
+figslide("01_urban_expansion.png", "Notebook figure 1 · urban expansion", "The city keeps growing into the sand",
+         ["<b>Left → right</b>built-up area before and after (Landsat, Random Forest)", "<b>Red</b>new urban land since the first year", "<b>Why it matters</b>new districts lock in roofs and roads for decades"])
+figslide("05_heat_drivers.png", "Notebook figure 5 · heat drivers", "What makes a place hot: surfaces, not guesses",
+         ["<b>Bars</b>how much each surface raises or lowers heat", "<b>Validated</b>spatial cross-validation, R² 0.85, error 1.2 °C", "<b>Read</b>asphalt and sand push heat up; green pulls it down"])
+figslide("07_people_exposure.png", "Notebook figure 7 · people exposure", "Counting people changes the priority list",
+         ["<b>Map</b>WorldPop residents + OSM bus stops, mosques, schools, clinics", "<b>Finding</b>counting people instead of buildings changes 90% of the top 20", "<b>Use</b>shade where heat and people overlap"])
+figslide("08_when_persistence_green.png", "Notebook figure 8 · when and how stable", "Same hotspots every summer, same danger hours",
+         ["<b>When</b>ERA5 hours above 40 °C, checked against NOAA stations", "<b>Stable</b>hotspots repeat 2024 → 2025 (r 0.90)", "<b>Green</b>parks run cooler than built-up land"])
+figslide("09_surface_classifier.png", "Notebook figure 9 · surface model", "Trained model vs the starter index rule",
+         ["<b>Left</b>starter NDBI rule calls bare sand 'city'", "<b>Right</b>QAYDH Random Forest separates road, roof, sand, green", "<b>Score</b>held-out blocks 0.91 vs 0.47"])
+figslide("10_abudhabi_transfer.png", "Notebook figure 10 · transfer", "Same pipeline, another city: Abu Dhabi mainland",
+         ["<b>Transfer</b>no retuning, same code and data sources", "<b>Districts</b>Musaffah, Masdar and others compared on heat and green", "<b>Result</b>the method travels across Gulf cities"])
+slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">More evidence<br><span class="o">notebook figures</span></h1></div><div></div></div>''')
+def at(sub, k=0):
+    hits = [i_ for i_, s_ in enumerate(S) if sub in s_]
+    assert len(hits) > k, sub; return hits[k]
+L_ = lambda t: at(f"<h2>{t}</h2>")
+ORDER = [0, at("Heat maps exist. Decisions don"), at("Question 1 · the business problem"), at("Nine open sources, one answer"), at("Narrow bands read the material"),
+         at("From open satellites to a decision"), at("Open it, follow six steps"), at("Musaffah in four maps"), at("Hotspot M-001: one decision"),
+         at("Question 2 · how good is the model"), at("Being upfront"), at("Value you can measure"), at("From proof of concept"), at("Built on open data and open models"), at("From “where is it hot?”"),
+         at("Supporting detail"), at("Three people, one city problem"), at("Real places, not pixels"), at("Who benefits"), at("Tanager reads roof, road and sand"), at("Five questions, answered step by step"),
+         at("Hazard zones, not fake street"), at("139 named outdoor sites"), at("Road · roof · sand · green · water"), at("Objects with ID, box and label"), at("Asphalt and sand up, green down"),
+         *[L_(t) for t in ["Heat hazard zones", "Surface classes (10 m)", "Model confidence", "Building objects", "Exposure sites", "AI segments (SAM)", "Priority ranking"]],
+         at("Every material gets its own fix"), at("Metal, concrete, tile, bitumen"), at("Dense, irregular, sheet-roofed"), at("Surface vs air, reported as a difference"),
+         at("More evidence"), at("Where the ground burns"), at("The city keeps growing"), at("What makes a place hot"), at("Counting people changes"), at("Same hotspots every summer"),
+         at("Trained model vs the starter"), at("Same pipeline, another city"), at("Radar sees structure")]
+assert len(set(ORDER)) == len(ORDER), "duplicate slide in ORDER"
 S = [S[i] for i in ORDER]
 doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get('EXTRA_CSS', '')}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)

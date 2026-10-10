@@ -1,17 +1,21 @@
-# QAYDH (القيظ) · Heat-risk intelligence for Gulf cities
+# QAYDH (القيظ) · From "where is it hot?" to "where do we act first?"
+
+> **Satellites show that Gulf cities burn. QAYDH shows *why* each hotspot burns, *who* is outside in it, and *which fix* to do first.**
+
+**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme 05: Urban Expansion, Land Use Change & Heat Risk**
 
 ## 1 · Title and summary
 
-**Project:** QAYDH · **Team:** T0049 (United Arab Emirates) · **Challenge:** Arab Youth Space Hackathon 2026, 813 Challenge
-**Theme 05:** Urban Expansion, Land Use Change & Heat Risk
+QAYDH is a proof of concept that turns open satellite data into a ranked heat-action plan for a city district. For Musaffah (Abu Dhabi) it:
 
-**What the PoC does:** it finds summer heat hotspots in Gulf cities from satellite data, explains each hotspot by its surface materials, shows who is outside there, and ranks the fix to do first.
+1. **Maps heat zones** from 10 summer Landsat thermal scenes (surfaces reach 57 °C).
+2. **Reads what each surface is made of** (road, roof, sand, green, water) from Sentinel-2, Sentinel-1 radar and **hyperspectral** Planet Tanager / NASA EMIT, including roof materials (metal, concrete, tile).
+3. **Finds who is outside**: named bus stops, mosques, schools, clinics, labour camps and residents.
+4. **Ranks hotspots and gives each one a matched fix**, e.g. *M-001: shaded rest point + cool pavement + cool-roof coating*.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Noora-Alhajeri/QAYDH-813-T0049/blob/main/QAYDH_T0049_urban_heat_risk.ipynb)
-
-| ▶ Live dashboard | 📊 Slides | 💻 Notebook |
+| ▶ Try it (no install) | 📊 Slides | 💻 Run it yourself |
 |---|---|---|
-| [noora-alhajeri.github.io/QAYDH-813-T0049](https://noora-alhajeri.github.io/QAYDH-813-T0049/) ([backup](https://raw.githack.com/Noora-Alhajeri/QAYDH-813-T0049/main/dashboard/index.html)) | [`pitch/QAYDH_T0049_pitch.pdf`](pitch/QAYDH_T0049_pitch.pdf) | [`QAYDH_T0049_urban_heat_risk.ipynb`](QAYDH_T0049_urban_heat_risk.ipynb) (run end to end, outputs visible) |
+| **[Live dashboard](https://noora-alhajeri.github.io/QAYDH-813-T0049/)** ([backup](https://raw.githack.com/Noora-Alhajeri/QAYDH-813-T0049/main/dashboard/index.html)) | [`pitch/QAYDH_T0049_pitch.pdf`](pitch/QAYDH_T0049_pitch.pdf) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Noora-Alhajeri/QAYDH-813-T0049/blob/main/QAYDH_T0049_urban_heat_risk.ipynb) |
 
 ![QAYDH dashboard walkthrough over Musaffah](pitch/gifs/qaydh_musaffah_tour.gif)
 
@@ -61,40 +65,37 @@ Exact scene IDs and dates: [`data/sample_input/README.md`](data/sample_input/REA
 
 ## 6 · Installation
 
-Requires **Python 3.11–3.13** (Google Colab uses 3.13). No GPU needed.
+**Python 3.11–3.13. No GPU. No account needed.**
 
-**Option A · Google Colab (recommended, nothing to install yourself)**
-Click the **Open in Colab** badge at the top of this page. The notebook's first code cell clones this repository and installs the pinned packages itself.
+**Easiest, in Google Colab:** click **Open in Colab** above. That's all: the first cell downloads this repository and installs the pinned packages.
 
-**Option B · Your own computer**
+**On your own computer:**
 ```bash
 git clone https://github.com/Noora-Alhajeri/QAYDH-813-T0049.git
 cd QAYDH-813-T0049
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt jupyterlab
 ```
 
-**Tokens (optional, never stored in the repo):** `EARTHDATA_TOKEN` (NASA EMIT section) and `HF_TOKEN` (Llama brief). Without them those two sections print "skipped" and everything else runs.
+Optional tokens (never stored in the repo): `HF_TOKEN` for the Llama planner brief, `EARTHDATA_TOKEN` for NASA EMIT. Without them those two steps use their fallback and everything else runs.
 
 ## 7 · How to run
 
-| Step | Colab (Option A) | Own computer (Option B) |
+| | Colab | Own computer |
 |---|---|---|
-| 1 · Open | Click the **Open in Colab** badge | `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb` |
-| 2 · Run | *Runtime → Run all* | *Run → Run All Cells* |
-| 3 · Restart once | The first code cell installs the pinned packages. If it stops with **"Now click Runtime → Restart session"**, do that, then *Runtime → Run all* again (needed once per new Colab session) | — |
-| 4 · Wait | About **60 minutes** on the first run (it downloads the satellite scenes). Keep the tab open so free Colab does not disconnect | Same; later runs are faster (cached in `data/`) |
+| **1. Open** | the **Open in Colab** badge | `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb` |
+| **2. Run** | *Runtime → Run all* | *Run → Run All Cells* |
+| **3. Restart once** | if the first cell says *"Restart session"*: *Runtime → Restart session*, then *Run all* again | not needed |
+| **4. Wait** | about **60 min** (downloads the satellite scenes). Keep the tab open | about 60 min first time, faster after |
 
-**Nothing to edit.** The study area (Musaffah, bbox `[54.455, 24.315, 54.545, 24.395]`), the Tanager scene ID and `SEED = 813` are set in the configuration cells.
+Nothing to edit: the study area (Musaffah) and `SEED = 813` are set inside the notebook. All paths are relative.
 
-**What you should see:**
-- Each section prints its numbers and draws its figures (heat maps, surface classes, model scores).
-- The evidence table with the headline result: **Musaffah surfaces macro-F1 0.91 on the held-out block** (index rules 0.47).
-- The **last cell** prints `wrote results/example_output.png`, `wrote results/example_output_hotspots.csv`, `wrote results/example_output_results.json`. That means the run finished.
-
-**Reads:** `data/sample_input/tanager_stac_item_20250515_080954_16_4001.json` plus open data fetched by exact scene ID. **Writes:** `results/` (example output) and `qaydh_outputs/` (every figure, table and GeoJSON). All paths are relative; random steps use `SEED = 813`.
-
-Colab may print red "dependency conflict" lines about its own preinstalled packages during installation. They are harmless.
+**You know it worked when** the last cell prints:
+```
+wrote results/example_output.png
+wrote results/example_output_hotspots.csv
+wrote results/example_output_results.json
+```
+Along the way you see every map and score, including the headline **macro-F1 0.91** (surface classes on held-out blocks). The notebook reads `data/sample_input/` plus open data fetched by exact scene ID, and writes `results/` and `qaydh_outputs/`.
 
 ## 8 · Example input and output
 

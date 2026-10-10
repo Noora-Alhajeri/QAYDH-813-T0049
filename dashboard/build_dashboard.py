@@ -146,7 +146,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
     rules_ = [k for k in mc_ if k.startswith("Index")][0]; bestk = R["musaffah_classifier"]["chosen"]
     s0 = ms_.iloc[0]; h0_ = mh.iloc[0]
     CH["musaffah"] = [
-        dict(id="where", layer="blocks", hint="Red = extreme heat zone. Press Next to see who is there.", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
+        dict(id="where", layer="hazard", hint="Orange = elevated · red = high · dark red = extreme (top 5%). Press Next to see who is there.", kicker="Where is heat high?", title=f"Hazard zones, not fake street temperatures",
              body=f"Landsat thermal (≈100 m) shows zones: elevated ≥ {th['P75']:.1f} °C, high ≥ {th['P90']:.1f} °C, extreme ≥ {th['P95']:.1f} °C. It never pretends to know one bus stop's exact temperature.",
              stat=[(f"{th['P95']:.1f} °C", "extreme threshold (P95)"), (f"{th['median']:.1f} °C", "block median")]),
         dict(id="who", layer="sites", view=[float(s0.lat), float(s0.lon), 15], hint="Click a lettered icon: B bus stop, M mosque, S school/clinic.", kicker="Who may be exposed?", title="Bus stops, mosques, clinics, labour camps",
@@ -158,7 +158,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
         dict(id="labels", layer="annotation", view=[float(h0_.lat), float(h0_.lon), 16], hint="Hover a building outline to see its ID and labels. Orange outline = cool-roof candidate.", kicker="How we labelled it", title="Annotation, objects and AI segments",
              body=f"Reference labels at ≥80% purity (A–C train · D validate · E test), {R['musaffah_objects']['buildings']:,} building objects with ID and bounding box, SAM segments around hotspots, and a 300-point review queue for people to check.",
              stat=[(f"{R['musaffah_objects']['buildings']:,}", "labelled building objects"), (f"{R['sam']['annotation_candidates']}", "SAM annotation candidates")]),
-        dict(id="why", layer="blocks", hint="Drivers are shown in each hotspot card in the last step.", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
+        dict(id="why", layer="blocks", view=[float(h0_.lat), float(h0_.lon), 16], hint="Each 100 m block is coloured by its summer surface temperature (yellow cooler → dark red hotter). Click a building to see its block value.", kicker="Why may it be hot?", title="Asphalt and sand up, green down",
              body=f"A spatially cross-validated model links each 100 m cell's surface mix to its heat. Drivers are shown as associations, not proof of cause.",
              stat=[(f"{wm['Random Forest']['R2']:.2f}", "R², spatial CV"), (f"{wm['Random Forest']['MAE_C']:.1f} °C", "mean error")]),
         dict(id="act", layer="priority", hint="Pick a hotspot from the list to see its card.", kicker="What should be done?", title="Where to act first in Musaffah",
