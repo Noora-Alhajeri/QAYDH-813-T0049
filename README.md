@@ -63,35 +63,38 @@ Exact scene IDs and dates: [`data/sample_input/README.md`](data/sample_input/REA
 
 Requires **Python 3.11–3.13** (Google Colab uses 3.13). No GPU needed.
 
-**Google Colab (easiest):** click the *Open in Colab* badge above, or run in a new notebook:
-```
-!git clone https://github.com/Noora-Alhajeri/QAYDH-813-T0049.git
-%cd QAYDH-813-T0049
-!pip install -r requirements.txt
-```
-Then *Runtime → Restart session*. Colab may print dependency warnings about its own preinstalled packages; they are safe to ignore.
+**Option A · Google Colab (recommended, nothing to install yourself)**
+Click the **Open in Colab** badge at the top of this page. The notebook's first code cell clones this repository and installs the pinned packages itself.
 
-**Local:**
+**Option B · Your own computer**
 ```bash
 git clone https://github.com/Noora-Alhajeri/QAYDH-813-T0049.git
 cd QAYDH-813-T0049
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt jupyterlab
 ```
 
-**Tokens (optional, never stored in the repo):** `EARTHDATA_TOKEN` (NASA EMIT section) and `HF_TOKEN` (Llama brief). Without them those two sections skip and the rest runs.
+**Tokens (optional, never stored in the repo):** `EARTHDATA_TOKEN` (NASA EMIT section) and `HF_TOKEN` (Llama brief). Without them those two sections print "skipped" and everything else runs.
 
 ## 7 · How to run
 
-```bash
-jupyter lab QAYDH_T0049_urban_heat_risk.ipynb
-```
-- **Run all cells.** Nothing to edit: the area (Musaffah, bbox `[54.455, 24.315, 54.545, 24.395]`) and `SEED = 813` are set in the first cells.
-- **Runtime:** about 60 minutes on the first run (it downloads the scenes), faster afterwards (cached in `data/`). On free Colab keep the tab open so the session does not disconnect.
-- **Reads** `data/sample_input/tanager_stac_item_20250515_080954_16_4001.json` (plus open data fetched by scene ID). **Writes** `results/example_output.png`, `results/example_output_hotspots.csv` and `results/example_output_results.json` (last cell), and all products to `qaydh_outputs/`.
-- **At the end** you see the hotspot priority map and the evidence table.
+| Step | Colab (Option A) | Own computer (Option B) |
+|---|---|---|
+| 1 · Open | Click the **Open in Colab** badge | `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb` |
+| 2 · Run | *Runtime → Run all* | *Run → Run All Cells* |
+| 3 · If asked to restart | Colab may say "restart the session" after installing; click **Restart session**, then *Runtime → Run all* again | — |
+| 4 · Wait | About **60 minutes** on the first run (it downloads the satellite scenes). Keep the tab open so free Colab does not disconnect | Same; later runs are faster (cached in `data/`) |
 
-All paths are relative to the repository. Optional: `python dashboard/build_dashboard.py` rebuilds the dashboard from the notebook outputs.
+**Nothing to edit.** The study area (Musaffah, bbox `[54.455, 24.315, 54.545, 24.395]`), the Tanager scene ID and `SEED = 813` are set in the configuration cells.
+
+**What you should see:**
+- Each section prints its numbers and draws its figures (heat maps, surface classes, model scores).
+- The evidence table with the headline result: **Musaffah surfaces macro-F1 0.91 on the held-out block** (index rules 0.47).
+- The **last cell** prints `wrote results/example_output.png`, `wrote results/example_output_hotspots.csv`, `wrote results/example_output_results.json`. That means the run finished.
+
+**Reads:** `data/sample_input/tanager_stac_item_20250515_080954_16_4001.json` plus open data fetched by exact scene ID. **Writes:** `results/` (example output) and `qaydh_outputs/` (every figure, table and GeoJSON). All paths are relative; random steps use `SEED = 813`.
+
+Colab may print red "dependency conflict" lines about its own preinstalled packages during installation. They are harmless.
 
 ## 8 · Example input and output
 
