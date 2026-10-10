@@ -1,0 +1,61 @@
+dataset,id,lat,lon,label,labeller,time
+"Accuracy check · 60 random points (surface class)",P-01,24.336363,54.501029,"Bare soil / sand","Noora",2026-10-10T14:08:48.442Z
+"Accuracy check · 60 random points (surface class)",P-02,24.320966,54.483382,"Bare soil / sand","Noora",2026-10-10T14:08:49.868Z
+"Accuracy check · 60 random points (surface class)",P-03,24.386640,54.462768,"Vegetation","Noora",2026-10-10T14:08:51.677Z
+"Accuracy check · 60 random points (surface class)",P-04,24.390461,54.508594,"Water","Noora",2026-10-10T14:08:59.519Z
+"Accuracy check · 60 random points (surface class)",P-05,24.359313,54.466174,"Bare soil / sand","Noora",2026-10-10T14:09:07.476Z
+"Accuracy check · 60 random points (surface class)",P-06,24.354605,54.507390,"Bare soil / sand","Noora",2026-10-10T14:09:10.645Z
+"Accuracy check · 60 random points (surface class)",P-07,24.383433,54.535354,"Bare soil / sand","Noora",2026-10-10T14:09:12.552Z
+"Accuracy check · 60 random points (surface class)",P-08,24.330076,54.512257,"Bare soil / sand","Noora",2026-10-10T14:09:14.256Z
+"Accuracy check · 60 random points (surface class)",P-09,24.332690,54.537331,"Building / roof","Noora",2026-10-10T14:09:17.115Z
+"Accuracy check · 60 random points (surface class)",P-10,24.337204,54.483442,"Bare soil / sand","Noora",2026-10-10T14:09:18.638Z
+"Accuracy check · 60 random points (surface class)",P-11,24.335192,54.458385,"Unsure","Noora",2026-10-10T14:09:25.577Z
+"Accuracy check · 60 random points (surface class)",P-12,24.358865,54.530147,"Road / dark pavement","Noora",2026-10-10T14:09:30.572Z
+"Accuracy check · 60 random points (surface class)",P-13,24.377932,54.503773,"Bare soil / sand","Noora",2026-10-10T14:09:32.119Z
+"Accuracy check · 60 random points (surface class)",P-14,24.382381,54.521237,"Vegetation","Noora",2026-10-10T14:09:34.405Z
+"Accuracy check · 60 random points (surface class)",P-15,24.365807,54.512638,"Building / roof","Noora",2026-10-10T14:09:37.773Z
+"Accuracy check · 60 random points (surface class)",P-16,24.315926,54.460257,"Building / roof","Noora",2026-10-10T14:09:45.399Z
+"Accuracy check · 60 random points (surface class)",P-17,24.368233,54.541709,"Bare soil / sand","Noora",2026-10-10T14:09:48.339Z
+"Accuracy check · 60 random points (surface class)",P-18,24.353123,54.524119,"Road / dark pavement","Noora",2026-10-10T14:09:52.566Z
+"Accuracy check · 60 random points (surface class)",P-19,24.367757,54.537873,"Bare soil / sand","Noora",2026-10-10T14:09:55.041Z
+"Accuracy check · 60 random points (surface class)",P-20,24.323388,54.518212,"Building / roof","Noora",2026-10-10T14:09:57.740Z
+"Accuracy check · 60 random points (surface class)",P-21,24.326052,54.539961,"Building / roof","Noora",2026-10-10T14:09:59.571Z
+"Accuracy check · 60 random points (surface class)",P-22,24.373518,54.523422,"Road / dark pavement","Noora",2026-10-10T14:10:03.534Z
+"Accuracy check · 60 random points (surface class)",P-23,24.353649,54.479473,"Bare soil / sand","Noora",2026-10-10T14:10:05.613Z
+"Accuracy check · 60 random points (surface class)",P-24,24.316322,54.476474,"Bare soil / sand","Noora",2026-10-10T14:10:06.971Z
+"Accuracy check · 60 random points (surface class)",P-25,24.348141,54.502192,"Road / dark pavement","Noora",2026-10-10T14:10:09.445Z
+"Accuracy check · 60 random points (surface class)",P-26,24.353271,54.494767,"Road / dark pavement","Noora",2026-10-10T14:10:11.075Z
+"Accuracy check · 60 random points (surface class)",P-27,24.318565,54.457482,"Building / roof","Noora",2026-10-10T14:10:13.703Z
+"Accuracy check · 60 random points (surface class)",P-28,24.387095,54.482503,"Water","Noora",2026-10-10T14:11:34.734Z
+"Accuracy check · 60 random points (surface class)",P-29,24.340064,54.544851,"Vegetation","Noora",2026-10-10T14:11:39.007Z
+"Accuracy check · 60 random points (surface class)",P-30,24.367067,54.454477,"Bare soil / sand","Noora",2026-10-10T14:11:41.513Z
+"Accuracy check · 60 random points (surface class)",P-31,24.372903,54.457765,"Bare soil / sand","Noora",2026-10-10T14:11:42.909Z
+"Accuracy check · 60 random points (surface class)",P-32,24.327031,54.458245,"Bare soil / sand","Noora",2026-10-10T14:11:43.933Z
+"Accuracy check · 60 random points (surface class)",P-33,24.356093,54.471606,"Road / dark pavement","Noora",2026-10-10T14:11:45.164Z
+"Accuracy check · 60 random points (surface class)",P-34,24.355454,54.522272,"Bare soil / sand","Noora",2026-10-10T14:11:46.245Z
+"Accuracy check · 60 random points (surface class)",P-35,24.317248,54.534155,"Road / dark pavement","Noora",2026-10-10T14:11:47.387Z
+"Accuracy check · 60 random points (surface class)",P-36,24.335324,54.503335,"Road / dark pavement","Noora",2026-10-10T14:11:48.214Z
+"Accuracy check · 60 random points (surface class)",P-37,24.370072,54.502837,"Building / roof","Noora",2026-10-10T14:11:49.289Z
+"Accuracy check · 60 random points (surface class)",P-38,24.353883,54.497471,"Building / roof","Noora",2026-10-10T14:11:50.064Z
+"Accuracy check · 60 random points (surface class)",P-39,24.358947,54.473322,"Bare soil / sand","Noora",2026-10-10T14:11:51.076Z
+"Accuracy check · 60 random points (surface class)",P-40,24.326142,54.534242,"Road / dark pavement","Noora",2026-10-10T14:11:52.093Z
+"Accuracy check · 60 random points (surface class)",P-41,24.351207,54.510288,"Building / roof","Noora",2026-10-10T14:11:53.033Z
+"Accuracy check · 60 random points (surface class)",P-42,24.357580,54.475291,"Bare soil / sand","Noora",2026-10-10T14:11:55.173Z
+"Accuracy check · 60 random points (surface class)",P-43,24.387120,54.520607,"Bare soil / sand","Noora",2026-10-10T14:11:57.707Z
+"Accuracy check · 60 random points (surface class)",P-44,24.366926,54.535928,"Bare soil / sand","Noora",2026-10-10T14:11:58.551Z
+"Accuracy check · 60 random points (surface class)",P-45,24.362931,54.458420,"Water","Noora",2026-10-10T14:11:59.590Z
+"Accuracy check · 60 random points (surface class)",P-46,24.395271,54.519556,"Road / dark pavement","Noora",2026-10-10T14:12:01.981Z
+"Accuracy check · 60 random points (surface class)",P-47,24.348712,54.483552,"Road / dark pavement","Noora",2026-10-10T14:12:03.718Z
+"Accuracy check · 60 random points (surface class)",P-48,24.344964,54.455934,"Water","Noora",2026-10-10T14:12:06.609Z
+"Accuracy check · 60 random points (surface class)",P-49,24.363455,54.463745,"Building / roof","Noora",2026-10-10T14:12:13.994Z
+"Accuracy check · 60 random points (surface class)",P-50,24.330396,54.467242,"Road / dark pavement","Noora",2026-10-10T14:12:16.025Z
+"Accuracy check · 60 random points (surface class)",P-51,24.338158,54.510193,"Building / roof","Noora",2026-10-10T14:12:17.660Z
+"Accuracy check · 60 random points (surface class)",P-52,24.340755,54.488588,"Vegetation","Noora",2026-10-10T14:12:19.050Z
+"Accuracy check · 60 random points (surface class)",P-53,24.314713,54.527661,"Bare soil / sand","Noora",2026-10-10T14:12:20.403Z
+"Accuracy check · 60 random points (surface class)",P-54,24.354930,54.531469,"Bare soil / sand","Noora",2026-10-10T14:12:23.092Z
+"Accuracy check · 60 random points (surface class)",P-55,24.331541,54.530125,"Road / dark pavement","Noora",2026-10-10T14:12:24.211Z
+"Accuracy check · 60 random points (surface class)",P-56,24.374014,54.545623,"Vegetation","Noora",2026-10-10T14:12:26.475Z
+"Accuracy check · 60 random points (surface class)",P-57,24.330240,54.486167,"Bare soil / sand","Noora",2026-10-10T14:12:29.029Z
+"Accuracy check · 60 random points (surface class)",P-58,24.322495,54.499583,"Bare soil / sand","Noora",2026-10-10T14:12:30.348Z
+"Accuracy check · 60 random points (surface class)",P-59,24.315930,54.506069,"Bare soil / sand","Noora",2026-10-10T14:12:34.462Z
+"Accuracy check · 60 random points (surface class)",P-60,24.368483,54.534144,"Building / roof","Noora",2026-10-10T14:12:41.900Z
