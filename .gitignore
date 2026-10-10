@@ -1,5 +1,6 @@
 # raw imagery and downloads are never committed (licence + size); the notebook re-downloads them
-data/
+data/*
+!data/sample_input/
 *.h5
 *.tif
 *.part

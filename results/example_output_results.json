@@ -1,0 +1,987 @@
+{
+  "cv_built_f1_rf": 0.8949409062571672,
+  "cv_built_f1_ndbi": 0.5805374088104885,
+  "cv_built_iou_rf": 0.8099656818745131,
+  "cv_macro_f1_rf": 0.8801356529707738,
+  "indep2023_built_f1_rf": 0.856900427162904,
+  "indep2023_built_f1_ndbi": 0.5777291618659997,
+  "change_agreement_2017_2023": {
+    "precision": 0.6368719816995679,
+    "recall": 0.1915793766088131,
+    "f1": 0.29455329153605014,
+    "iou": 0.17271327803690004
+  },
+  "built_km2_before": 166.96439999999998,
+  "built_km2_after": 213.9804,
+  "new_urban_km2": 32.600699999999996,
+  "growth_pct": 28.15929623320901,
+  "lst_by_zone": [
+    {
+      "zone": "Desert / bare",
+      "km2": 239.32,
+      "mean_LST": 51.810001373291016,
+      "ci_low": 51.65,
+      "ci_high": 51.97
+    },
+    {
+      "zone": "Vegetation",
+      "km2": 15.94,
+      "mean_LST": 50.439998626708984,
+      "ci_low": 49.69,
+      "ci_high": 51.19
+    },
+    {
+      "zone": "Established urban (built \u22642014)",
+      "km2": 155.35,
+      "mean_LST": 52.16999816894531,
+      "ci_low": 51.97,
+      "ci_high": 52.38
+    },
+    {
+      "zone": "New urban (2014\u20132025)",
+      "km2": 32.6,
+      "mean_LST": 51.869998931884766,
+      "ci_low": 51.58,
+      "ci_high": 52.18
+    }
+  ],
+  "weather": {
+    "source": "Open-Meteo historical (ERA5) CC-BY-4.0",
+    "danger_window_local": "11:00\u201320:00",
+    "days_air_ge_45": 12,
+    "days_air_ge_40": 87,
+    "n_days": 92,
+    "mean_daily_max_C": 43.12608695652173,
+    "typical_peak_hour": 15,
+    "air_at_landsat_overpass_C": 39.90380434782608,
+    "air_daily_max_minus_overpass_C": 3.22228260869565,
+    "heat_hours_ge40_per_day": 8.26086956521739
+  },
+  "lst_cells_r_2024_vs_2025": 0.8966515417814966,
+  "persistent_hot_cells": 415,
+  "ndbi_lst_r_all": 0.1865446458594683,
+  "ndbi_lst_r_builtup": -0.01217175227357782,
+  "green_km2": 4.1652,
+  "lst_green_minus_builtup_C": -5.286811828613281,
+  "tanager_beta_cloud_pct": 74.09143194463216,
+  "tanager_physics_cloud_pct": 0.030618915869701342,
+  "tanager_cloud_mask_used": "physics",
+  "tanager_saturated_pct": 0.11608723643972317,
+  "materials": [
+    {
+      "cluster": 0,
+      "share": 0.0423,
+      "albedo": 0.4537999927997589,
+      "ndvi": -0.01940000057220459,
+      "hi": 0.0035000001080334187,
+      "bd2200": -0.03359999880194664,
+      "bd2330": -0.021199999377131462,
+      "suggested_material": "Brightest: high-albedo roofs / pale sand"
+    },
+    {
+      "cluster": 1,
+      "share": 0.1805,
+      "albedo": 0.3393000066280365,
+      "ndvi": 0.03139999881386757,
+      "hi": 0.0024999999441206455,
+      "bd2200": -0.013700000010430813,
+      "bd2330": 0.030400000512599945,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 2,
+      "share": 0.1936,
+      "albedo": 0.42089998722076416,
+      "ndvi": 0.04749999940395355,
+      "hi": 0.0019000000320374966,
+      "bd2200": 0.0071000000461936,
+      "bd2330": 0.07349999994039536,
+      "suggested_material": "Carbonate-rich: concrete / limestone ground"
+    },
+    {
+      "cluster": 3,
+      "share": 0.1025,
+      "albedo": 0.2969000041484833,
+      "ndvi": 0.031099999323487282,
+      "hi": 0.0024999999441206455,
+      "bd2200": -0.015300000086426735,
+      "bd2330": 0.023900000378489494,
+      "suggested_material": "Darkest impervious: asphalt roads / dark roofs"
+    },
+    {
+      "cluster": 4,
+      "share": 0.1519,
+      "albedo": 0.37040001153945923,
+      "ndvi": 0.023099999874830246,
+      "hi": 0.002400000113993883,
+      "bd2200": -0.01119999960064888,
+      "bd2330": 0.02889999933540821,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 5,
+      "share": 0.1572,
+      "albedo": 0.45329999923706055,
+      "ndvi": 0.04800000041723251,
+      "hi": 0.0017000000225380063,
+      "bd2200": 0.009399999864399433,
+      "bd2330": 0.08900000154972076,
+      "suggested_material": "Brightest: high-albedo roofs / pale sand"
+    },
+    {
+      "cluster": 6,
+      "share": 0.1503,
+      "albedo": 0.39480000734329224,
+      "ndvi": 0.03849999979138374,
+      "hi": 0.002300000051036477,
+      "bd2200": -0.0013000000035390258,
+      "bd2330": 0.05209999904036522,
+      "suggested_material": "Mixed urban fabric / bare soil"
+    },
+    {
+      "cluster": 7,
+      "share": 0.0217,
+      "albedo": 0.25780001282691956,
+      "ndvi": 0.17440000176429749,
+      "hi": 0.0026000000070780516,
+      "bd2200": -0.026100000366568565,
+      "bd2330": 0.018200000748038292,
+      "suggested_material": "Sparse / irrigated greenery & gardens"
+    }
+  ],
+  "dark_albedo_threshold": 0.3373852074146271,
+  "coreg_r_before": 0.8487635483057938,
+  "coreg_r_after": 0.8706851093448739,
+  "coreg_shift_px": [
+    1,
+    1
+  ],
+  "georef_method": "HDF-EOS StructMetadata (UTM)",
+  "building_outlines": {
+    "osm": 1250,
+    "microsoft": 66063
+  },
+  "material_classifier": {
+    "validation": "leave-one-tile-out (4 tiles, 3.9 km)",
+    "n_labelled": 20042,
+    "labels_per_class": {
+      "Road / asphalt": 3694,
+      "Roof / building": 7506,
+      "Vegetation": 598,
+      "Bare / sand": 8244
+    },
+    "scores": [
+      {
+        "approach": "Index rules (starter NDVI/NDBI/MNDWI)",
+        "macro_F1": 0.377,
+        "accuracy": 0.399,
+        "F1 Road / asphalt": 0.0,
+        "F1 Roof / building": 0.554,
+        "F1 Vegetation": 0.942,
+        "F1 Bare / sand": 0.013
+      },
+      {
+        "approach": "6 broad bands + RF (Landsat-like)",
+        "macro_F1": 0.75,
+        "accuracy": 0.767,
+        "F1 Road / asphalt": 0.525,
+        "F1 Roof / building": 0.781,
+        "F1 Vegetation": 0.839,
+        "F1 Bare / sand": 0.856
+      },
+      {
+        "approach": "Full spectrum (98 bands) + RF",
+        "macro_F1": 0.762,
+        "accuracy": 0.785,
+        "F1 Road / asphalt": 0.552,
+        "F1 Roof / building": 0.796,
+        "F1 Vegetation": 0.833,
+        "F1 Bare / sand": 0.867
+      }
+    ]
+  },
+  "material_macroF1_gain_full_vs_6band": 0.01200000000000001,
+  "surface_shares_scene": {
+    "Road / asphalt": 0.07545094527858151,
+    "Roof / building": 0.3127558028028111,
+    "Vegetation": 0.010603812066292479,
+    "Bare / sand": 0.6011894398523149,
+    "Water": 0.0
+  },
+  "dR2_all": 0.08900000000000002,
+  "dR2_built": 0.132,
+  "lst_model": [
+    {
+      "subset": "All pixels in Tanager footprint",
+      "features": "A: Landsat only",
+      "R2": 0.441,
+      "R2_sd": 0.032,
+      "RMSE_C": 1.475
+    },
+    {
+      "subset": "All pixels in Tanager footprint",
+      "features": "B: Landsat + Tanager",
+      "R2": 0.53,
+      "R2_sd": 0.034,
+      "RMSE_C": 1.354
+    },
+    {
+      "subset": "Built-up pixels only",
+      "features": "A: Landsat only",
+      "R2": 0.31,
+      "R2_sd": 0.03,
+      "RMSE_C": 1.593
+    },
+    {
+      "subset": "Built-up pixels only",
+      "features": "B: Landsat + Tanager",
+      "R2": 0.442,
+      "R2_sd": 0.022,
+      "RMSE_C": 1.434
+    }
+  ],
+  "poi_share_in_hot20": {
+    "mosque": 4.678362573099415,
+    "bus_stop": 0.0,
+    "delivery": 5.405405405405405,
+    "construction": 0.0,
+    "vulnerable": 2.3255813953488373,
+    "park": 1.7857142857142856
+  },
+  "mean_lst_at_poi": {
+    "mosque": 50.94025802612305,
+    "bus_stop": 50.74425506591797,
+    "delivery": 51.19330978393555,
+    "construction": 51.3535041809082,
+    "vulnerable": 50.949951171875,
+    "park": 51.18860626220703
+  },
+  "amenities_per_10k_hot_vs_rest": {
+    "mosque": {
+      "hottest_20pct": 0.5099999904632568,
+      "rest_of_city": 1.7400000095367432
+    },
+    "bus_stop": {
+      "hottest_20pct": 0.0,
+      "rest_of_city": 0.6299999952316284
+    },
+    "delivery": {
+      "hottest_20pct": 0.12999999523162842,
+      "rest_of_city": 0.3700000047683716
+    },
+    "vulnerable": {
+      "hottest_20pct": 0.05999999865889549,
+      "rest_of_city": 0.44999998807907104
+    },
+    "park": {
+      "hottest_20pct": 0.12999999523162842,
+      "rest_of_city": 1.1799999475479126
+    }
+  },
+  "residents_hot20": 157075.6875,
+  "people_in_top_decile_cells": 80468.75,
+  "population_aoi": 1091323.625,
+  "green_m2_per_resident": 3.8166496753692627,
+  "residents_in_cells_lt5pct_green": 1067236.0,
+  "cooling_per_0p1_ndvi_CI": [
+    -2.0145698953914324,
+    -1.410129005332381
+  ],
+  "cooling_per_0p1_albedo_C": [
+    -0.6994674309207177,
+    -0.8453202241935313,
+    -0.5646536033874905
+  ],
+  "cooling_per_0p1_ndvi_C": -1.7014875360600035,
+  "hrpi_top20_overlap": {
+    "hazard\u00d7exposure only": 0.6,
+    "green-heavy": 1.0,
+    "exposure-heavy": 0.65,
+    "hazard\u00b2": 0.75
+  },
+  "top20_changed_by_people_layer_pct": 90.0,
+  "n_priority_cells_top_decile": 301,
+  "top10_summary": {
+    "dominant_surface": {
+      "roofs": 9,
+      "roads/asphalt": 1
+    },
+    "confidence": {
+      "High": 6,
+      "Medium": 3,
+      "Low": 1
+    },
+    "urgency": {
+      "High": 7,
+      "URGENT": 3
+    },
+    "mean_dT_cool_roofs_C": -1.7513999999999998,
+    "mean_dT_cool_pavement_C": -0.1258,
+    "mean_dT_trees_C": -0.45030000000000003
+  },
+  "abudhabi": {
+    "aoi": [
+      54.44,
+      24.3,
+      54.66,
+      24.47
+    ],
+    "cv_built_f1_rf": 0.8097342576339341,
+    "cv_built_f1_ndbi": 0.43392043974888017,
+    "built_km2_before": 130.4334,
+    "built_km2_after": 188.721,
+    "new_urban_km2": 37.6263,
+    "population": 560471.25,
+    "n_osm_places": 1709,
+    "districts": [
+      {
+        "district": "Musaffah industrial",
+        "mean_LST_C": 54.5,
+        "p90_LST_C": 57.099998474121094,
+        "builtup_starter_NDBI_pct": 91.6,
+        "builtup_QAYDH_RF_pct": 82.2,
+        "builtup_WorldCover_pct": 69.7,
+        "green_pct": 0.4,
+        "albedo": 0.20000000298023224,
+        "new_urban_km2": 2.0,
+        "residents": 87463.296875,
+        "bus_stops": 25,
+        "mosques": 36,
+        "construction_sites": 1,
+        "mean_priority": 53.7
+      },
+      {
+        "district": "Masdar City",
+        "mean_LST_C": 55.400001525878906,
+        "p90_LST_C": 57.599998474121094,
+        "builtup_starter_NDBI_pct": 79.6,
+        "builtup_QAYDH_RF_pct": 34.8,
+        "builtup_WorldCover_pct": 17.1,
+        "green_pct": 0.5,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 0.7,
+        "residents": 5150.10009765625,
+        "bus_stops": 2,
+        "mosques": 4,
+        "construction_sites": 8,
+        "mean_priority": 43.1
+      },
+      {
+        "district": "Mohamed Bin Zayed City",
+        "mean_LST_C": 54.20000076293945,
+        "p90_LST_C": 55.70000076293945,
+        "builtup_starter_NDBI_pct": 83.5,
+        "builtup_QAYDH_RF_pct": 70.5,
+        "builtup_WorldCover_pct": 52.9,
+        "green_pct": 0.7,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 4.6,
+        "residents": 52773.6015625,
+        "bus_stops": 6,
+        "mosques": 9,
+        "construction_sites": 1,
+        "mean_priority": 39.4
+      },
+      {
+        "district": "Khalifa City A",
+        "mean_LST_C": 53.599998474121094,
+        "p90_LST_C": 56.20000076293945,
+        "builtup_starter_NDBI_pct": 67.9,
+        "builtup_QAYDH_RF_pct": 71.7,
+        "builtup_WorldCover_pct": 65.2,
+        "green_pct": 0.3,
+        "albedo": 0.30000001192092896,
+        "new_urban_km2": 1.2,
+        "residents": 44463.19921875,
+        "bus_stops": 3,
+        "mosques": 9,
+        "construction_sites": 5,
+        "mean_priority": 33.4
+      }
+    ],
+    "top_hotspots": [
+      {
+        "rank": 1,
+        "district": "",
+        "LST_C": 56.57500076293945,
+        "population": 155.8090057373047,
+        "recommended_action": "Cool roofs & cool pavements + Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 2,
+        "district": "Musaffah industrial",
+        "LST_C": 56.74399948120117,
+        "population": 190.5070037841797,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 3,
+        "district": "Musaffah industrial",
+        "LST_C": 56.25400161743164,
+        "population": 183.08700561523438,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 4,
+        "district": "",
+        "LST_C": 55.71099853515625,
+        "population": 145.1490020751953,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      },
+      {
+        "rank": 5,
+        "district": "",
+        "LST_C": 55.733001708984375,
+        "population": 156.3459930419922,
+        "recommended_action": "Shade trees / green corridors + Heat-aware design code for new district"
+      }
+    ]
+  },
+  "musaffah_annotation": {
+    "purity_rule": "\u226580% one class (roof/road), uniform WorldCover+index agreement (sand/veg/water), mixed excluded",
+    "labelled_pixels": 64643,
+    "removed_as_noisy": 1718,
+    "per_split": {
+      "A-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 386,
+        "Water": 3000
+      },
+      "B-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 1577,
+        "Water": 3000
+      },
+      "C-train": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 189,
+        "Water": 2484
+      },
+      "D-validation": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 552,
+        "Water": 3000
+      },
+      "E-test": {
+        "Road / dark pavement": 3000,
+        "Building / roof": 3000,
+        "Bare soil / sand": 3000,
+        "Vegetation": 2455,
+        "Water": 3000
+      }
+    }
+  },
+  "musaffah_classifier": {
+    "validation": "1 km spatial blocks: A\u2013C train, D validation (model choice), E held-out test",
+    "chosen": "Sentinel-2 RF + spatial context",
+    "scores": [
+      {
+        "approach": "Index rules (starter NDVI/NDBI/BUI/MNDWI)",
+        "val_macro_F1": 0.463,
+        "test_macro_F1": 0.466,
+        "test_accuracy": 0.497,
+        "F1 Road / dark pavement": 0.0,
+        "F1 Building / roof": 0.303,
+        "F1 Bare soil / sand": 0.095,
+        "F1 Vegetation": 0.993,
+        "F1 Water": 0.938
+      },
+      {
+        "approach": "Sentinel-2 RF (bands + indices)",
+        "val_macro_F1": 0.888,
+        "test_macro_F1": 0.898,
+        "test_accuracy": 0.895,
+        "F1 Road / dark pavement": 0.87,
+        "F1 Building / roof": 0.842,
+        "F1 Bare soil / sand": 0.811,
+        "F1 Vegetation": 0.984,
+        "F1 Water": 0.983
+      },
+      {
+        "approach": "Sentinel-2 RF + spatial context",
+        "val_macro_F1": 0.899,
+        "test_macro_F1": 0.906,
+        "test_accuracy": 0.903,
+        "F1 Road / dark pavement": 0.878,
+        "F1 Building / roof": 0.854,
+        "F1 Bare soil / sand": 0.827,
+        "F1 Vegetation": 0.985,
+        "F1 Water": 0.984
+      }
+    ]
+  },
+  "musaffah_surface_shares": {
+    "Road / dark pavement": 0.28668476642970264,
+    "Building / roof": 0.3339549173007538,
+    "Bare soil / sand": 0.31092296883744747,
+    "Vegetation": 0.019610855094726064,
+    "Water": 0.04850379261482037
+  },
+  "musaffah_hazard_thresholds_C": {
+    "P75": 55.988189697265625,
+    "P90": 56.99652099609375,
+    "P95": 57.54170227050781,
+    "median": 54.966217041015625
+  },
+  "musaffah_why_model": {
+    "validation": "5-fold 1 km spatial blocks",
+    "scores": [
+      {
+        "model": "Linear (standardised)",
+        "MAE_C": 1.402,
+        "RMSE_C": 1.974,
+        "R2": 0.814
+      },
+      {
+        "model": "Random Forest",
+        "MAE_C": 1.188,
+        "RMSE_C": 1.777,
+        "R2": 0.849
+      }
+    ],
+    "linear_coef_C_per_SD": {
+      "road_frac": 10.7,
+      "building_frac": 10.312,
+      "bare_frac": 12.594,
+      "vegetation_frac": 3.645,
+      "albedo": -0.18,
+      "ndvi": -0.973,
+      "dist_green_m": -0.318
+    },
+    "rf_importance": {
+      "road_frac": 0.03,
+      "building_frac": 0.032,
+      "bare_frac": 0.029,
+      "vegetation_frac": 0.054,
+      "albedo": 0.761,
+      "ndvi": 0.056,
+      "dist_green_m": 0.038
+    }
+  },
+  "musaffah_sites": {
+    "n": 139,
+    "very_high": 1,
+    "high": 7,
+    "by_type": {
+      "Bus stop": 51.0,
+      "Mosque": 51.0,
+      "School / clinic": 42.0
+    }
+  },
+  "musaffah_top_hotspot": {
+    "id": "M-001",
+    "lat": 24.34857,
+    "lon": 54.51194,
+    "risk": 82.0,
+    "heat_pct": 93,
+    "LST_C": 57.2,
+    "dominant_surface": "road",
+    "road": 0.54,
+    "roof": 0.02,
+    "sand": 0.44,
+    "veg": 0.0,
+    "impervious": 0.56,
+    "dist_green_m": 230,
+    "residents": 24,
+    "exposure_context": "industrial outdoor workers, pedestrians",
+    "drivers": "asphalt / dark pavement \u2191, bare sand \u2191, surface brightness (albedo) \u2193",
+    "actions": "Shade structures + cool pavement + Shaded rest nodes + midday work-break enforcement + Trees / vegetated shade on open ground (irrigation needed)",
+    "why": "54% dark pavement on a walking/transit route + industrial outdoor work + 44% bare sand, 0% vegetation",
+    "confidence": "High",
+    "priority": "High",
+    "dLST_trees_C": -4.93,
+    "dLST_coolpave_C": -0.09,
+    "risk_Trees +10%": 0.42,
+    "risk_Cool pavement": 0.99,
+    "risk_Shaded stops / rest nodes": 0.67
+  },
+  "musaffah_objects": {
+    "buildings": 25462,
+    "cool_roof_candidates": 445,
+    "in_high_or_extreme_heat": 965,
+    "new_since_2017": 1359,
+    "roof_label_agreement": 0.7157332495483466
+  },
+  "sam": {
+    "model": "SAM ViT-B (Meta, Apache-2.0)",
+    "segments": 84,
+    "annotation_candidates": 72,
+    "mean_purity": 0.923095238095238,
+    "hottest_label_by_LST": {
+      "Bare soil / sand": 57.6,
+      "Building / roof": 55.6,
+      "Road / dark pavement": 55.7
+    }
+  },
+  "llm_briefs": {
+    "model": "meta-llama/Llama-3.3-70B-Instruct",
+    "n": 5,
+    "llm_drafts_passing_fact_check": 5,
+    "policy": "LLM drafts only from verified facts; unit-aware fact-check; failed drafts replaced by the verified template; human sign-off required"
+  },
+  "station_check": [
+    {
+      "station": "Al Bateen (OMAD)",
+      "hours_compared": 2022,
+      "era5_vs_station_r": 0.955,
+      "MAE_C": 1.37,
+      "bias_C": -0.57,
+      "danger_window_station": "12:00\u201315:00",
+      "danger_window_era5": "11:00\u201316:00",
+      "landsat_days": 18,
+      "LST_minus_air_C": 15.2
+    },
+    {
+      "station": "Abu Dhabi Intl (OMAA)",
+      "hours_compared": 2019,
+      "era5_vs_station_r": 0.951,
+      "MAE_C": 1.53,
+      "bias_C": -0.36,
+      "danger_window_station": "11:00\u201316:00",
+      "danger_window_era5": "11:00\u201317:00",
+      "landsat_days": 10,
+      "LST_minus_air_C": 15.5
+    },
+    {
+      "station": "Riyadh King Khaled (OERK)",
+      "hours_compared": 2015,
+      "era5_vs_station_r": 0.986,
+      "MAE_C": 1.38,
+      "bias_C": -1.31,
+      "danger_window_station": "10:00\u201320:00",
+      "danger_window_era5": "11:00\u201319:00",
+      "landsat_days": 22,
+      "LST_minus_air_C": 10.7
+    }
+  ],
+  "emit": {
+    "granule": "EMIT_L2A_RFL_001_20230625T075714_2317605_020",
+    "date": "2023-06-25",
+    "r2_without": 0.8228922878527091,
+    "r2_with": 0.8389125555482486,
+    "dR2": 0.016020267695539547,
+    "mae_without": 1.251013401148172,
+    "mae_with": 1.1431441953270631,
+    "hydrocarbon_index_by_surface": {
+      "road": 0.001846048515290022,
+      "roof": 0.002114584669470787,
+      "sand": 0.0014355604071170092,
+      "vegetation": 0.001453846925869584
+    },
+    "roof_types": [
+      {
+        "roof_type": 0,
+        "cells": 757,
+        "albedo": 0.2724408507347107,
+        "bd2330": 0.02953939326107502,
+        "mean_LST_C": 54.361915588378906,
+        "name": "Dark roofs (cool-roof first)"
+      },
+      {
+        "roof_type": 1,
+        "cells": 87,
+        "albedo": 0.29488062858581543,
+        "bd2330": 0.029843110591173172,
+        "mean_LST_C": 54.03670120239258,
+        "name": "Mid roofs"
+      },
+      {
+        "roof_type": 2,
+        "cells": 729,
+        "albedo": 0.31634068489074707,
+        "bd2330": 0.028082353994250298,
+        "mean_LST_C": 54.42580795288086,
+        "name": "Bright roofs"
+      }
+    ]
+  },
+  "sar_fusion": {
+    "data": "Sentinel-1 RTC VV/VH, 12 scenes (ascending), summer 2025, 10 m",
+    "validation": "held-out 1 km test blocks (E), same labels as 10b",
+    "scores": [
+      {
+        "model": "Sentinel-2 only (10b best)",
+        "built_precision": 0.845,
+        "built_recall": 0.864,
+        "built_F1": 0.854,
+        "built_IoU": 0.745,
+        "macro_F1": 0.906,
+        "accuracy": 0.903,
+        "sand_called_roof_pct": 10.567
+      },
+      {
+        "model": "SAR only (VV, VH, ratio, texture)",
+        "built_precision": 0.687,
+        "built_recall": 0.805,
+        "built_F1": 0.741,
+        "built_IoU": 0.589,
+        "macro_F1": 0.528,
+        "accuracy": 0.524,
+        "sand_called_roof_pct": 10.533
+      },
+      {
+        "model": "Sentinel-2 + SAR (fusion)",
+        "built_precision": 0.886,
+        "built_recall": 0.888,
+        "built_F1": 0.887,
+        "built_IoU": 0.796,
+        "macro_F1": 0.919,
+        "accuracy": 0.916,
+        "sand_called_roof_pct": 7.767
+      }
+    ],
+    "built_F1_gain": 0.03300000000000003,
+    "macro_F1_gain": 0.013000000000000012,
+    "sand_called_roof_pct_s2": 10.567,
+    "sand_called_roof_pct_fusion": 7.767,
+    "median_vv_db_by_class": {
+      "Road / dark pavement": -7.8,
+      "Building / roof": -0.5,
+      "Bare soil / sand": -10.5,
+      "Vegetation": -8.9,
+      "Water": -15.8
+    },
+    "growth_check": {
+      "dVV_new_buildings_db": 1.04512357711792,
+      "dVV_existing_buildings_db": 1.5281641483306885,
+      "scenes_2017": 12
+    }
+  },
+  "roof_materials_riyadh": {
+    "method": "Tanager diagnostic-feature rules (albedo, 1730 nm hydrocarbon, Fe3+ 880 nm, Al-OH 2200 nm, carbonate 2330 nm, SWIR flatness)",
+    "share_pct": {
+      "White / cool coating": 8.0,
+      "Bitumen / dark membrane": 0.0,
+      "Clay tile / brick": 0.0,
+      "Concrete / cement": 25.5,
+      "Metal sheet (bare / painted)": 38.2,
+      "Mixed / unsure": 28.3
+    },
+    "silhouette": 0.09968849271535873,
+    "median_LST_C": {
+      "White / cool coating": 52.0,
+      "Concrete / cement": 50.9,
+      "Metal sheet (bare / painted)": 52.2
+    },
+    "osm_check": {
+      "pixels": 0,
+      "osm_ways": 0,
+      "note": "too few OSM roof:material tags in this AOI for a score"
+    }
+  },
+  "roof_materials_musaffah": {
+    "buildings_screened": 12365,
+    "share_pct": {
+      "Concrete / cement": 56.6,
+      "White / cool coating": 24.5,
+      "Metal sheet (bare / painted)": 11.1,
+      "Mixed / unsure": 7.7,
+      "Bitumen / dark membrane": 0.1
+    },
+    "median_LST_C": {
+      "Bitumen / dark membrane": 45.599998474121094,
+      "Concrete / cement": 54.900001525878906,
+      "Metal sheet (bare / painted)": 53.599998474121094,
+      "Mixed / unsure": 55.099998474121094,
+      "White / cool coating": 54.70000076293945
+    },
+    "hot_material_in_hot_zone": 49
+  },
+  "roof_ground_truth": {
+    "labels": 122,
+    "labellers": 1,
+    "roofs_with_truth": 122,
+    "fleiss_kappa_people": NaN,
+    "rules_vs_truth_Musaffah": {
+      "n": 122,
+      "accuracy": 0.26229508196721313,
+      "cohen_kappa": 0.010899918926222885,
+      "per_class_F1": {
+        "Bitumen / dark membrane": 0.0,
+        "Concrete / cement": 0.357,
+        "Metal sheet (bare / painted)": 0.208,
+        "Mixed / unsure": 0.0,
+        "White / cool coating": 0.34
+      },
+      "macro_F1": 0.1809115412888998
+    },
+    "supervised_on_truth_Musaffah": {
+      "n": 93,
+      "validation": "leave-one-1km-block-out",
+      "accuracy": 0.5161290322580645,
+      "macro_F1": 0.4612042791362612,
+      "cohen_kappa": 0.2330951072017592
+    }
+  },
+  "informal_screen": {
+    "cells": 2150,
+    "flagged": 215,
+    "osm_housing_points": 851,
+    "enrichment_ratio": 1.4215686274509804,
+    "permutation_p": 0.023,
+    "flagged_profile": {
+      "n": 15.0,
+      "med_area": 138.167,
+      "spread": 0.014,
+      "hot_roof": 0.0,
+      "ndvi": 0.045,
+      "lst": 53.967
+    },
+    "other_profile": {
+      "n": 7.0,
+      "med_area": 417.85,
+      "spread": 0.001,
+      "hot_roof": 0.0,
+      "ndvi": 0.035,
+      "lst": 54.748
+    }
+  },
+  "heat_island_proxy": {
+    "scale": "100 m cells, Musaffah, built-up \u226530%",
+    "ndbi_r": 0.40181524746357566,
+    "scores": [
+      {
+        "model": "NDBI alone (starter proxy)",
+        "r": 0.402,
+        "R2": -0.009,
+        "RMSE_C": 1.784,
+        "MAE_C": 1.305
+      },
+      {
+        "model": "Optical surfaces (S2)",
+        "r": NaN,
+        "R2": 0.314,
+        "RMSE_C": 1.471,
+        "MAE_C": 1.032
+      },
+      {
+        "model": "Optical + SAR (fused)",
+        "r": NaN,
+        "R2": 0.352,
+        "RMSE_C": 1.43,
+        "MAE_C": 0.996
+      }
+    ],
+    "SUHII_C": 8.792800903320312,
+    "weather_link": {
+      "danger_window": "11:00\u201320:00",
+      "heat_hours_ge40_per_day": 8.26086956521739
+    },
+    "stations": [
+      "station_check"
+    ]
+  },
+  "action_plan": {
+    "catalogue": {
+      "Metal sheet (bare / painted)": "Reflective white coating (high SRI) + under-deck insulation",
+      "Concrete / cement": "High-albedo elastomeric roof coating (Estidama-aligned SRI)",
+      "Bitumen / dark membrane": "Replace with white cool-roof membrane",
+      "White / cool coating": "Keep: clean and recoat on schedule",
+      "Mixed / unsure": "Roof survey, then coat the darkest roofs first",
+      "road": "Cool-pavement coating on roads and car parks + street trees",
+      "sand": "Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation",
+      "bus_stop": "Shaded, ventilated bus shelter with cooling",
+      "mosque": "Shaded walkway (pergola) on the prayer approach + trees",
+      "industrial": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep)",
+      "school": "Shaded drop-off and play areas; cool roof on classrooms",
+      "clinic": "Shaded entrance and waiting area"
+    },
+    "hotspots": [
+      {
+        "id": "M-001",
+        "roof_mix": "Concrete / cement 61% \u00b7 Metal sheet (bare / painted) 18% \u00b7 White / cool coating 14%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 86
+      },
+      {
+        "id": "M-002",
+        "roof_mix": "Concrete / cement 58% \u00b7 Metal sheet (bare / painted) 24% \u00b7 White / cool coating 16%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 55
+      },
+      {
+        "id": "M-003",
+        "roof_mix": "Concrete / cement 62% \u00b7 Metal sheet (bare / painted) 22% \u00b7 White / cool coating 13%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 56
+      },
+      {
+        "id": "M-004",
+        "roof_mix": "Concrete / cement 58% \u00b7 Metal sheet (bare / painted) 20% \u00b7 White / cool coating 17%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 72
+      },
+      {
+        "id": "M-005",
+        "roof_mix": "Concrete / cement 45% \u00b7 Metal sheet (bare / painted) 26% \u00b7 White / cool coating 25%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 67
+      },
+      {
+        "id": "M-006",
+        "roof_mix": "Concrete / cement 46% \u00b7 Metal sheet (bare / painted) 32% \u00b7 White / cool coating 21%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 41
+      },
+      {
+        "id": "M-007",
+        "roof_mix": "Concrete / cement 51% \u00b7 Metal sheet (bare / painted) 25% \u00b7 White / cool coating 22%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 46
+      },
+      {
+        "id": "M-008",
+        "roof_mix": "Concrete / cement 47% \u00b7 White / cool coating 30% \u00b7 Metal sheet (bare / painted) 20%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 72
+      },
+      {
+        "id": "M-009",
+        "roof_mix": "Concrete / cement 69% \u00b7 Mixed / unsure 16% \u00b7 White / cool coating 8%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun) | Shade sails + native trees (Ghaf, Sidr) on drip / TSE irrigation (open sand lots heat the air around them)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 131
+      },
+      {
+        "id": "M-010",
+        "roof_mix": "Concrete / cement 47% \u00b7 White / cool coating 31% \u00b7 Metal sheet (bare / painted) 18%",
+        "dominant_roof": "Concrete / cement",
+        "plan": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) (outdoor industrial work) | Cool-pavement coating on roads and car parks + street trees (dark asphalt stores heat into the evening) | High-albedo elastomeric roof coating (Estidama-aligned SRI) (grey concrete roofs absorb most of the sun)",
+        "now": "Shaded rest node + water station; enforce MoHRE midday break 12:30\u201315:00 (15 Jun\u201315 Sep) + Cool-pavement coating on roads and car parks + street trees",
+        "buildings_screened": 92
+      }
+    ],
+    "sites_by_type": {
+      "Mosque": 46,
+      "Bus stop": 30,
+      "School": 29,
+      "Clinic": 21,
+      "Hospital": 13
+    }
+  }
+}

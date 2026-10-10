@@ -62,6 +62,8 @@ All numbers above except the last row are agreement with reference maps the mode
 
 ### Example output
 
+![Example output: Musaffah heat, surfaces, exposure and priority](results/example_output.png)
+
 The notebook writes all of these into `qaydh_outputs/` (committed). Three of them:
 
 ![Musaffah: heat hazard, surfaces, exposure and priority](qaydh_outputs/12_musaffah_heat_surface_exposure_priority.png)
@@ -93,6 +95,10 @@ The notebook writes all of these into `qaydh_outputs/` (committed). Three of the
 Planet Tanager (CC-BY-4.0) · NASA EMIT · Landsat 8/9 (USGS) · Sentinel-1 and Sentinel-2 (ESA Copernicus) · ESA WorldCover · Impact Observatory LULC · Microsoft Building Footprints (ODbL) · OpenStreetMap (ODbL) · WorldPop 2025 · ERA5 via Open-Meteo · NOAA ISD stations. Every scene ID is in [`qaydh_outputs/data_provenance.json`](qaydh_outputs/data_provenance.json).
 
 ## 8 · Run it
+
+**Requires Python 3.11** (tested on Google Colab, Python 3.11/3.12). No GPU needed.
+
+**Layout:** notebook `QAYDH_T0049_urban_heat_risk.ipynb` at the root · sample input in `data/sample_input/` (same files as `example_input/`) · example output in `results/` (`example_output.png`, `example_output_hotspots.csv`, `example_output_results.json`) · all products in `qaydh_outputs/`. Runtime ≈60 min on a first run (downloads), then cached.
 
 **Fresh Google Colab (what a reviewer does):**
 ```
