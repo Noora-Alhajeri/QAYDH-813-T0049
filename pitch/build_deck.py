@@ -159,7 +159,7 @@ slide(f'''<h1 class="splash">QAYDH <span>القيظ</span></h1><div class="lense
 # 9 data & tools (Ghaf: data / tools / application steps)
 slide(f'''<div class="split"><div><h1 class="big">Data<br><span class="o">&amp; tools</span></h1></div>
 <dl class="why"><dt>Data</dt><dd>Landsat 8/9 thermal · Sentinel-2 10 m · Planet Tanager hyperspectral · ESA WorldCover · OSM · Microsoft footprints · WorldPop · ERA5</dd>
-<dt>Tools</dt><dd>Python · Planetary Computer · scikit-learn · QGIS-ready GeoJSON · gIQ-ready dashboard</dd>
+<dt>Tools</dt><dd>Python · Planetary Computer · scikit-learn · QGIS-ready GeoJSON · dashboard that could be hosted on gIQ</dd>
 <dt>Steps</dt><dd>Masks → annotation → training → spatial validation → priority → dashboard</dd></dl></div>''')
 # 9b open data we built on (logos)
 LOGOS = [("USGS_logo_green.svg", "Landsat 8/9 thermal + optical"), ("ESA_logo.svg", "Sentinel-1 radar · Sentinel-2 10 m · WorldCover"),
@@ -172,7 +172,7 @@ slide('<div class="kick">Open data we built on</div><h1 class="big">Nine open so
 # 10 approach (Ghaf: short-term / long-term)
 slide(f'''<div class="split"><div><h1 class="big">QAYDH<br><span class="o">Approach</span></h1></div>
 <dl class="why"><dt>Now · PoC</dt><dd>Musaffah at 10 m, end to end · hyperspectral proof on Riyadh (Tanager) · Abu Dhabi screening</dd>
-<dt>Next · MVP</dt><dd>Satellite 813 / MBZ-SAT over Abu Dhabi, Dubai, Al Ain · field-checked labels · gIQ</dd>
+<dt>Next · MVP</dt><dd>Satellite 813 / MBZ-SAT over Abu Dhabi, Dubai, Al Ain · field-checked labels · could be hosted on gIQ</dd>
 <dt>Later</dt><dd>Every Gulf city, every summer: one brief, one map, one budget line</dd></dl></div>''')
 # 10b the product, start to finish (overview flow of the real dashboard)
 FLOW = [("flame", "1 · Where", "Heat hazard zones", SC["m_where"]), ("users", "2 · Who", "Named bus stops, mosques, clinics", SC["m_who"]),
@@ -293,7 +293,7 @@ slide('<div class="kick">Who benefits</div><h1>Built for the people who decide w
 # 24 solution value + impact (icon tiles + numbers)
 st_ = {d["station"]: d for d in R.get("station_check", [])}
 slide(f'''<div class="kick">Solution value &amp; impact</div><h1 class="big">Value you can measure</h1><div class="tiles four4">
-<div>{icon("users", 52)}<b>{f0(R['residents_hot20'])}</b><span>residents in the hottest fifth of east Riyadh</span></div>
+<div>{icon("users", 52)}<b>{f0(R['residents_hot20'])}</b><span>residents in the hottest fifth of east Riyadh (transfer test)</span></div>
 <div>{icon("building-skyscraper", 52)}<b>{R['musaffah_objects']['cool_roof_candidates']}</b><span>cool-roof candidates in Musaffah</span></div>
 <div>{icon("bus", 52)}<b>{sites['very_high'] + sites['high']}</b><span>exposure sites at high or very high priority</span></div>
 <div>{icon("leaf", 52)}<b>{cool[0]:+.2f} °C</b><span>per +0.10 roof albedo (95% CI)</span></div></div>
@@ -432,9 +432,19 @@ slide(f'''<div class="split"><div><div class="kick">Next steps · incubation</di
 <dl class="why"><dt>0–3 months</dt><dd>Finish the blind 60-point check and human roof labels; field-check 20 Musaffah hotspots with the municipality.</dd>
 <dt>3–6 months</dt><dd>Satellite 813 / MBZ-SAT hyperspectral over Abu Dhabi, Dubai and Al Ain; afternoon thermal from ECOSTRESS.</dd>
 <dt>6–12 months</dt><dd>Municipal pilot in Musaffah: shade, cool roofs and rest points placed from QAYDH, then measured next summer.</dd>
-<dt>Platform</dt><dd>Host on Space42 gIQ as a dashboard + GeoJSON API + summer heat report.</dd></dl></div>''')
-# Order follows the submission guide: title · problem · business use case · data (hyperspectral) · approach · example outputs · validation & limits · impact · next steps
-ORDER = [0, 2,  5, 7,  44, 40,  11, 20, 32,  36, 8,  13, 14, 15, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28, 29, 30, 31, 49, 50,  45, 42, 38,  41,  len(S) - 1,  52]
+<dt>Platform</dt><dd>Could be hosted on Space42 gIQ as a dashboard + GeoJSON API + summer heat report.</dd></dl></div>''')
+# Attribution (from the README credits; Maryam may replace the wording)
+slide('''<div class="kick">Credits &amp; attribution</div><h1 class="big">Built on open data and open models</h1>
+<dl class="why"><dt>Hyperspectral</dt><dd>Tanager STAC Data, available at www.planet.com/data/stac, © 2025 Planet Labs PBC, All Rights Reserved. NASA EMIT courtesy of NASA LP DAAC.</dd>
+<dt>Satellites</dt><dd>Contains modified Copernicus Sentinel data 2025 (Sentinel-1, Sentinel-2). Landsat 8/9 courtesy of USGS. ERA5 © ECMWF / Copernicus Climate Change Service.</dd>
+<dt>Maps &amp; people</dt><dd>© OpenStreetMap contributors (ODbL) · Microsoft Building Footprints (ODbL) · WorldPop · ESA WorldCover · Impact Observatory · NOAA ISD.</dd>
+<dt>AI models</dt><dd>Built with Llama (Llama-3.3-70B, Llama 3.3 Community License) · Segment Anything, Meta (Apache-2.0).</dd>
+<dt>Code</dt><dd>MIT licence · Team T0049: Entesar Alhebsi, Noora Alhajeri, Maryam Albonni.</dd></dl>''')
+slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">Supporting detail<br><span class="o">dashboard tour, layers, methods</span></h1></div><div></div></div>''')
+# Spine = the nine sections the submission guide asks for, in order; everything else follows as the appendix
+NXT, ATT, APP = len(S) - 3, len(S) - 2, len(S) - 1
+ORDER = [0,  5,  44,  11, 20,  36,  13, 19,  45, 38,  41,  NXT,  ATT, 52,
+         APP, 2, 7, 40, 32, 8, 14, 15, 16, 17, 18, 23, 24, 25, 26, 27, 28, 29, 30, 31, 49, 50, 42]
 S = [S[i] for i in ORDER]
 doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get('EXTRA_CSS', '')}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)

@@ -132,7 +132,7 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 - EMIT (60 m) mixes roofs and roads; Tanager (30 m) separates materials better. The 139 roof-material labels were AI-assisted and are not yet human-checked, so roof-material accuracy is provisional.
 - The independent 60-point check is not yet complete.
 
-**Next steps (incubation):** Satellite 813 / MBZ-SAT imagery over Abu Dhabi, Dubai and Al Ain; a municipal pilot in Musaffah; hosting on Space42 gIQ.
+**Next steps (incubation):** Satellite 813 / MBZ-SAT imagery over Abu Dhabi, Dubai and Al Ain; a municipal pilot in Musaffah; the dashboard could be hosted on Space42 gIQ.
 
 **Repository layout:**
 
@@ -149,7 +149,7 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 
 ## 10 · Team, licence and attribution
 
-**Team T0049 (UAE):** Entesar Al Habsi (انتصار الحبسي), lead, story and README · Noura Al Hajeri (نورة الهاجري), notebook, data and dashboard · Maryam Al Bonni (مريم البني), deck, licences and checks.
+**Team T0049 (UAE):** Entesar Alhebsi (انتصار الحبسي), lead, story and README · Noora Alhajeri (نورة الهاجري), notebook, data and dashboard · Maryam Albonni (مريم البني), deck, licences and checks.
 
 **Licence:** code under MIT ([`LICENSE`](LICENSE)). Each dataset keeps its own licence (table in §4).
 

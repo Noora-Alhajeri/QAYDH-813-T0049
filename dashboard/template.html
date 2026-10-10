@@ -205,7 +205,7 @@ function fmt(n,d=0){return Number(n).toLocaleString("en-US",{maximumFractionDigi
 function build(){
   const D = DATA[city]; if(map){map.remove();} layer={};
   map = L.map("map",{zoomControl:true,attributionControl:true,preferCanvas:true}).setView(D.center,12);
-  map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Tanager © 2025 Planet Labs PBC · WorldPop · © OpenStreetMap");
+  map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Tanager © 2025 Planet Labs PBC · Contains modified Copernicus Sentinel data 2025 · WorldPop · © OpenStreetMap · Built with Llama · SAM (Apache-2.0)");
   const b = D.ov.bounds; map.fitBounds(b,{padding:[0,0]});
   if(D.block){ map.setMaxBounds(L.latLngBounds(b).pad(0.08)); map.setMinZoom(map.getBoundsZoom(b,true)); map.fitBounds(b,{padding:[0,0]}); }
   map.on("zoomend",()=>{ if(!layer.siteLabels) return; if(map.getZoom()>=15 && active.has("sites")) layer.siteLabels.addTo(map); else map.removeLayer(layer.siteLabels); });
@@ -325,7 +325,7 @@ try{ if(sessionStorage.getItem("qaydh-intro")) document.getElementById("intro").
 function cardIntro(){
   const D=DATA[city]; document.getElementById("card").innerHTML=`<h3>${D.name}</h3><div class="empty">${D.sub}</div>
   <dl class="q"><dt>Where</dt><dd>Persistent summer hotspots at 300 m</dd><dt>When</dt><dd>Hours above 40 °C, from weather reanalysis</dd><dt>Why</dt><dd>Roof, road, sand or missing greenery, read from hyperspectral spectra</dd><dt>Who</dt><dd>Residents + people outdoors: mosque-goers, bus riders, delivery riders, workers, children</dd><dt>What next</dt><dd>One named action per hotspot, with estimated °C and confidence</dd></dl>
-  <p class="empty">Open the last chapter, “Where to act first”, and pick a hotspot.</p><div class="src">Open data: Planet Tanager (© 2025 Planet Labs PBC), Landsat 8/9, ESA WorldCover, WorldPop 2025, OpenStreetMap, Microsoft building footprints, Open-Meteo/ERA5.</div>`;
+  <p class="empty">Open the last chapter, “Where to act first”, and pick a hotspot.</p><div class="src">Open data: Planet Tanager (© 2025 Planet Labs PBC), Landsat 8/9, ESA WorldCover, WorldPop 2025, OpenStreetMap, Microsoft building footprints, Open-Meteo/ERA5. Contains modified Copernicus Sentinel data 2025. Built with Llama (Llama 3.3). Segment Anything (Meta, Apache-2.0).</div>`;
 }
 function blockCard(h,i){
   const rel=[["Trees +10%",h["risk_Trees +10%"]],["Cool pavement",h["risk_Cool pavement"]],["Shaded stops / rest nodes",h["risk_Shaded stops / rest nodes"]]];

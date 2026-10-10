@@ -27,8 +27,8 @@ _cust = [("building-skyscraper", "Municipal planners", "One-off consultant studi
 slide(f'''<div class="kick">Question 1 · the business problem</div><h1 class="big">Who loses when a city heats up, and what do they do today?</h1>
 <div class="q1">{"".join(f'<div class="c">{icon(i_, 46)}<b>{t}</b><div class="tag bad">Today</div><p>{a}</p><div class="tag good">With QAYDH</div><p class="g">{b}</p></div>' for i_, t, a, b in _cust)}</div>
 <div class="cost"><div><b>{_w["heat_hours_ge40_per_day"]:.1f} h</b>a day above 40 °C air</div><div><b>{_w["days_air_ge_40"]}/{_w["n_days"]}</b>summer days at 40 °C+</div>
-<div><b>+{(_st[0]["LST_minus_air_C"] if _st else 15):.0f} °C</b>surface–air difference at 10:40 (descriptive)</div><div><b>{R["residents_hot20"]:,.0f}</b>residents in the hottest fifth (Riyadh)</div></div>
-<p class="biz">Business model · per-city subscription: dashboard + API + summer report · open-data core keeps cost near zero · upgrades to Satellite 813 / MBZ-SAT hyperspectral in incubation</p>''')
+<div><b>+{(_st[0]["LST_minus_air_C"] if _st else 15):.0f} °C</b>surface–air difference at 10:40 (descriptive)</div><div><b>{R["residents_hot20"]:,.0f}</b>residents in the hottest fifth of east Riyadh (transfer test)</div></div>
+<p class="biz">Business model · per-city subscription: dashboard + API + summer report · open-data core keeps cost near zero</p>''')
 
 # ---------- Q2 · how good is it, really? ----------
 _rows = [("Built-up map · east Riyadh", "F1", R["cv_built_f1_ndbi"], R["cv_built_f1_rf"], "5-fold spatial-block CV vs ESA WorldCover"),
@@ -53,7 +53,8 @@ _extra = [f"<div><b>MAE {min(d['MAE_C'] for d in _st):.1f}–{max(d['MAE_C'] for
           f"<div><b>{min(R['hrpi_top20_overlap'].values())*100:.0f}–{max(R['hrpi_top20_overlap'].values())*100:.0f}%</b>top-20 stable under 4 weightings</div>"]
 if R.get("informal_screen"): _extra.append(f"<div><b>×{R['informal_screen']['enrichment_ratio']:.1f}</b>informal screen enrichment (p {R['informal_screen']['permutation_p']:.3f})</div>")
 slide(f'''<div class="kick">Question 2 · how good is the model, really?</div><h1>Measured against baselines, on places the model never saw</h1>
-<div class="legend2"><i class="b0"></i>starter / baseline <i class="b1"></i>QAYDH</div><div class="score">{_bars}</div><div class="extra">{"".join(_extra)}</div>''')
+<div class="legend2"><i class="b0"></i>starter / baseline <i class="b1"></i>QAYDH</div><div class="score">{_bars}</div><div class="extra">{"".join(_extra)}</div>
+<p class="biz">Musaffah 0.91 is macro-F1 on a near-balanced test sample (up to 3,000 pixels per class; majority-class baseline 0.21), not the district's natural class mix.</p>''')
 
 # ---------- Q3 · how end users see it ----------
 _dash = _os.path.join(PITCH, "screens", "m5_act.png")
