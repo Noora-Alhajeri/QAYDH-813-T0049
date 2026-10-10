@@ -2,7 +2,7 @@
 
 > **Satellites show that Gulf cities burn. QAYDH shows *why* each hotspot burns, *who* is outside in it, and *which fix* to do first.**
 
-**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme: Urban Expansion, Land Use Change & Heat Risk**
+**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme 02: Urban Expansion, Land Use Change & Heat Risk**
 
 ## 1 · Title and summary
 
@@ -16,6 +16,8 @@ QAYDH is a proof of concept that turns open satellite data into a ranked heat-ac
 | ▶ Try it (no install) | 📊 Slides | 💻 Run it yourself |
 |---|---|---|
 | **[Live dashboard](https://noora-alhajeri.github.io/QAYDH-813-T0049/)** ([backup](https://raw.githack.com/Noora-Alhajeri/QAYDH-813-T0049/main/dashboard/index.html)) | [`pitch/QAYDH_T0049_pitch.pdf`](pitch/QAYDH_T0049_pitch.pdf) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Noora-Alhajeri/QAYDH-813-T0049/blob/main/QAYDH_T0049_urban_heat_risk.ipynb) |
+
+**Jump to:** [Business use case](#2--business-use-case) · [Problem](#3--the-problem) · [Data](#4--data-used) · [Approach](#5--technical-approach-in-execution-order) · [Install](#6--installation) · [Run](#7--how-to-run) · [Example output](#8--example-input-and-output) · [Results & limits](#9--results-and-limitations) · [Team & licence](#10--team-licence-and-attribution)
 
 ![QAYDH dashboard walkthrough over Musaffah](pitch/gifs/qaydh_musaffah_tour.gif)
 
@@ -80,12 +82,21 @@ Optional tokens (never stored in the repo): `HF_TOKEN` for the Llama planner bri
 
 ## 7 · How to run
 
-| | Colab | Own computer |
-|---|---|---|
-| **1. Open** | the **Open in Colab** badge | `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb` |
-| **2. Run** | *Runtime → Run all* | *Run → Run All Cells* |
-| **3. Restart once** | if the first cell says *"Restart session"*: *Runtime → Restart session*, then *Run all* again | not needed |
-| **4. Wait** | about **60 min** (downloads the satellite scenes). Keep the tab open | about 60 min first time, faster after |
+**In Google Colab (recommended, about 60 minutes):**
+
+1. Click **[Open in Colab](https://colab.research.google.com/github/Noora-Alhajeri/QAYDH-813-T0049/blob/main/QAYDH_T0049_urban_heat_risk.ipynb)**.
+2. In the menu choose **Runtime → Run all**.
+3. If the first cell stops with *"Restart session"*, choose **Runtime → Restart session**, then **Runtime → Run all** again (once only).
+4. Keep the tab open while it runs (about 60 min; it downloads the satellite scenes).
+5. Scroll to the last cell and check the three `wrote results/…` lines below.
+
+**On your own computer:**
+
+1. Do the three commands in [Installation](#6--installation).
+2. Run `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb`.
+3. Choose **Run → Run All Cells** and wait (about 60 min the first time, faster after).
+
+**Just want to see the result?** Open the **[live dashboard](https://noora-alhajeri.github.io/QAYDH-813-T0049/)**, or look at the [example output](#8--example-input-and-output) below.
 
 Nothing to edit: the study area (Musaffah) and `SEED = 813` are set inside the notebook. All paths are relative.
 
