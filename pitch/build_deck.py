@@ -99,16 +99,16 @@ def screen(src, kicker, title, quote, n):
 
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
-<div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 05</div><h1>QAYDH <span>القيظ</span></h1>
+<div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 05</div><h1>QAYDH</h1>
 <h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 05 · Urban Expansion, Land Use Change &amp; Heat Risk</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
 # 2 agenda
 slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">From where it is hot<br>to where we act first</h1></div>
 <ol class="agenda"><li>Team</li><li>The heat problem</li><li>QAYDH</li><li>Approach &amp; tools</li><li>The Musaffah story</li><li>Proof</li><li>Impact &amp; value</li><li>Closing</li></ol></div>''')
 # 3 team
 slide('''<div class="kick">Team T0049</div><h1 class="big">Three people, one city problem</h1>
-<div class="three team3"><div><b>انتصار الحبسي</b><span>Team lead</span></div><div><b>نورة الهاجري</b><span>Team member</span></div><div><b>مريم البني</b><span>Team member</span></div></div>''')
+<div class="three team3"><div><b>Entesar Alhebsi</b><span>Team lead · story, README, submission</span></div><div><b>Noora Alhajeri</b><span>Notebook, data, models, dashboard</span></div><div><b>Maryam Albonni</b><span>Deck, licences, checks</span></div></div>''')
 # 4 title
-slide(f'''<div class="split"><div><div class="kick">QAYDH · القيظ</div><h1 class="big">The fierce heat of summer,<br>mapped where people live and work</h1>
+slide(f'''<div class="split"><div><div class="kick">QAYDH</div><h1 class="big">The fierce heat of summer,<br>mapped where people live and work</h1>
 <p class="lead">Heat · surfaces · people · action, from open satellite data.</p></div><figure class="phf"><img class="photo" src="{blockimg(("sat", "haz"))}"><figcaption>Musaffah, Abu Dhabi · summer 2025 heat hazard zones on Sentinel-2 10 m</figcaption></figure></div>''')
 # 5 why + impact (Ghaf: challenge / significance / impact / solution)
 slide(f'''<div class="split"><div><h1 class="big">Why QAYDH as a solution?<br><span class="o">What is its impact?</span></h1></div>
@@ -135,7 +135,7 @@ outs = [("flame", "Hotspot map", "Heat zones across Musaffah", blockimg(("sat", 
 slide(f'''<div class="pa"><div><div class="kick">The problem we solve</div>
 <h1 class="big" style="font-size:64px">We don't only map heat.<br><span class="o">We explain it and say what to do.</span></h1>
 <p class="dstrip"><b>Hyperspectral:</b> Planet Tanager 426 bands (Riyadh) + NASA EMIT 285 bands (Abu Dhabi) · <b>Thermal:</b> Landsat 8/9 · <b>10 m:</b> Sentinel-2 + Sentinel-1 radar · <b>Places:</b> OSM + 25,462 footprints · <b>People:</b> WorldPop · <b>Truth:</b> NOAA stations</p>
-<p class="ar">نحن لا نكتفي برسم خريطة للحرارة؛ بل نفسر أسبابها على مستوى المواد ونقترح التدخل المناسب</p></div>
+</div>
 <div class="outs">{"".join(f'<figure><img src="{im}"><figcaption>{icon(i_, 26)}<b>{t}</b><span>{d_}</span></figcaption></figure>' for i_, t, d_, im in outs)}</div></div>''')
 # 6 collage
 slide(f'''<div class="kick">Musaffah, Abu Dhabi</div><h1 class="big">Real places, not pixels</h1>
@@ -151,7 +151,7 @@ slide('<div class="kick">Solution overview</div><h1 class="big">Five questions, 
       "".join(f'<div><div class="ic">{icon(i_, 44)}</div><i>{k+1}</i><b>{t}</b><span>{d_}</span><img src="{im}"></div>' for k, (i_, t, d_, im) in enumerate(steps)) + "</div>")
 
 # 8 splash with three lenses (Ghaf: GreenScope · Palm / Ghaf / Mangrove)
-slide(f'''<h1 class="splash">QAYDH <span>القيظ</span></h1><div class="lenses">
+slide(f'''<h1 class="splash">QAYDH</h1><div class="lenses">
 <figure><img src="{crop(MH.iloc[6].lat, MH.iloc[6].lon, 600, ("sat", "haz"))}"><figcaption>Heat</figcaption></figure>
 <figure><img src="{crop(MH.iloc[6].lat, MH.iloc[6].lon, 600, ("sat", "surf"))}"><figcaption>Materials</figcaption></figure>
 <figure><img src="{shotcrop(SC["m_who"], (330, 120, 1000, 790))}"><figcaption>People &amp; places</figcaption></figure>
@@ -312,7 +312,7 @@ slide('<div class="kick">See it work · animated walkthrough in the repo</div><h
 # 25 closing
 exec(open(os.path.join(PITCH, "judging_slides.py")).read())   # Q1 business problem · Q2 validation · Q3 delivery · coverage · SAR/roofs/informal/heat-proxy
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_geometry.png'))}">
-<div class="cover"><h1>QAYDH <span>القيظ</span></h1><h2>From “where is it hot?” to “where we act first, why, and how.”</h2>
+<div class="cover"><h1>QAYDH</h1><h2>From “where is it hot?” to “where we act first, why, and how.”</h2>
 <div class="team">Musaffah → Abu Dhabi → UAE → Gulf cities</div></div>''', "dark")
 
 CSS = """
@@ -328,7 +328,8 @@ h1.big{font-size:84px;line-height:.98;max-width:1250px}
 h1 span,.o{color:#ff6b2c} h1 span{font-family:'IBM Plex Sans Arabic'}
 .lead{font-size:28px;color:#cdbda4;max-width:620px}
 .bleed{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.bleed.art{filter:brightness(.45) saturate(1.1)} .bleed.art2{opacity:.75;mix-blend-mode:screen}
+.bleed.art{filter:brightness(.4) saturate(1.1)} .bleed.art2{opacity:.4;mix-blend-mode:screen}
+.cover{background:rgba(20,17,14,.82);padding:34px 44px;border-radius:18px} .cover h1{text-shadow:0 4px 18px #000}
 .cover{position:absolute;left:96px;bottom:110px;max-width:1250px}
 .cover h1{font-size:160px;margin:6px 0}
 .cover h2{font:600 40px/1.2 'IBM Plex Sans Arabic';color:#ffcf9a;margin:0 0 24px}
@@ -439,7 +440,7 @@ slide('''<div class="kick">Credits &amp; attribution</div><h1 class="big">Built 
 <dt>Maps &amp; people</dt><dd>© OpenStreetMap contributors (ODbL) · Microsoft Building Footprints (ODbL) · WorldPop · ESA WorldCover · Impact Observatory · NOAA ISD.</dd>
 <dt>AI models</dt><dd>Built with Llama (Llama-3.3-70B, Llama 3.3 Community License) · Segment Anything, Meta (Apache-2.0).</dd>
 <dt>Code</dt><dd>MIT licence · Team T0049: Entesar Alhebsi, Noora Alhajeri, Maryam Albonni.</dd></dl>''')
-slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">Supporting detail<br><span class="o">dashboard tour, layers, methods</span></h1></div><div></div></div>''')
+slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">Supporting detail<br><span class="o">dashboard layers, methods, figures</span></h1></div><div></div></div>''')
 # Notebook figures with legends: each gets its own explained slide
 def figslide(fn, kick, title, pts):
     slide(f'''<div class="kick">{kick}</div><h1>{title}</h1><img class="figw" style="height:560px" src="{fig(fn)}">
@@ -460,16 +461,26 @@ figslide("09_surface_classifier.png", "Notebook figure 9 · surface model", "Tra
          ["<b>Left</b>starter NDBI rule calls bare sand 'city'", "<b>Right</b>QAYDH Random Forest separates road, roof, sand, green", "<b>Score</b>held-out blocks 0.91 vs 0.47"])
 figslide("10_abudhabi_transfer.png", "Notebook figure 10 · transfer", "Same pipeline, another city: Abu Dhabi mainland",
          ["<b>Transfer</b>no retuning, same code and data sources", "<b>Districts</b>Musaffah, Masdar and others compared on heat and green", "<b>Result</b>the method travels across Gulf cities"])
+slide(f'''<div class="split" style="grid-template-columns:1fr 1.15fr;gap:50px"><div><div class="kick">How to use the dashboard</div><h1 class="big" style="font-size:66px">Open it, click, decide</h1>
+<dl class="why"><dt>1 · Open</dt><dd>noora-alhajeri.github.io/QAYDH-813-T0049 — no login, any browser</dd>
+<dt>2 · Pick a city</dt><dd>Tabs at the top: East Riyadh · Abu Dhabi · <b>Musaffah deep dive</b></dd>
+<dt>3 · Walk the steps</dt><dd>Next / Back (or ← →) moves through 6 steps: where · who · what · labels · why · act</dd>
+<dt>4 · Click a place</dt><dd>B bus stop, M mosque, S school → card with heat %, greenery and the fix</dd>
+<dt>5 · Click a hotspot</dt><dd>M-001, M-002 … → materials, who is outside, do-now plan</dd>
+<dt>6 · Layers ▾</dt><dd>Switch heat zones, surfaces, buildings, priority; click a building for its block temperature</dd></dl></div>
+<img style="width:100%;border-radius:14px;border:1px solid #3a3027" src="{img(SC['m_act'])}"></div>''')
 slide('''<div class="split"><div><div class="kick">Appendix</div><h1 class="big">More evidence<br><span class="o">notebook figures</span></h1></div><div></div></div>''')
 def at(sub, k=0):
     hits = [i_ for i_, s_ in enumerate(S) if sub in s_]
     assert len(hits) > k, sub; return hits[k]
 L_ = lambda t: at(f"<h2>{t}</h2>")
 ORDER = [0, at("Heat maps exist. Decisions don"), at("Question 1 · the business problem"), at("Nine open sources, one answer"), at("Narrow bands read the material"),
-         at("From open satellites to a decision"), at("Open it, follow six steps"), at("Musaffah in four maps"), at("Hotspot M-001: one decision"),
-         at("Question 2 · how good is the model"), at("Being upfront"), at("Value you can measure"), at("From proof of concept"), at("Built on open data and open models"), at("From “where is it hot?”"),
+         at("From open satellites to a decision"),
+         at("Open it, follow six steps"), at("Open it, click, decide"),
+         at("Hazard zones, not fake street"), at("139 named outdoor sites"), at("Road · roof · sand · green · water"), at("Objects with ID, box and label"), at("Asphalt and sand up, green down"), at("Hotspot M-001: one decision"),
+         at("Musaffah in four maps"),
+         at("Question 2 · how good is the model"), at("Being upfront"), at("Value you can measure"), at("From proof of concept"), at("Built on open data and open models"),
          at("Supporting detail"), at("Three people, one city problem"), at("Real places, not pixels"), at("Who benefits"), at("Tanager reads roof, road and sand"), at("Five questions, answered step by step"),
-         at("Hazard zones, not fake street"), at("139 named outdoor sites"), at("Road · roof · sand · green · water"), at("Objects with ID, box and label"), at("Asphalt and sand up, green down"),
          *[L_(t) for t in ["Heat hazard zones", "Surface classes (10 m)", "Model confidence", "Building objects", "Exposure sites", "AI segments (SAM)", "Priority ranking"]],
          at("Every material gets its own fix"), at("Metal, concrete, tile, bitumen"), at("Dense, irregular, sheet-roofed"), at("Surface vs air, reported as a difference"),
          at("More evidence"), at("Where the ground burns"), at("The city keeps growing"), at("What makes a place hot"), at("Counting people changes"), at("Same hotspots every summer"),
