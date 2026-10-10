@@ -18,7 +18,7 @@ DASH = open(os.path.join(ROOT, "dashboard", "index.html")).read().replace("</sty
 def shot(name, js, w=1600, h=950):
     p = os.path.join(SHOTS, name + ".png"); tmp = os.path.join(SHOTS, "_tmp.html")
     open(tmp, "w").write(DASH.replace("build();\n</script>", f"build();setTimeout(()=>{{{js}}},500);\n</script>"))
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={w},{h}", "--virtual-time-budget=9000",
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=2", f"--window-size={w},{h}", "--virtual-time-budget=9000",
                     f"--screenshot={p}", "file://" + tmp], capture_output=True, timeout=180)
     os.remove(tmp); return p
 mus = "document.getElementById('city-musaffah').click();"
@@ -434,7 +434,7 @@ slide(f'''<div class="split"><div><div class="kick">Next steps · incubation</di
 <dt>6–12 months</dt><dd>Municipal pilot in Musaffah: shade, cool roofs and rest points placed from QAYDH, then measured next summer.</dd>
 <dt>Platform</dt><dd>Host on Space42 gIQ as a dashboard + GeoJSON API + summer heat report.</dd></dl></div>''')
 # Order follows the submission guide: title · problem · business use case · data (hyperspectral) · approach · example outputs · validation & limits · impact · next steps
-ORDER = [0, 2,  5, 7,  44, 40,  11, 20, 32,  36, 8,  14, 15, 16, 18, 19, 31, 49, 50,  45, 42, 38,  41,  len(S) - 1,  52]
+ORDER = [0, 2,  5, 7,  44, 40,  11, 20, 32,  36, 8,  13, 14, 15, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28, 29, 30, 31, 49, 50,  45, 42, 38,  41,  len(S) - 1,  52]
 S = [S[i] for i in ORDER]
 doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get('EXTRA_CSS', '')}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)

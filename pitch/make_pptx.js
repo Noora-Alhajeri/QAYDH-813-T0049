@@ -10,8 +10,8 @@ const alpha = c => { const m = (c || "").match(/\d+(\.\d+)?/g); return m && m.le
 const font = (f, t) => /[؀-ۿ]/.test(t) ? "Arial" : /Shoulders/.test(f) ? "Arial Narrow" : /Mono/.test(f) ? "Courier New" : "Calibri";
 S.forEach((sd, si) => {
   const s = pres.addSlide(); s.background = { color: "14110E" };
-  s.addImage({ path: path.join(L, `bg_${si}.png`), x: 0, y: 0, w: 13.333, h: 7.5, objectName: "Background (cards and icons)" });
-  sd.imgs.forEach((im, k) => s.addImage({ path: path.join(L, `img_${si}_${k}.png`), x: im.x * PX, y: im.y * PX, w: im.w * PX, h: im.h * PX,
+  s.addImage({ path: path.join(L, `bg_${si}.jpg`), x: 0, y: 0, w: 13.333, h: 7.5, objectName: "Background (cards and icons)" });
+  sd.imgs.forEach((im, k) => s.addImage({ path: path.join(L, `img_${si}_${k}.jpg`), x: im.x * PX, y: im.y * PX, w: im.w * PX, h: im.h * PX,
       rounding: false, objectName: `Picture ${k + 1}` }));
   sd.texts.forEach((t, k) => {
     const runs = []; t.runs.forEach((r, i) => {

@@ -57,11 +57,11 @@ with sync_playwright() as pw:
                 x0, y0 = (W - cw) * px, (H - ch) * py; I = I.crop((int(x0), int(y0), int(x0 + cw), int(y0 + ch)))
             elif im["fit"] == "contain":
                 s_ = min(bw / W, bh / H); nw, nh = W * s_, H * s_; im.update(x=im["x"] + (bw - nw) / 2, y=im["y"] + (bh - nh) / 2, w=nw, h=nh)
-            I.save(os.path.join(OUT, f"img_{si}_{k}.png")); del im["src"]
+            I.convert("RGB").save(os.path.join(OUT, f"img_{si}_{k}.jpg"), quality=85); del im["src"]
     # background: hide pictures and make text transparent (keeps boxes, cards, icons)
-    pg.add_style_tag(content="section img[data-k]{visibility:hidden!important} [data-txt]{color:transparent!important} [data-txt] *{color:transparent!important} section::after{content:''!important} .pop{background:transparent!important;box-shadow:none!important}")
+    pg.add_style_tag(content="section img[data-k]{visibility:hidden!important} [data-txt]{color:transparent!important} [data-txt] *{color:transparent!important} section::after{content:''!important}")
     for si, sec in enumerate(secs):
-        sec.screenshot(path=os.path.join(OUT, f"bg_{si}.png"))
+        sec.screenshot(path=os.path.join(OUT, f"bg_{si}.jpg"), type="jpeg", quality=88)
     b.close()
 json.dump(data, open(os.path.join(OUT, "slides.json"), "w"))
 print(len(data), "slides", sum(len(d["texts"]) for d in data), "text boxes", sum(len(d["imgs"]) for d in data), "images")
