@@ -9,7 +9,7 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "qaydh_outputs"); D = os.path.join(OUT, "dashboard"); PITCH = os.path.join(ROOT, "pitch"); SHOTS = os.path.join(PITCH, "screens")
 os.makedirs(SHOTS, exist_ok=True)
-CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")  # set CHROME to your Chrome/Chromium binary
 R = json.load(open(os.path.join(OUT, "results.json")))
 MH = pd.read_csv(os.path.join(OUT, "musaffah_hotspots.csv")); MS = pd.read_csv(os.path.join(OUT, "musaffah_exposure_sites.csv"))
 
@@ -18,7 +18,7 @@ DASH = open(os.path.join(ROOT, "dashboard", "index.html")).read().replace("</sty
 def shot(name, js, w=1600, h=950):
     p = os.path.join(SHOTS, name + ".png"); tmp = os.path.join(SHOTS, "_tmp.html")
     open(tmp, "w").write(DASH.replace("build();\n</script>", f"build();setTimeout(()=>{{{js}}},500);\n</script>"))
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={w},{h}", "--virtual-time-budget=9000",
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=2", f"--window-size={w},{h}", "--virtual-time-budget=9000",
                     f"--screenshot={p}", "file://" + tmp], capture_output=True, timeout=180)
     os.remove(tmp); return p
 mus = "document.getElementById('city-musaffah').click();"
@@ -266,7 +266,7 @@ slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert
 <div><b>Heat is coarse</b><span>Thermal = zones; 10 m surfaces explain them.</span></div></div>''')
 # 21 tradeoffs
 slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 class="big">Being upfront</h1></div>
-<dl class="why"><dt>Labels</dt><dd>Labels are cleaned, not assumed. {ann['removed_as_noisy']:,} noisy labels removed automatically; 139 roofs labelled on 0.3 m imagery.</dd>
+<dl class="why"><dt>Labels</dt><dd>Labels are cleaned, not assumed. {ann['removed_as_noisy']:,} noisy labels removed automatically; 139 roof-material labels are AI-assisted and not yet human-checked; a blind 60-point check by the team is under way. No buffer between test blocks.</dd>
 <dt>Heat</dt><dd>Surface runs 11–15 °C above air (NOAA stations). We rank zones; ERA5, checked against stations, sets the hours.</dd>
 <dt>Materials</dt><dd>Tanager (30 m) separates materials clearly in Riyadh; EMIT (60 m) over Musaffah mixes roofs and roads in one pixel. Satellite 813 brings the finer detail.</dd>
 <dt>People</dt><dd>Exposure opportunity, not head counts.</dd></dl></div>''')
@@ -300,8 +300,8 @@ slide(f'''<div class="kick">Solution value &amp; impact</div><h1 class="big">Val
 <p class="sdg">Aligned with UAE Net Zero 2050 · We the UAE 2031 · Abu Dhabi urban heat goals · SDG 3 · 11 · 13</p>''')
 # 24b ground truth
 if st_:
-    slide(f'''<div class="kick">Ground truth · NOAA weather stations</div><h1>Checked against real thermometers</h1><img class="figw" style="height:430px" src="{fig('14_station_validation.png')}">
-    <div class="strip" style="bottom:50px">{"".join(f"<div><b>r {d['era5_vs_station_r']:.2f}</b>{n}: ERA5 vs station · danger {d['danger_window_station']}</div>" for n, d in list(st_.items())[:3])}</div>''')
+    slide(f'''<div class="kick">Ground truth · NOAA weather stations</div><h1>Surface vs air, reported as a difference, not a validation</h1><img class="figw" style="height:430px" src="{fig('14_station_validation.png')}">
+    <div class="strip" style="bottom:50px">{"".join(f"<div><b>+{d['LST_minus_air_C']:.1f} °C</b>{n}: surface minus air on {d['landsat_days']} Landsat days · ERA5 MAE {d['MAE_C']:.1f} °C over {d['hours_compared']:,} h</div>" for n, d in list(st_.items())[:3])}</div>''')
 # 24c see it work (storyboard from the GIF)
 from PIL import ImageSequence
 g_ = Image.open(os.path.join(PITCH, "gifs", "qaydh_musaffah_tour.gif")); frs = [f.convert("RGB") for f in ImageSequence.Iterator(g_)]
@@ -427,6 +427,15 @@ section:has(.filmstrip) .split{height:560px}
 .nums b{display:block;font:800 108px/1 'Big Shoulders Display';color:#ff6b2c} .nums span{font-size:21px;color:#cdbda4;line-height:1.3}
 ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabic'} ul.ben li{border-bottom:1px solid #3a3027}
 """
+# Next steps for incubation (guide section 9)
+slide(f'''<div class="split"><div><div class="kick">Next steps · incubation</div><h1 class="big">From proof of concept<br><span class="o">to a city service</span></h1></div>
+<dl class="why"><dt>0–3 months</dt><dd>Finish the blind 60-point check and human roof labels; field-check 20 Musaffah hotspots with the municipality.</dd>
+<dt>3–6 months</dt><dd>Satellite 813 / MBZ-SAT hyperspectral over Abu Dhabi, Dubai and Al Ain; afternoon thermal from ECOSTRESS.</dd>
+<dt>6–12 months</dt><dd>Municipal pilot in Musaffah: shade, cool roofs and rest points placed from QAYDH, then measured next summer.</dd>
+<dt>Platform</dt><dd>Host on Space42 gIQ as a dashboard + GeoJSON API + summer heat report.</dd></dl></div>''')
+# Order follows the submission guide: title · problem · business use case · data (hyperspectral) · approach · example outputs · validation & limits · impact · next steps
+ORDER = [0, 2,  5, 7,  44, 40,  11, 20, 32,  36, 8,  13, 14, 15, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28, 29, 30, 31, 49, 50,  45, 42, 38,  41,  len(S) - 1,  52]
+S = [S[i] for i in ORDER]
 doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get('EXTRA_CSS', '')}</style></head><body>{''.join(S)}</body></html>"
 hp = os.path.join(PITCH, "QAYDH_T0049_pitch.html"); open(hp, "w").write(doc)
 pdf = os.path.join(PITCH, "QAYDH_T0049_pitch.pdf")

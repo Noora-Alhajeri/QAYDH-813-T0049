@@ -205,7 +205,7 @@ function fmt(n,d=0){return Number(n).toLocaleString("en-US",{maximumFractionDigi
 function build(){
   const D = DATA[city]; if(map){map.remove();} layer={};
   map = L.map("map",{zoomControl:true,attributionControl:true,preferCanvas:true}).setView(D.center,12);
-  map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Planet Tanager CC-BY-4.0 · WorldPop · © OpenStreetMap");
+  map.attributionControl.setPrefix("").addAttribution("Landsat (USGS) · Tanager © 2025 Planet Labs PBC · WorldPop · © OpenStreetMap");
   const b = D.ov.bounds; map.fitBounds(b,{padding:[0,0]});
   if(D.block){ map.setMaxBounds(L.latLngBounds(b).pad(0.08)); map.setMinZoom(map.getBoundsZoom(b,true)); map.fitBounds(b,{padding:[0,0]}); }
   map.on("zoomend",()=>{ if(!layer.siteLabels) return; if(map.getZoom()>=15 && active.has("sites")) layer.siteLabels.addTo(map); else map.removeLayer(layer.siteLabels); });
@@ -221,7 +221,7 @@ function build(){
       onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>Block ${p.block}</b> · 100 m thermal block<br>Block LST <b>${fmt(p.LST_C,1)} °C</b> · hotter than ${p.heat_pct}% of blocks<br><span style="color:#b3a48e">${D.acq||""}</span>`);}});
     const RMC={"Metal sheet (bare / painted)":"#4aa3df","Bitumen / dark membrane":"#2b2b2b","Concrete / cement":"#a9a9a0","White / cool coating":"#f5f5f0","Clay tile / brick":"#c0573e"};
     if(D.objects) layer.objects = L.geoJSON(D.objects,{style:f=>{const c=(f.properties.action||"").startsWith("Cool-roof");return {color:c?"#ff6b2c":"#f2ead9",weight:c?2.2:1,fill:true,fillOpacity:0,fillColor:"#000"};},
-       onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip(`<b>${p.id}</b> · ${fmt(p.area_m2)} m² · ${p.street||""}<br>${p.roof_material&&!p.roof_material.startsWith("small")?"Roof: <b>"+p.roof_material+"</b><br>":""}Surrounding block LST: <b>${p.block_LST_C!=null?fmt(p.block_LST_C,1)+" °C":"n/a"}</b> (block ${p.block||"–"})${p.action?"<br><b>"+p.action+"</b>":""}`);
+       onEachFeature:(f,l)=>{const p=Object.assign({},f.properties,{block_LST_C:blockOf(f.properties.block).LST_C});l.bindTooltip(`<b>${p.id}</b> · ${fmt(p.area_m2)} m² · ${p.street||""}<br>${p.roof_material&&!p.roof_material.startsWith("small")?"Roof: <b>"+p.roof_material+"</b><br>":""}Surrounding block LST: <b>${p.block_LST_C!=null?fmt(p.block_LST_C,1)+" °C":"n/a"}</b> (block ${p.block||"–"})${p.action?"<br><b>"+p.action+"</b>":""}`);
          l.on("click",()=>showBuilding(p));}});
     if(D.segments) layer.segments = L.geoJSON(D.segments,{style:f=>({color:"#fff",weight:1,fillColor:MC[f.properties.label],fillOpacity:.55,dashArray:f.properties.candidate?null:"3 3"}),
        onEachFeature:(f,l)=>l.bindTooltip(`<b>${f.properties.segment}</b><br>${f.properties.label} · purity ${f.properties.purity}<br>${f.properties.candidate?"annotation candidate":"mixed: needs review"}`)});
@@ -325,7 +325,7 @@ try{ if(sessionStorage.getItem("qaydh-intro")) document.getElementById("intro").
 function cardIntro(){
   const D=DATA[city]; document.getElementById("card").innerHTML=`<h3>${D.name}</h3><div class="empty">${D.sub}</div>
   <dl class="q"><dt>Where</dt><dd>Persistent summer hotspots at 300 m</dd><dt>When</dt><dd>Hours above 40 °C, from weather reanalysis</dd><dt>Why</dt><dd>Roof, road, sand or missing greenery, read from hyperspectral spectra</dd><dt>Who</dt><dd>Residents + people outdoors: mosque-goers, bus riders, delivery riders, workers, children</dd><dt>What next</dt><dd>One named action per hotspot, with estimated °C and confidence</dd></dl>
-  <p class="empty">Open the last chapter, “Where to act first”, and pick a hotspot.</p><div class="src">Open data: Planet Tanager (CC-BY-4.0), Landsat 8/9, ESA WorldCover, WorldPop 2025, OpenStreetMap, Microsoft building footprints, Open-Meteo/ERA5.</div>`;
+  <p class="empty">Open the last chapter, “Where to act first”, and pick a hotspot.</p><div class="src">Open data: Planet Tanager (© 2025 Planet Labs PBC), Landsat 8/9, ESA WorldCover, WorldPop 2025, OpenStreetMap, Microsoft building footprints, Open-Meteo/ERA5.</div>`;
 }
 function blockCard(h,i){
   const rel=[["Trees +10%",h["risk_Trees +10%"]],["Cool pavement",h["risk_Cool pavement"]],["Shaded stops / rest nodes",h["risk_Shaded stops / rest nodes"]]];
@@ -353,8 +353,9 @@ function blockCard(h,i){
   ${h.cool_roof_candidates_300m!=null?`<p style="font-size:13px;margin:0">${h.cool_roof_candidates_300m} dark-roof buildings within ~300 m are cool-roof candidates.</p>`:""}
   <div class="src">Hazard from Landsat (≈100 m). Surfaces from Sentinel-2 (10 m). Drivers are associations from a spatially validated model.</div>`;
 }
+function blockOf(id){const c=(DATA[city].cells.features||[]).find(f=>f.properties.block===id);return c?c.properties:{};}
 function showBuilding(p){
-  const D=DATA[city]; if(layer.blocks){layer.blocks.eachLayer(x=>x.setStyle({weight:x.feature.properties.block===p.block?3:.3,color:x.feature.properties.block===p.block?"#ffffff":"#14110e"}));}
+  const D=DATA[city]; const B=blockOf(p.block); p=Object.assign({},p,{block_LST_C:B.LST_C,block_heat_pct:B.heat_pct}); if(layer.blocks){layer.blocks.eachLayer(x=>x.setStyle({weight:x.feature.properties.block===p.block?3:.3,color:x.feature.properties.block===p.block?"#ffffff":"#14110e"}));}
   document.getElementById("card").innerHTML=`<div class="pills"><span class="pill">Building ${p.id}</span>${p.roof_material&&!p.roof_material.startsWith("small")?`<span class="pill ok">${p.roof_material}</span>`:""}</div>
   <h3>${p.street||"Building "+p.id}</h3>
   <div class="blk"><div class="h">Surrounding block LST</div><div class="big"><b>${p.block_LST_C!=null?fmt(p.block_LST_C,1)+"°":"–"}</b><span>block ${p.block||"–"} · 100 m · hotter than ${p.block_heat_pct??"–"}% of blocks</span></div>
