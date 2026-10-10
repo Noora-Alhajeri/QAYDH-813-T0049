@@ -33,11 +33,24 @@ p_ = pred[truth.index]; n = len(truth); acc = float((p_ == truth).mean())
 z = 1.96; lo = (acc + z*z/(2*n) - z*math.sqrt(acc*(1-acc)/n + z*z/(4*n*n))) / (1 + z*z/n); hi = (acc + z*z/(2*n) + z*math.sqrt(acc*(1-acc)/n + z*z/(4*n*n))) / (1 + z*z/n)
 base_cls = truth.value_counts().idxmax(); base = float((truth == base_cls).mean())
 cls = sorted(set(truth) | set(p_))
+# location tolerance: is the labelled class present in the model map within 10 / 20 m of the point? (10 m pixels, imagery co-registration)
+from PIL import Image
+_D = os.path.join(ROOT, "qaydh_outputs", "dashboard"); _m = json.load(open(os.path.join(_D, "musaffah_overlays.json"))); (_a0, _o0), (_a1, _o1) = _m["bounds"]
+_im = np.array(Image.open(os.path.join(_D, "musaffah_surfaces.png")).convert("RGB")).astype(int); _H, _W = _im.shape[:2]
+_C = {(58, 58, 58): "Road / dark pavement", (228, 87, 46): "Building / roof", (43, 131, 186): "Water", (233, 216, 166): "Bare soil / sand", (46, 158, 68): "Vegetation"}
+_pts = {f["properties"]["id"]: f["geometry"]["coordinates"][:2] for f in json.load(open(os.path.join(HERE, "independent_points.geojson")))["features"]}
+def _within(r_):
+    h_ = 0
+    for i_, t_ in truth.items():
+        lo_, la_ = _pts[i_]; x_ = int((lo_ - _o0) / (_o1 - _o0) * _W); y_ = int((_a1 - la_) / (_a1 - _a0) * _H)
+        h_ += t_ in {_C.get(tuple(c_)) for c_ in _im[max(y_ - r_, 0):y_ + r_ + 1, max(x_ - r_, 0):x_ + r_ + 1].reshape(-1, 3)}
+    return round(h_ / n, 3)
 out = dict(design="60 simple-random points in the Musaffah 9x9 km block (seed 813); 20 labelled by all three teammates, 40 by one; Esri World Imagery ~0.3-0.5 m; blind to the model",
            labellers=labs, labels=int(len(L)), points_with_truth=n,
            inter_rater=dict(points_shared=int(len(shared)), fleiss_kappa=fleiss(tab), pairs=pairs),
            accuracy=acc, accuracy_CI95=[round(lo, 3), round(hi, 3)], macro_F1=float(f1_score(truth, p_, labels=cls, average="macro", zero_division=0)),
            cohen_kappa_vs_truth=float(cohen_kappa_score(truth, p_)), majority_class_baseline=dict(class_=base_cls, accuracy=base),
+           accuracy_within_10m=_within(1), accuracy_within_20m=_within(2),
            confusion=pd.DataFrame(confusion_matrix(truth, p_, labels=cls), index=cls, columns=cls).to_dict())
 json.dump(out, open(os.path.join(ROOT, "qaydh_outputs", "independent_check.json"), "w"), indent=1)
 print(json.dumps({k: v for k, v in out.items() if k != "confusion"}, indent=1))

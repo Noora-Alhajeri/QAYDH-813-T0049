@@ -121,7 +121,7 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 | Priorities robust | 4 other weightings | 60–100% top-20 overlap | — |
 | Cool roofs cool | Block-bootstrap regression | **−0.70 °C per +0.10 albedo** (95% CI −0.85 to −0.56) | — |
 | Planner briefs | Number-by-number fact-check | 5/5 pass | — |
-| Independent check by people | 60 random points labelled blind on very-high-resolution imagery (`validation/`) | Pending; reported when labelled | Majority class |
+| Independent check by people | 60 simple-random 10 m points, labelled blind on very-high-resolution imagery by 3 teammates (20 shared); truth = majority vote (`validation/`) | **Accuracy 0.42** (95% CI 0.30–0.54), macro-F1 0.37; **0.65 within 10 m**, 0.82 within 20 m; inter-rater Fleiss κ **0.85** | Majority class 0.40 |
 
 **Notes:** the 0.91 is macro-F1 on a near-balanced test set (up to 3,000 pixels per class, majority baseline ≈0.21), not the district's natural class mix. Most numbers above compare against reference maps, not field survey.
 
@@ -130,7 +130,7 @@ Colab may print red "dependency conflict" lines about its own preinstalled packa
 - Landsat passes at ~10:40 local time, before the afternoon peak, and LST is surface, not air, temperature.
 - There is no buffer between spatial blocks, so test scores may be slightly optimistic.
 - EMIT (60 m) mixes roofs and roads; Tanager (30 m) separates materials better. The 139 roof-material labels were AI-assisted and are not yet human-checked, so roof-material accuracy is provisional.
-- The independent 60-point check is not yet complete.
+- **On random real-world points the surface map is no better than the majority class** (0.42 vs 0.40) at the exact pixel, rising to 0.65 when the labelled class is allowed one pixel (10 m) away, although the three labellers agree strongly with each other (κ 0.85). The 0.91 holds on pure pixels (one class ≥ 80%) in held-out blocks; random 10 m points often mix roof, sand and road, and the imagery date can differ from summer 2025. Per-pixel surface classes are therefore indicative only: QAYDH's decisions use 100 m heat zones and surface *fractions*, and finer imagery plus human labels is the first incubation step.
 
 **Next steps (incubation):** Satellite 813 / MBZ-SAT imagery over Abu Dhabi, Dubai and Al Ain; a municipal pilot in Musaffah; the dashboard could be hosted on Space42 gIQ.
 

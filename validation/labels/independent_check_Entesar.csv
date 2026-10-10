@@ -1,0 +1,22 @@
+dataset,id,lat,lon,label,labeller,time
+"Accuracy check · 60 random points (surface class)",P-01,24.336363,54.501029,"Bare soil / sand","Entesar",2026-10-10T14:53:45.009Z
+"Accuracy check · 60 random points (surface class)",P-02,24.320966,54.483382,"Bare soil / sand","Entesar",2026-10-10T14:53:47.559Z
+"Accuracy check · 60 random points (surface class)",P-03,24.386640,54.462768,"Water","Entesar",2026-10-10T14:53:58.975Z
+"Accuracy check · 60 random points (surface class)",P-04,24.390461,54.508594,"Water","Entesar",2026-10-10T14:54:37.891Z
+"Accuracy check · 60 random points (surface class)",P-05,24.359313,54.466174,"Building / roof","Entesar",2026-10-10T14:54:43.158Z
+"Accuracy check · 60 random points (surface class)",P-06,24.354605,54.507390,"Bare soil / sand","Entesar",2026-10-10T14:54:48.891Z
+"Accuracy check · 60 random points (surface class)",P-07,24.383433,54.535354,"Bare soil / sand","Entesar",2026-10-10T14:54:59.025Z
+"Accuracy check · 60 random points (surface class)",P-08,24.330076,54.512257,"Bare soil / sand","Entesar",2026-10-10T14:55:02.824Z
+"Accuracy check · 60 random points (surface class)",P-09,24.332690,54.537331,"Building / roof","Entesar",2026-10-10T14:55:06.841Z
+"Accuracy check · 60 random points (surface class)",P-10,24.337204,54.483442,"Unsure","Entesar",2026-10-10T14:55:22.858Z
+"Accuracy check · 60 random points (surface class)",P-11,24.335192,54.458385,"Unsure","Entesar",2026-10-10T14:55:39.308Z
+"Accuracy check · 60 random points (surface class)",P-12,24.358865,54.530147,"Road / dark pavement","Entesar",2026-10-10T14:55:44.824Z
+"Accuracy check · 60 random points (surface class)",P-13,24.377932,54.503773,"Bare soil / sand","Entesar",2026-10-10T14:55:46.424Z
+"Accuracy check · 60 random points (surface class)",P-14,24.382381,54.521237,"Vegetation","Entesar",2026-10-10T14:55:47.992Z
+"Accuracy check · 60 random points (surface class)",P-15,24.365807,54.512638,"Building / roof","Entesar",2026-10-10T14:55:53.024Z
+"Accuracy check · 60 random points (surface class)",P-16,24.315926,54.460257,"Building / roof","Entesar",2026-10-10T14:55:57.158Z
+"Accuracy check · 60 random points (surface class)",P-17,24.368233,54.541709,"Building / roof","Entesar",2026-10-10T14:56:00.674Z
+"Accuracy check · 60 random points (surface class)",P-18,24.353123,54.524119,"Road / dark pavement","Entesar",2026-10-10T14:56:03.474Z
+"Accuracy check · 60 random points (surface class)",P-19,24.367757,54.537873,"Bare soil / sand","Entesar",2026-10-10T14:56:06.874Z
+"Accuracy check · 60 random points (surface class)",P-20,24.323388,54.518212,"Building / roof","Entesar",2026-10-10T14:56:09.024Z
+"Accuracy check · 60 random points (surface class)",P-21,24.326052,54.539961,"Building / roof","Entesar",2026-10-10T14:56:10.491Z

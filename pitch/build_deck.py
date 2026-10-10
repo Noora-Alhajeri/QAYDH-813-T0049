@@ -266,7 +266,7 @@ slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert
 <div><b>Heat is coarse</b><span>Thermal = zones; 10 m surfaces explain them.</span></div></div>''')
 # 21 tradeoffs
 slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 class="big">Being upfront</h1></div>
-<dl class="why"><dt>Labels</dt><dd>Labels are cleaned, not assumed. {ann['removed_as_noisy']:,} noisy labels removed automatically; 139 roof-material labels are AI-assisted and not yet human-checked; a blind 60-point check by the team is under way. No buffer between test blocks.</dd>
+<dl class="why"><dt>Labels</dt><dd>Labels are cleaned, not assumed. {ann['removed_as_noisy']:,} noisy labels removed automatically; 139 roof-material labels are AI-assisted and not yet human-checked. Blind check by 3 people on 60 random points: people agree (κ 0.85) but the 10 m surface map scores 0.42 at the exact pixel (0.65 within 10 m) vs a 0.40 baseline, so per-pixel classes are indicative; we decide on 100 m zones. No buffer between test blocks.</dd>
 <dt>Heat</dt><dd>Surface runs 11–15 °C above air (NOAA stations). We rank zones; ERA5, checked against stations, sets the hours.</dd>
 <dt>Materials</dt><dd>Tanager (30 m) separates materials clearly in Riyadh; EMIT (60 m) over Musaffah mixes roofs and roads in one pixel. Satellite 813 brings the finer detail.</dd>
 <dt>People</dt><dd>Exposure opportunity, not head counts.</dd></dl></div>''')
@@ -429,7 +429,7 @@ ul.ben{list-style:none;padding:0;margin:0;font:600 34px/1.7 'IBM Plex Sans Arabi
 """
 # Next steps for incubation (guide section 9)
 slide(f'''<div class="split"><div><div class="kick">Next steps · incubation</div><h1 class="big">From proof of concept<br><span class="o">to a city service</span></h1></div>
-<dl class="why"><dt>0–3 months</dt><dd>Finish the blind 60-point check and human roof labels; field-check 20 Musaffah hotspots with the municipality.</dd>
+<dl class="why"><dt>0–3 months</dt><dd>Human-labelled training data (the blind check showed mixed 10 m pixels are the weak point) and human roof labels; field-check 20 Musaffah hotspots with the municipality.</dd>
 <dt>3–6 months</dt><dd>Satellite 813 / MBZ-SAT hyperspectral over Abu Dhabi, Dubai and Al Ain; afternoon thermal from ECOSTRESS.</dd>
 <dt>6–12 months</dt><dd>Municipal pilot in Musaffah: shade, cool roofs and rest points placed from QAYDH, then measured next summer.</dd>
 <dt>Platform</dt><dd>Could be hosted on Space42 gIQ as a dashboard + GeoJSON API + summer heat report.</dd></dl></div>''')

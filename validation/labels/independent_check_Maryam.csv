@@ -1,0 +1,22 @@
+dataset,id,lat,lon,label,labeller,time
+"Accuracy check · 60 random points (surface class)",P-01,24.336363,54.501029,"Bare soil / sand","Maryam",2026-10-10T15:09:09.762Z
+"Accuracy check · 60 random points (surface class)",P-02,24.320966,54.483382,"Bare soil / sand","Maryam",2026-10-10T15:09:16.431Z
+"Accuracy check · 60 random points (surface class)",P-03,24.386640,54.462768,"Vegetation","Maryam",2026-10-10T15:09:18.721Z
+"Accuracy check · 60 random points (surface class)",P-04,24.390461,54.508594,"Water","Maryam",2026-10-10T15:09:28.754Z
+"Accuracy check · 60 random points (surface class)",P-05,24.359313,54.466174,"Building / roof","Maryam",2026-10-10T15:09:37.405Z
+"Accuracy check · 60 random points (surface class)",P-06,24.354605,54.507390,"Bare soil / sand","Maryam",2026-10-10T15:09:41.970Z
+"Accuracy check · 60 random points (surface class)",P-07,24.383433,54.535354,"Bare soil / sand","Maryam",2026-10-10T15:09:47.598Z
+"Accuracy check · 60 random points (surface class)",P-08,24.330076,54.512257,"Bare soil / sand","Maryam",2026-10-10T15:09:59.328Z
+"Accuracy check · 60 random points (surface class)",P-09,24.332690,54.537331,"Building / roof","Maryam",2026-10-10T15:10:01.152Z
+"Accuracy check · 60 random points (surface class)",P-10,24.337204,54.483442,"Unsure","Maryam",2026-10-10T15:10:13.536Z
+"Accuracy check · 60 random points (surface class)",P-11,24.335192,54.458385,"Building / roof","Maryam",2026-10-10T15:10:23.114Z
+"Accuracy check · 60 random points (surface class)",P-12,24.358865,54.530147,"Road / dark pavement","Maryam",2026-10-10T15:10:31.961Z
+"Accuracy check · 60 random points (surface class)",P-13,24.377932,54.503773,"Bare soil / sand","Maryam",2026-10-10T15:10:36.157Z
+"Accuracy check · 60 random points (surface class)",P-14,24.382381,54.521237,"Vegetation","Maryam",2026-10-10T15:10:37.850Z
+"Accuracy check · 60 random points (surface class)",P-15,24.365807,54.512638,"Building / roof","Maryam",2026-10-10T15:10:39.696Z
+"Accuracy check · 60 random points (surface class)",P-16,24.315926,54.460257,"Building / roof","Maryam",2026-10-10T15:10:43.913Z
+"Accuracy check · 60 random points (surface class)",P-17,24.368233,54.541709,"Bare soil / sand","Maryam",2026-10-10T15:10:50.497Z
+"Accuracy check · 60 random points (surface class)",P-18,24.353123,54.524119,"Road / dark pavement","Maryam",2026-10-10T15:10:53.591Z
+"Accuracy check · 60 random points (surface class)",P-19,24.367757,54.537873,"Bare soil / sand","Maryam",2026-10-10T15:10:56.303Z
+"Accuracy check · 60 random points (surface class)",P-20,24.323388,54.518212,"Building / roof","Maryam",2026-10-10T15:10:59.235Z
+"Accuracy check · 60 random points (surface class)",P-21,24.326052,54.539961,"Building / roof","Maryam",2026-10-10T15:11:03.101Z
