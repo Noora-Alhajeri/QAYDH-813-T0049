@@ -124,7 +124,7 @@ slide(f'''<div class="kick">The problem we solve</div><h1 class="big">Heat maps 
 <li>Site surveys: slow, one district at a time</li><li>Generic advice: "plant trees" everywhere</li></ul></div>
 <div class="arrow">{icon("arrow-right", 64)}</div>
 <div class="hl"><h3>{icon("shield-check", 40, "#43c6b4")} What QAYDH adds</h3><ul>
-<li>People: who is outside, at which hours</li><li>Surfaces: road, roof, sand, green at 10 m (F1 {mc[mbest]['test_macro_F1']:.2f})</li>
+<li>People: who is outside, at which hours</li><li>Surfaces: road, roof, sand, green at 10 m (F1 {mc[mbest]['test_macro_F1']:.2f} on pure pixels)</li>
 <li>Every Gulf city, every summer, open data</li><li>One named action per hotspot, with its reason</li></ul></div></div>''')
 # 6a problem → answer (bilingual) with the five outputs
 outs = [("flame", "Hotspot map", "Heat zones across Musaffah", blockimg(("sat", "haz"), 600)),
