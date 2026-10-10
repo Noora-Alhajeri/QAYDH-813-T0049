@@ -19,6 +19,7 @@ planetary-computer==1.0.0
 odc-stac==0.3.11
 odc-geo==0.4.10
 xarray==2024.7.0
+dask[array]==2024.12.1
 pyarrow==21.0.0
 adlfs==2025.8.0
 opencv-python-headless==4.11.0.86

@@ -82,7 +82,7 @@ pip install -r requirements.txt jupyterlab
 |---|---|---|
 | 1 · Open | Click the **Open in Colab** badge | `jupyter lab QAYDH_T0049_urban_heat_risk.ipynb` |
 | 2 · Run | *Runtime → Run all* | *Run → Run All Cells* |
-| 3 · If asked to restart | Colab may say "restart the session" after installing; click **Restart session**, then *Runtime → Run all* again | — |
+| 3 · Restart once | The first code cell installs the pinned packages. If it stops with **"Now click Runtime → Restart session"**, do that, then *Runtime → Run all* again (needed once per new Colab session) | — |
 | 4 · Wait | About **60 minutes** on the first run (it downloads the satellite scenes). Keep the tab open so free Colab does not disconnect | Same; later runs are faster (cached in `data/`) |
 
 **Nothing to edit.** The study area (Musaffah, bbox `[54.455, 24.315, 54.545, 24.395]`), the Tanager scene ID and `SEED = 813` are set in the configuration cells.
