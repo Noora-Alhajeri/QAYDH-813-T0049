@@ -96,7 +96,7 @@ Planet Tanager (CC-BY-4.0) · NASA EMIT · Landsat 8/9 (USGS) · Sentinel-1 and 
 
 ## 8 · Run it
 
-**Requires Python 3.11** (tested on Google Colab, Python 3.11/3.12). No GPU needed.
+**Requires Python 3.11–3.13** (pins resolve with binary wheels on 3.11, 3.12 and 3.13; Google Colab uses 3.13). No GPU needed.
 
 **Layout:** notebook `QAYDH_T0049_urban_heat_risk.ipynb` at the root · sample input in `data/sample_input/` (same files as `example_input/`) · example output in `results/` (`example_output.png`, `example_output_hotspots.csv`, `example_output_results.json`) · all products in `qaydh_outputs/`. Runtime ≈60 min on a first run (downloads), then cached.
 
