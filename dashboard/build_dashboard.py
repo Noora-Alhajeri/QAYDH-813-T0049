@@ -132,7 +132,7 @@ if os.path.exists(os.path.join(D, "musaffah_overlays.json")):
             c_ = _shape(f_["geometry"]).centroid; hit = [j for j in _tree.query(c_) if _polys[j].contains(c_)]
             pr_ = f_["properties"]; pr_.pop("LST_C", None)
             if hit:
-                cp = mcells["features"][hit[0]]["properties"]; pr_["block"] = cp["block"]; pr_["block_LST_C"] = cp["LST_C"]; pr_["block_heat_pct"] = cp["heat_pct"]
+                cp = mcells["features"][hit[0]]["properties"]; pr_["block"] = cp["block"]   # only the block id: no temperature on the building record
                 _count[cp["block"]] = _count.get(cp["block"], 0) + 1
         for f_ in DATA["musaffah"]["objects"]["features"]: f_["properties"]["block_n"] = _count.get(f_["properties"].get("block"), 0)
         _lsm = [d for d in json.load(open(os.path.join(OUT, "data_provenance.json"))) if "Landsat" in d["source"] and "Musaffah" in d["source"]]

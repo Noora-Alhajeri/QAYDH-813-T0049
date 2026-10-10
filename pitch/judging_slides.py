@@ -47,7 +47,7 @@ if _ic:
 _bars = "".join(f'''<div class="r"><span class="n">{n}</span><span class="m">{m}</span>
 <span class="bars"><i class="b0" style="width:{max(2, 100*b0):.0f}%"></i><i class="b1" style="width:{max(2, 100*b1):.0f}%"></i></span>
 <span class="v"><s>{b0:.2f}</s> → <b>{b1:.2f}</b></span><span class="how">{h}</span></div>''' for n, m, b0, b1, h in _rows)
-_extra = [f"<div><b>r {min(d['era5_vs_station_r'] for d in _st):.2f}–{max(d['era5_vs_station_r'] for d in _st):.2f}</b>ERA5 vs 3 NOAA stations, air temp, hourly n≈2,000 · MAE ≈{_st[0]['MAE_C']:.1f} °C</div>" if _st else "",
+_extra = [f"<div><b>MAE {min(d['MAE_C'] for d in _st):.1f}–{max(d['MAE_C'] for d in _st):.1f} °C</b>ERA5 vs 3 NOAA stations, air temp, hourly n≈2,000; used only to count danger hours</div>" if _st else "",
           f"<div><b>{R['cv_built_iou_rf']:.2f}</b>built-up IoU (Riyadh)</div>",
           f"<div><b>r {R['lst_cells_r_2024_vs_2025']:.2f}</b>hotspots repeat 2024 ↔ 2025</div>",
           f"<div><b>{min(R['hrpi_top20_overlap'].values())*100:.0f}–{max(R['hrpi_top20_overlap'].values())*100:.0f}%</b>top-20 stable under 4 weightings</div>"]
