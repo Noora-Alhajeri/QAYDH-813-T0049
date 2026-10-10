@@ -2,7 +2,7 @@
 
 > **Satellites show that Gulf cities burn. QAYDH shows *why* each hotspot burns, *who* is outside in it, and *which fix* to do first.**
 
-**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme 05: Sustainable Urban Planning & Smart Cities**
+**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme: Urban Expansion, Land Use Change & Heat Risk**
 
 ## 1 · Title and summary
 
