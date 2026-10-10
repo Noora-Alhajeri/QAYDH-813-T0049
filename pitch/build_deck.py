@@ -313,7 +313,7 @@ slide('<div class="kick">See it work · animated walkthrough in the repo</div><h
 exec(open(os.path.join(PITCH, "judging_slides.py")).read())   # Q1 business problem · Q2 validation · Q3 delivery · coverage · SAR/roofs/informal/heat-proxy
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_geometry.png'))}">
 <div class="cover"><h1>QAYDH</h1><h2>From “where is it hot?” to “where we act first, why, and how.”</h2>
-<div class="team">Musaffah → Abu Dhabi → UAE → Gulf cities</div></div>''', "dark")
+<div class="team">Thank you · Team T0049, United Arab Emirates<br>Live dashboard: noora-alhajeri.github.io/QAYDH-813-T0049 · Code: github.com/Noora-Alhajeri/QAYDH-813-T0049</div></div>''', "dark")
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
@@ -474,17 +474,17 @@ def at(sub, k=0):
     hits = [i_ for i_, s_ in enumerate(S) if sub in s_]
     assert len(hits) > k, sub; return hits[k]
 L_ = lambda t: at(f"<h2>{t}</h2>")
-ORDER = [0, at("Heat maps exist. Decisions don"), at("Question 1 · the business problem"), at("Nine open sources, one answer"), at("Narrow bands read the material"),
-         at("From open satellites to a decision"),
-         at("Open it, follow six steps"), at("Open it, click, decide"),
-         at("Hazard zones, not fake street"), at("139 named outdoor sites"), at("Road · roof · sand · green · water"), at("Objects with ID, box and label"), at("Asphalt and sand up, green down"), at("Hotspot M-001: one decision"),
-         at("Musaffah in four maps"),
-         at("Question 2 · how good is the model"), at("Being upfront"), at("Value you can measure"), at("From proof of concept"), at("Built on open data and open models"),
-         at("Supporting detail"), at("Three people, one city problem"), at("Real places, not pixels"), at("Who benefits"), at("Tanager reads roof, road and sand"), at("Five questions, answered step by step"),
-         *[L_(t) for t in ["Heat hazard zones", "Surface classes (10 m)", "Model confidence", "Building objects", "Exposure sites", "AI segments (SAM)", "Priority ranking"]],
-         at("Every material gets its own fix"), at("Metal, concrete, tile, bitumen"), at("Dense, irregular, sheet-roofed"), at("Surface vs air, reported as a difference"),
-         at("More evidence"), at("Where the ground burns"), at("The city keeps growing"), at("What makes a place hot"), at("Counting people changes"), at("Same hotspots every summer"),
-         at("Trained model vs the starter"), at("Same pipeline, another city"), at("Radar sees structure")]
+ORDER = [0, at("Three people, one city problem"),                                                   # 1 title · team
+         at("Heat maps exist. Decisions don"), at("Real places, not pixels"),                          # 2 problem · who is affected
+         at("Business use case · the end user"), at("Who benefits"),                                   # 3 business use case · end users
+         at("Nine open sources, one answer"), at("Narrow bands read the material"),                    # 4 data · hyperspectral
+         at("From open satellites to a decision"), at("Every material gets its own fix"),              # 5 approach (workflow + rules)
+         at("Open it, click, decide"), at("Hazard zones, not fake street"), at("139 named outdoor sites"), # 6 example outputs: dashboard steps
+         at("Road · roof · sand · green · water"), at("Objects with ID, box and label"), at("Asphalt and sand up, green down"),
+         at("Hotspot M-001: one decision"), at("Musaffah in four maps"), at("Metal, concrete, tile, bitumen"), at("Radar sees structure"),
+         at("Validation · against baselines"), at("Surface vs air, reported as a difference"), at("Being upfront"),  # 7 validation · limitations
+         at("Value you can measure"),                                                                   # 8 impact
+         at("From proof of concept"), at("Built on open data and open models"), at("From “where is it hot?”")]  # 9 next steps · credits · closing
 assert len(set(ORDER)) == len(ORDER), "duplicate slide in ORDER"
 S = [S[i] for i in ORDER]
 doc = f"<!doctype html><html><head><meta charset='utf-8'><title>QAYDH pitch</title><style>{CSS}{globals().get('EXTRA_CSS', '')}</style></head><body>{''.join(S)}</body></html>"

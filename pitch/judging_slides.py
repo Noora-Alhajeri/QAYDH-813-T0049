@@ -24,7 +24,7 @@ _cust = [("building-skyscraper", "Municipal planners", "One-off consultant studi
           "Which yards, camps and bus stops need shade, rest nodes and roof coating first"),
          ("motorbike", "Transport & delivery operators", "Riders and passengers wait wherever the stop or restaurant happens to be",
           "Cooling points and shaded stops placed where heat and waiting overlap")]
-slide(f'''<div class="kick">Question 1 · the business problem</div><h1 class="big">Who loses when a city heats up, and what do they do today?</h1>
+slide(f'''<div class="kick">Business use case · the end user</div><h1 class="big">Who loses when a city heats up, and what do they do today?</h1>
 <div class="q1">{"".join(f'<div class="c">{icon(i_, 46)}<b>{t}</b><div class="tag bad">Today</div><p>{a}</p><div class="tag good">With QAYDH</div><p class="g">{b}</p></div>' for i_, t, a, b in _cust)}</div>
 <div class="cost"><div><b>{_w["heat_hours_ge40_per_day"]:.1f} h</b>a day above 40 °C air</div><div><b>{_w["days_air_ge_40"]}/{_w["n_days"]}</b>summer days at 40 °C+</div>
 <div><b>+{(_st[0]["LST_minus_air_C"] if _st else 15):.0f} °C</b>surface–air difference at 10:40 (descriptive)</div><div><b>{R["residents_hot20"]:,.0f}</b>residents in the hottest fifth of east Riyadh (transfer test)</div></div>
@@ -52,7 +52,7 @@ _extra = [f"<div><b>MAE {min(d['MAE_C'] for d in _st):.1f}–{max(d['MAE_C'] for
           f"<div><b>r {R['lst_cells_r_2024_vs_2025']:.2f}</b>hotspots repeat 2024 ↔ 2025</div>",
           f"<div><b>{min(R['hrpi_top20_overlap'].values())*100:.0f}–{max(R['hrpi_top20_overlap'].values())*100:.0f}%</b>top-20 stable under 4 weightings</div>"]
 if R.get("informal_screen"): _extra.append(f"<div><b>×{R['informal_screen']['enrichment_ratio']:.1f}</b>informal screen enrichment (p {R['informal_screen']['permutation_p']:.3f})</div>")
-slide(f'''<div class="kick">Question 2 · how good is the model, really?</div><h1>Measured against baselines, on places the model never saw</h1>
+slide(f'''<div class="kick">Validation · against baselines and held-out places</div><h1>Measured against baselines, on places the model never saw</h1>
 <div class="legend2"><i class="b0"></i>starter / baseline <i class="b1"></i>QAYDH</div><div class="score">{_bars}</div><div class="extra">{"".join(_extra)}</div>
 <p class="biz">Musaffah 0.91 is macro-F1 on a near-balanced test sample (up to 3,000 pixels per class; majority-class baseline 0.21), not the district's natural class mix.</p>''')
 
@@ -63,7 +63,7 @@ _api = _json.dumps({"id": _h0.id, "street": str(_h0.street), "lat": round(float(
                     "surfaces": {"road": float(_h0.road), "roof": float(_h0.roof), "sand": float(_h0.sand), "green": float(_h0.veg)},
                     "actions": str(_h0.actions).split(" + ")[:3], "confidence": str(_h0.confidence)}, indent=1, ensure_ascii=False)
 _top5 = "".join(f"<tr><td>{r.id}</td><td>{str(r.street)[:22]}</td><td>{r.LST_C:.1f}°</td><td>{str(r.actions).split(' + ')[0]}</td></tr>" for r in MH.head(5).itertuples())
-slide(f'''<div class="kick">Question 3 · how end users see the results</div><h1>One engine, four doors. No GIS skills needed.</h1>
+slide(f'''<div class="kick">Delivery · how end users get the results</div><h1>One engine, four doors. No GIS skills needed.</h1>
 <div class="doors">
 <div class="d"><div class="dh">{icon("eye", 30)}<b>Dashboard</b><span>open a link → click a hotspot</span></div>{f'<img src="{img(_dash)}">' if _os.path.exists(_dash) else ''}</div>
 <div class="d"><div class="dh">{icon("database", 30)}<b>REST API</b><span>into the city's GIS & permits</span></div><pre><em>GET</em> /v1/hotspots?city=musaffah&amp;top=10
