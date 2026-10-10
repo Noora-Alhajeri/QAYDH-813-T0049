@@ -99,8 +99,8 @@ def screen(src, kicker, title, quote, n):
 
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
-<div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 2</div><h1>QAYDH <span>القيظ</span></h1>
-<h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 2 · Urban Expansion, Land Use Change &amp; Heat Risk</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
+<div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 05</div><h1>QAYDH <span>القيظ</span></h1>
+<h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 05 · Urban Expansion, Land Use Change &amp; Heat Risk</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
 # 2 agenda
 slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">From where it is hot<br>to where we act first</h1></div>
 <ol class="agenda"><li>Team</li><li>The heat problem</li><li>QAYDH</li><li>Approach &amp; tools</li><li>The Musaffah story</li><li>Proof</li><li>Impact &amp; value</li><li>Closing</li></ol></div>''')
