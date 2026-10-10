@@ -1,0 +1,61 @@
+{
+ "design": "60 simple-random points in the Musaffah 9x9 km block (seed 813); 20 labelled by all three teammates, 40 by one; Esri World Imagery ~0.3-0.5 m; blind to the model",
+ "labellers": [
+  "Noora"
+ ],
+ "labels": 59,
+ "points_with_truth": 59,
+ "inter_rater": {
+  "points_shared": 0,
+  "fleiss_kappa": NaN,
+  "pairs": {}
+ },
+ "accuracy": 0.4406779661016949,
+ "accuracy_CI95": [
+  0.322,
+  0.567
+ ],
+ "macro_F1": 0.3812486772486772,
+ "cohen_kappa_vs_truth": 0.21237864077669888,
+ "majority_class_baseline": {
+  "class_": "Bare soil / sand",
+  "accuracy": 0.423728813559322
+ },
+ "confusion": {
+  "Bare soil / sand": {
+   "Bare soil / sand": 13,
+   "Building / roof": 5,
+   "Road / dark pavement": 4,
+   "Vegetation": 1,
+   "Water": 2
+  },
+  "Building / roof": {
+   "Bare soil / sand": 7,
+   "Building / roof": 5,
+   "Road / dark pavement": 2,
+   "Vegetation": 0,
+   "Water": 1
+  },
+  "Road / dark pavement": {
+   "Bare soil / sand": 4,
+   "Building / roof": 2,
+   "Road / dark pavement": 6,
+   "Vegetation": 2,
+   "Water": 0
+  },
+  "Vegetation": {
+   "Bare soil / sand": 0,
+   "Building / roof": 0,
+   "Road / dark pavement": 1,
+   "Vegetation": 1,
+   "Water": 0
+  },
+  "Water": {
+   "Bare soil / sand": 1,
+   "Building / roof": 0,
+   "Road / dark pavement": 0,
+   "Vegetation": 1,
+   "Water": 1
+  }
+ }
+}
