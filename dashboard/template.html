@@ -188,9 +188,12 @@ function actionPlan(h){ // expert-style 3-horizon plan built only from this hots
   if(who.includes("rider")) now.push("Add a shaded rider waiting bay with water at the nearest restaurant cluster");
   if(who.includes("pedestrian")||who.includes("bus")) now.push("Fit shade and a water point at the nearest bus stop / walking route");
   if(!now.length) now.push("Post heat-hour warnings and a temporary shade structure on site");
-  if(r>=30||has("pavement")) season.push(`Cool-pavement coating on the ${r}% asphalt (sidewalks, yards, parking first)`);
+  const tv=h.dLST_trees_C, pv=h.dLST_coolpave_C;
+  if(+g<10&&sd>=15) season.push(`Trees and shade sails on the open sand${tv!=null?` (model ≈ ${tv.toFixed(1)} °C surface)`:""}`);
+  const pave=`Cool-pavement coating on the ${r}% asphalt${pv!=null?` (minor here: model ≈ ${pv.toFixed(1)} °C)`:""}`;
   if(rf>=30||has("roof")) season.push(`Cool-roof coating on the dark roofs (${rf}% roof cover${h.cool_roof_candidates_300m?`, ${h.cool_roof_candidates_300m} candidates within 300 m`:""})`);
   if(!season.length) season.push("Fixed shade structures along the main walking route");
+  if(r>=30||has("pavement")) (pv!=null&&pv>-0.5?next:season).push(pave);
   if(+g<10) next.push(`Street trees with drip irrigation (green is only ${g}%; budget the water)`);
   if(sd>=30) next.push(`Stabilise and shade the ${sd}% open sand (gravel, shade sails or landscaping)`);
   next.push("Re-measure next summer; move the hotspot off the list only when heat drops");

@@ -100,7 +100,7 @@ def screen(src, kicker, title, quote, n):
 # 1 cover
 slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.png'))}"><img class="bleed art2" src="{img(os.path.join(D, 'musaffah_hazard.png'))}">
 <div class="cover"><div class="kick">Arab Youth Space Hackathon 2026 · Challenge 813 · Theme 05</div><h1>QAYDH</h1>
-<h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 05 · Urban Expansion, Land Use Change &amp; Heat Risk</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
+<h2>Urban heat risk, through the eyes of satellites</h2><div class="theme">Theme 05 · Sustainable Urban Planning &amp; Smart Cities</div><div class="team">Team T0049 · United Arab Emirates</div></div>''', "dark")
 # 2 agenda
 slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">From where it is hot<br>to where we act first</h1></div>
 <ol class="agenda"><li>Team</li><li>The heat problem</li><li>QAYDH</li><li>Approach &amp; tools</li><li>The Musaffah story</li><li>Proof</li><li>Impact &amp; value</li><li>Closing</li></ol></div>''')
@@ -184,10 +184,10 @@ slide('<div class="kick">The product, start to finish</div><h1>Open it, follow s
 # 11-15 Musaffah story screens
 screen(SC["m_where"], "Where is heat high?", "Hazard zones, not fake street temperatures", f"Extreme ≥ {f1(th['P95'])} °C. Landsat gives the zone; buildings and places tell us what falls inside it.", "01")
 screen(SC["m_who"], "Who may be exposed?", f"{sites['n']} named outdoor sites", f"Each scored within 150 m: heat percentile, green, impervious cover, distance to shade.", "02")
-screen(SC["m_what"], "What is physically there?", "Road · roof · sand · green · water", f"Held-out blocks: macro-F1 {f2(mc[mbest]['test_macro_F1'])}. Starter index rules: {f2(mc[mrule]['test_macro_F1'])}.", "03")
+screen(SC["m_what"], "What is physically there?", "Road · roof · sand · green · water", f"Held-out blocks, pure pixels: macro-F1 {f2(mc[mbest]['test_macro_F1'])} (starter rules {f2(mc[mrule]['test_macro_F1'])}). On random points 0.42: classes are indicative.", "03")
 screen(SC["m_labels"], "How we labelled it", "Objects with ID, box and label", f"{R['musaffah_objects']['buildings']:,} buildings labelled: roof class, heat zone, dark-roof flag, street. {R['musaffah_objects']['cool_roof_candidates']} are cool-roof candidates.", "03b")
 screen(SC["m_why"], "Why may it be hot?", "Asphalt and sand up, green down", f"Spatially validated: R² {f2(wm['Random Forest']['R2'])}, error {f1(wm['Random Forest']['MAE_C'])} °C. Shown as associations, not proof of cause.", "04")
-screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"{h0.actions}. Because {h0.why}.", "05")
+screen(SC["m_act"], "What should be done?", f"Hotspot {h0.id}: one decision", f"Do first: shaded rest point + water, midday work break, trees and shade on the open sand (model {h0.dLST_trees_C:+.1f} °C). Cool pavement is minor here ({h0.dLST_coolpave_C:+.1f} °C).", "05")
 # 17a hyperspectral evidence: Riyadh (Tanager) + Abu Dhabi (EMIT)
 _em = R.get("emit")
 slide(f'''<div class="kick">Hyperspectral · Planet Tanager 426 bands</div><h1>Narrow bands read the material, not just the colour</h1>
@@ -229,11 +229,11 @@ for k_, ttl, what, use in LAYER_SLIDES:
     slide(f'<img class="shotbig" src="{img(p_)}"><div class="capbar"><div class="cn">{icon("map-pin", 36)}<span>Layer</span></div><div><div class="qn">Dashboard layer</div><h2>{ttl}</h2></div><p><b style="color:#43c6b4">What it shows:</b> {what}<br><b style="color:#ffb15c">Use it to:</b> {use}</p></div>', "screen")
 # 17b do now: material-matched actions
 rmm = R.get("roof_materials_musaffah", {}).get("share_pct", {}); ap = R.get("action_plan", {}).get("catalogue", {})
-ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs"),
-        ("#a9a9a0", "Concrete / cement roof", "carbonate dip at 2330 nm, mid albedo", "Stores heat, releases it after sunset", "Elastomeric cool-roof coating (Estidama SRI ≥ 78)", f"{rmm.get('Concrete / cement', 0):.0f}% of roofs"),
-        ("#2b2b2b", "Asphalt road / car park", "hydrocarbon dip at 1730 nm, albedo < 0.12", "Darkest surface; hot into the night", "Cool-pavement seal coat + street trees", f"{h0.road*100:.0f}% of {h0.id}"),
+ROWS = [("#4aa3df", "Metal sheet roof", "flat SWIR, no 2330 nm dip, corrugation texture", "Heats fast, re-radiates into rooms and street", "White high-SRI coating + under-deck insulation", f"{rmm.get('Metal sheet (bare / painted)', 0):.0f}% of roofs (rough estimate)"),
+        ("#a9a9a0", "Concrete / cement roof", "carbonate dip at 2330 nm, mid albedo", "Stores heat, releases it after sunset", "Elastomeric cool-roof coating (Estidama SRI ≥ 78)", f"{rmm.get('Concrete / cement', 0):.0f}% of roofs (rough estimate)"),
+        ("#2b2b2b", "Asphalt road / car park", "hydrocarbon dip at 1730 nm, albedo < 0.12", "Darkest surface; hot into the night", "Street trees + shade first; cool-pavement seal coat (minor)", f"{h0.road*100:.0f}% of {h0.id}"),
         ("#e9d8a6", "Bare sand lot", "bright, Fe³⁺ slope 500–900 nm, no green", "Radiates heat to the air around it", "Shade sails + Ghaf / Sidr on TSE drip", f"{h0.sand*100:.0f}% of {h0.id}"),
-        ("#f5f5f0", "White / cool roof", "albedo > 0.45", "Already reflective", "Keep: clean and recoat", f"{rmm.get('White / cool coating', 0):.0f}% of roofs"),
+        ("#f5f5f0", "White / cool roof", "albedo > 0.45", "Already reflective", "Keep: clean and recoat", f"{rmm.get('White / cool coating', 0):.0f}% of roofs (rough estimate)"),
         ("#2e9e44", "Vegetation", "red edge 705–750 nm, NDVI > 0.3", "Cools 5.3 °C vs built-up (Riyadh)", "Protect and extend into hotspots", "the coolant")]
 slide('<div class="kick">Material → cause → fix</div><h1>Every material gets its own fix</h1><div class="mtab"><div class="mh"><span></span><span>Material</span><span>How satellites see it</span><span>Why it is hot</span><span>Replace / treat with</span><span>Where</span></div>' +
       "".join(f'<div><i style="background:{c}"></i><b>{n}</b><span>{sig}</span><span>{why}</span><em>{fix}</em><small>{w}</small></div>' for c, n, sig, why, fix, w in ROWS) + "</div>")
@@ -271,7 +271,7 @@ slide(f'''<div class="split"><div><div class="kick">Known tradeoffs</div><h1 cla
 <dt>People</dt><dd>Exposure opportunity, not head counts.</dd></dl></div>''')
 # 22 proof
 slide(f'''<div class="kick">Proof</div><h1 class="big">Every claim has a number</h1>
-<div class="nums"><div><b>{f2(mc[mbest]['test_macro_F1'])}</b><span>Musaffah surfaces, held-out<br>starter rules {f2(mc[mrule]['test_macro_F1'])}</span></div>
+<div class="nums"><div><b>{f2(mc[mbest]['test_macro_F1'])}</b><span>Musaffah surfaces, held-out, pure pixels<br>starter rules {f2(mc[mrule]['test_macro_F1'])}</span></div>
 <div><b>{f2(wm['Random Forest']['R2'])}</b><span>heat driver model R²<br>spatial CV</span></div>
 <div><b>{f2(R['cv_built_f1_rf'])}</b><span>built-up F1 Riyadh<br>starter {f2(R['cv_built_f1_ndbi'])}</span></div>
 <div><b>+{f2(R['dR2_built'])}</b><span>R² from hyperspectral<br>Riyadh built-up</span></div>

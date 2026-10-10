@@ -2,7 +2,7 @@
 
 > **Satellites show that Gulf cities burn. QAYDH shows *why* each hotspot burns, *who* is outside in it, and *which fix* to do first.**
 
-**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme 05: Urban Expansion, Land Use Change & Heat Risk**
+**Team T0049 · United Arab Emirates · Arab Youth Space Hackathon 2026 (813 Challenge) · Theme 05: Sustainable Urban Planning & Smart Cities**
 
 ## 1 · Title and summary
 
@@ -11,7 +11,7 @@ QAYDH is a proof of concept that turns open satellite data into a ranked heat-ac
 1. **Maps heat zones** from 10 summer Landsat thermal scenes (surfaces reach 57 °C).
 2. **Reads what each surface is made of** (road, roof, sand, green, water) from Sentinel-2, Sentinel-1 radar and **hyperspectral** Planet Tanager / NASA EMIT, including roof materials (metal, concrete, tile).
 3. **Finds who is outside**: named bus stops, mosques, schools, clinics, labour camps and residents.
-4. **Ranks hotspots and gives each one a matched fix**, e.g. *M-001: shaded rest point + cool pavement + cool-roof coating*.
+4. **Ranks hotspots and gives each one a matched fix**, e.g. *M-001: shaded rest point + water + trees and shade on the open sand*.
 
 | ▶ Try it (no install) | 📊 Slides | 💻 Run it yourself |
 |---|---|---|
@@ -95,7 +95,7 @@ wrote results/example_output.png
 wrote results/example_output_hotspots.csv
 wrote results/example_output_results.json
 ```
-Along the way you see every map and score, including the headline **macro-F1 0.91** (surface classes on held-out blocks). The notebook reads `data/sample_input/` plus open data fetched by exact scene ID, and writes `results/` and `qaydh_outputs/`.
+Along the way you see every map and score, including the headline **macro-F1 0.91** (surface classes on held-out blocks, pure pixels). The notebook reads `data/sample_input/` plus open data fetched by exact scene ID, and writes `results/` and `qaydh_outputs/`.
 
 ## 8 · Example input and output
 
@@ -104,13 +104,13 @@ Along the way you see every map and score, including the headline **macro-F1 0.9
 
 ![Example output: Musaffah heat, surfaces, exposure and priority](results/example_output.png)
 
-**Example, hotspot M-001 (Al Hayal Street, Musaffah):** 57.2 °C surface, hotter than 93% of Musaffah · 54% asphalt, 44% bare sand, 0% green · industrial workers and pedestrians · **Do first:** shaded rest point and water, the MoHRE midday break, cool-pavement coating, coating on concrete roofs, shade and Ghaf trees on the sand.
+**Example, hotspot M-001 (Al Hayal Street, Musaffah):** 57.2 °C surface, hotter than 93% of Musaffah · 54% asphalt, 44% bare sand, 0% green · industrial workers and pedestrians · **Do first:** shaded rest point and water, the MoHRE midday break, then shade and Ghaf trees on the open sand (model: about −4.9 °C surface). Cool-roof coating next; cool pavement is minor here (about −0.1 °C).
 
 ## 9 · Results and limitations
 
 | What we measured | How we validated it | Result | Baseline |
 |---|---|---|---|
-| Musaffah surface classes | Held-out 1 km test block | **Macro-F1 0.91** (accuracy 0.90) | Index rules 0.47 |
+| Musaffah surface classes | Held-out 1 km test block | **Macro-F1 0.91** on pure pixels (accuracy 0.90) | Index rules 0.47 |
 | Built-up map, Riyadh (transfer test) | Spatial-block CV vs ESA WorldCover | **F1 0.89** | NDBI rule 0.58 |
 | Same map, another year and source | Impact Observatory 2023 | **F1 0.86** | 0.58 |
 | Adding Sentinel-1 radar | Held-out blocks | **F1 0.89** | Optical only 0.85 |
@@ -122,7 +122,7 @@ Along the way you see every map and score, including the headline **macro-F1 0.9
 | Priorities robust | 4 other weightings | 60–100% top-20 overlap | — |
 | Cool roofs cool | Block-bootstrap regression | **−0.70 °C per +0.10 albedo** (95% CI −0.85 to −0.56) | — |
 | Planner briefs | Number-by-number fact-check | 5/5 pass | — |
-| Independent check by people | 60 simple-random 10 m points, labelled blind on very-high-resolution imagery by 3 teammates (20 shared); truth = majority vote (`validation/`) | **Accuracy 0.42** (95% CI 0.30–0.54), macro-F1 0.37; **0.65 within 10 m**, 0.82 within 20 m; inter-rater Fleiss κ **0.85** | Majority class 0.40 |
+| Independent check by people | 60 simple-random 10 m points, labelled blind on very-high-resolution imagery by 3 teammates (20 shared, 19 usable after "unsure"); truth = majority vote (`validation/`) | **Accuracy 0.42** (95% CI 0.30–0.54), macro-F1 0.37; **0.65 within 10 m**, 0.82 within 20 m; inter-rater Fleiss κ **0.85** | Majority class 0.40 |
 
 **Notes:** the 0.91 is macro-F1 on a near-balanced test set (up to 3,000 pixels per class, majority baseline ≈0.21), not the district's natural class mix. Most numbers above compare against reference maps, not field survey.
 

@@ -80,7 +80,7 @@ _cov = [("Quantify urban growth", f"+{R['growth_pct']:.0f}% built-up 2014→2025
         ("Fuse optical + SAR + thermal", "Sentinel-1 VV/VH + Sentinel-2 + Landsat TIRS", "10f · 10i"),
         ("Green space mapping", "vegetation class, distance to green, parks per 10k people", "5b · 7b"),
         ("Heat proxy + weather", f"NDBI r = {R['ndbi_lst_r_builtup']:.2f} → fused model; ERA5 checked vs NOAA stations", "5b · 10d · 10i"),
-        ("Informal settlements & roof materials", "metal · concrete · tile · bitumen · white roofs, from spectra; informal-housing screening", "10g · 10g-b · 10h"),
+        ("Worker housing & roof materials", "metal · concrete · tile · bitumen · white roofs, from spectra; worker-housing heat screen", "10g · 10g-b · 10h"),
         ("Population & OSM", "WorldPop residents; OSM + Microsoft buildings, roads, mosques, stops", "7b · 10b"),
         ("Hyperspectral materials", "Planet Tanager over Riyadh + NASA EMIT over Musaffah; same pipeline takes Satellite 813", "10e")]
 _thumb = {"4": "01_urban_expansion.png", "4 · 10f": "15_sar_fusion.png", "5 · 8 · 10i": "02_heat_hazard.png", "10f · 10i": "15_sar_fusion.png",
@@ -108,11 +108,11 @@ _rr = R.get("roof_materials_riyadh"); _rm = R.get("roof_materials_musaffah")
 if _rr:
     _lst = _rr.get("median_LST_C", {}); _hot = max(_lst, key=_lst.get) if _lst else ""
     _figslide("16_roof_materials.png", "Roofing materials from spectra", "Metal, concrete, tile, bitumen, white: the roof decides the fix",
-              f"<div><b>5</b>roof material classes from spectra</div><div><b>{_hot.split(' ')[0]}</b>hottest roof material in Landsat LST</div>"
+              f"<div><b>5</b>roof material classes from spectra</div><div><b>Rough</b>roof shares are rule-based estimates (0.26 agreement with the roof labels)</div>"
               + (f"<div><b>{_rm['hot_material_in_hot_zone']:,}</b>metal/bitumen roofs in Musaffah's high-heat zones</div>" if _rm else ""))
 _inf = R.get("informal_screen")
 if _inf:
-    _figslide("17_informal_screen.png", "Informal / substandard-housing screen", "Dense, irregular, sheet-roofed and hot: priority areas for housing upgrades",
+    _figslide("17_informal_screen.png", "Worker-housing heat screen", "Dense, sheet-roofed and hot: where worker housing needs heat checks first",
               f"<div><b>{_inf['flagged']}</b>candidate 100 m cells of {_inf['cells']}</div><div><b>×{_inf['enrichment_ratio']:.1f}</b>OSM-mapped housing enrichment (p {_inf['permutation_p']:.3f})</div><div><b>Top 10%</b>cells prioritised for housing-quality programmes</div>")
 _hp = R.get("heat_island_proxy")
 if _hp:
