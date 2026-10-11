@@ -107,11 +107,10 @@ slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">F
 # 3 team
 slide('''<div class="kick">Team T0049 · United Arab Emirates</div><h1 class="big">The team that can take it to MVP</h1>
 <div class="three team3">
-<div><b>Entesar Alhebsi</b><span><em class="role">Team lead · computer engineer</em><br><u>Expertise</u> Computer Engineering, Khalifa University · Python geospatial analysis · Landsat thermal</span><span class="did"><u>Built</u> heat analysis, README, user and expert outreach in Abu Dhabi</span></div>
-<div><b>Noora Alhajeri</b><span><em class="role">Robotics researcher · biomedical engineer</em><br><u>Expertise</u> M.Sc. Robotics, MBZUAI · B.Sc. Biomedical Engineering, Khalifa University · research assistant (humanoid robotics, cognitive control) · IEEE TAFFC peer reviewer · clinical engineering, Philips</span><span class="did"><u>Built</u> the notebook, ML models, remote-sensing pipeline and dashboard</span></div>
-<div><b>Maryam Albonni</b><span><em class="role">Mechanical engineer · product design</em><br><u>Expertise</u> Senior Mechanical Engineering, American University of Bahrain · CAD design · product development · finite element analysis</span><span class="did"><u>Built</u> the pitch deck, licences and quality checks</span></div>
-</div>
-<p class="lead" style="max-width:1300px;margin-top:36px;font-size:24px">Together: satellite data science + machine learning + software + engineering design: the skills to scale QAYDH from proof of concept to a municipal MVP.</p>''')
+<div><b>Entesar Alhebsi</b><span><em class="role">Computer engineer</em><br><u>Expertise</u> Computer Engineering (Khalifa University) · Python geospatial analysis · Landsat thermal remote sensing · user and expert outreach</span></div>
+<div><b>Noora Alhajeri</b><span><em class="role">Robotics researcher · biomedical engineer</em><br><u>Expertise</u> Computer vision and deep learning · geospatial machine learning and remote sensing · human-computer and human-robot interaction (HCI / HRI) · embodied AI · data pipelines and interactive dashboards</span></div>
+<div><b>Maryam Albonni</b><span><em class="role">Mechanical engineer · product design</em><br><u>Expertise</u> CAD design · product development · finite element analysis (American University of Bahrain)</span></div>
+</div>''')
 # 4 title
 slide(f'''<div class="split"><div><div class="kick">QAYDH</div><h1 class="big">The fierce heat of summer,<br>mapped where people live and work</h1>
 <p class="lead">Heat · surfaces · people · action, from open satellite data.</p></div><figure class="phf"><img class="photo" src="{blockimg(("sat", "haz"))}"><figcaption>Musaffah, Abu Dhabi · summer 2025 heat hazard zones on Sentinel-2 10 m</figcaption></figure></div>''')

@@ -174,11 +174,11 @@ Along the way you see every map and score, including the headline **macro-F1 0.9
 ## 10 · Team, licence and attribution
 
 **Team T0049 (UAE):**
-| Member | Profile | Expertise | Built in QAYDH |
-|---|---|---|---|
-| **Entesar Alhebsi** | Team lead · computer engineer | Computer Engineering (Khalifa University); Python geospatial analysis; Landsat thermal | Heat analysis, README, user and expert outreach in Abu Dhabi |
-| **Noora Alhajeri** | Robotics researcher · biomedical engineer | M.Sc. Robotics (MBZUAI); B.Sc. Biomedical Engineering (Khalifa University); research assistant in humanoid robotics and cognitive control; IEEE TAFFC peer reviewer; clinical engineering at Philips | Notebook, ML models, remote-sensing pipeline, dashboard |
-| **Maryam Albonni** | Mechanical engineer · product design | Senior Mechanical Engineering (American University of Bahrain); CAD design; product development; finite element analysis | Pitch deck, licences, quality checks |
+| Member | Profile | Expertise |
+|---|---|---|
+| **Entesar Alhebsi** | Computer engineer | Computer Engineering (Khalifa University); Python geospatial analysis; Landsat thermal remote sensing; user and expert outreach |
+| **Noora Alhajeri** | Robotics researcher · biomedical engineer | Computer vision and deep learning; geospatial machine learning and remote sensing; human-computer and human-robot interaction (HCI / HRI); embodied AI; data pipelines and interactive dashboards |
+| **Maryam Albonni** | Mechanical engineer · product design | CAD design; product development; finite element analysis (American University of Bahrain) |
 
 **Licence:** code under MIT ([`LICENSE`](LICENSE)). Each dataset keeps its own licence (table in §4).
 
