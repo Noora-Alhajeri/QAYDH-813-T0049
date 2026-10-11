@@ -17,7 +17,9 @@ QAYDH is a proof of concept that turns open satellite data into a ranked heat-ac
 |---|---|---|
 | **[Live dashboard](https://noora-alhajeri.github.io/QAYDH-813-T0049/)** ([backup](https://raw.githack.com/Noora-Alhajeri/QAYDH-813-T0049/main/dashboard/index.html)) | [`pitch/QAYDH_T0049_pitch.pdf`](pitch/QAYDH_T0049_pitch.pdf) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Noora-Alhajeri/QAYDH-813-T0049/blob/main/QAYDH_T0049_urban_heat_risk.ipynb) |
 
-**Jump to:** [Business use case](#2--business-use-case) · [Problem](#3--the-problem) · [Data](#4--data-used) · [Approach](#5--technical-approach-in-execution-order) · [Install](#6--installation) · [Run](#7--how-to-run) · [Example output](#8--example-input-and-output) · [Results & limits](#9--results-and-limitations) · [Team & licence](#10--team-licence-and-attribution)
+**▶ [Watch the 2-minute narrated demo](pitch/demo/qaydh_demo.mp4)**: the six dashboard steps (where, who, what, labels, why, act), a bus-stop card, hotspot M-001, then Riyadh and Abu Dhabi.
+
+**Jump to:** [Business use case](#2--business-use-case) · [Problem](#3--the-problem) · [Data](#4--data-used) · [Approach](#5--technical-approach-in-execution-order) · [Install](#6--installation) · [Run](#7--how-to-run) · [Example output](#8--example-input-and-output) · [Results & limits](#9--results-and-limitations) · [Expert & user feedback](#expert-and-user-feedback) · [Team & licence](#10--team-licence-and-attribution)
 
 ![QAYDH dashboard walkthrough over Musaffah](pitch/gifs/qaydh_musaffah_tour.gif)
 
@@ -159,9 +161,24 @@ Along the way you see every map and score, including the headline **macro-F1 0.9
 | `dashboard/` | Interactive dashboard (`index.html`) and labelling tool |
 | `pitch/` | Slides (`QAYDH_T0049_pitch.pdf`), demo GIFs, slide builder |
 
+### Expert and user feedback
+
+| Who | Role | What they told us | What we changed |
+|---|---|---|---|
+| Dr Diana Francis | Climate scientist, Khalifa University | Report heat per 100 m thermal block, not per building; drop the over-strong station correlation claim | Dashboard colours blocks, buildings show their block's LST; station results reported as a surface–air difference |
+| GIS specialist | Abu Dhabi municipality | *Contacted; reply to be added* | |
+| Site engineer | Musaffah industrial area | *Outreach in progress; reply to be added* | |
+
+**End users:** municipal planners, transport authorities, developers and delivery platforms (see [Business use case](#2--business-use-case)).
+
 ## 10 · Team, licence and attribution
 
-**Team T0049 (UAE):** Entesar Alhebsi (انتصار الحبسي), lead, story and README · Noora Alhajeri (نورة الهاجري), notebook, data and dashboard · Maryam Albonni (مريم البني), deck, licences and checks.
+**Team T0049 (UAE):**
+| Member | Profile | Expertise | Built in QAYDH |
+|---|---|---|---|
+| **Entesar Alhebsi** | Team lead · computer engineer | Computer Engineering (Khalifa University); Python geospatial analysis; Landsat thermal | Heat analysis, README, user and expert outreach in Abu Dhabi |
+| **Noora Alhajeri** | Robotics researcher · biomedical engineer | M.Sc. Robotics (MBZUAI); B.Sc. Biomedical Engineering (Khalifa University); research assistant in humanoid robotics and cognitive control; IEEE TAFFC peer reviewer; clinical engineering at Philips | Notebook, ML models, remote-sensing pipeline, dashboard |
+| **Maryam Albonni** | Mechanical engineer · product design | Senior Mechanical Engineering (American University of Bahrain); CAD design; product development; finite element analysis | Pitch deck, licences, quality checks |
 
 **Licence:** code under MIT ([`LICENSE`](LICENSE)). Each dataset keeps its own licence (table in §4).
 

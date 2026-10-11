@@ -105,8 +105,13 @@ slide(f'''<img class="bleed art" src="{img(os.path.join(D, 'musaffah_satellite.p
 slide('''<div class="split"><div><div class="kick">Agenda</div><h1 class="big">From where it is hot<br>to where we act first</h1></div>
 <ol class="agenda"><li>Team</li><li>The heat problem</li><li>QAYDH</li><li>Approach &amp; tools</li><li>The Musaffah story</li><li>Proof</li><li>Impact &amp; value</li><li>Closing</li></ol></div>''')
 # 3 team
-slide('''<div class="kick">Team T0049</div><h1 class="big">Three people, one city problem</h1>
-<div class="three team3"><div><b>Entesar Alhebsi</b><span>Team lead · story, README, submission</span></div><div><b>Noora Alhajeri</b><span>Notebook, data, models, dashboard</span></div><div><b>Maryam Albonni</b><span>Deck, licences, checks</span></div></div>''')
+slide('''<div class="kick">Team T0049 · United Arab Emirates</div><h1 class="big">The team that can take it to MVP</h1>
+<div class="three team3">
+<div><b>Entesar Alhebsi</b><span><em class="role">Team lead · computer engineer</em><br><u>Expertise</u> Computer Engineering, Khalifa University · Python geospatial analysis · Landsat thermal</span><span class="did"><u>Built</u> heat analysis, README, user and expert outreach in Abu Dhabi</span></div>
+<div><b>Noora Alhajeri</b><span><em class="role">Robotics researcher · biomedical engineer</em><br><u>Expertise</u> M.Sc. Robotics, MBZUAI · B.Sc. Biomedical Engineering, Khalifa University · research assistant (humanoid robotics, cognitive control) · IEEE TAFFC peer reviewer · clinical engineering, Philips</span><span class="did"><u>Built</u> the notebook, ML models, remote-sensing pipeline and dashboard</span></div>
+<div><b>Maryam Albonni</b><span><em class="role">Mechanical engineer · product design</em><br><u>Expertise</u> Senior Mechanical Engineering, American University of Bahrain · CAD design · product development · finite element analysis</span><span class="did"><u>Built</u> the pitch deck, licences and quality checks</span></div>
+</div>
+<p class="lead" style="max-width:1300px;margin-top:36px;font-size:24px">Together: satellite data science + machine learning + software + engineering design: the skills to scale QAYDH from proof of concept to a municipal MVP.</p>''')
 # 4 title
 slide(f'''<div class="split"><div><div class="kick">QAYDH</div><h1 class="big">The fierce heat of summer,<br>mapped where people live and work</h1>
 <p class="lead">Heat · surfaces · people · action, from open satellite data.</p></div><figure class="phf"><img class="photo" src="{blockimg(("sat", "haz"))}"><figcaption>Musaffah, Abu Dhabi · summer 2025 heat hazard zones on Sentinel-2 10 m</figcaption></figure></div>''')
@@ -255,7 +260,8 @@ slide('<div class="kick">Architecture</div><h1>From open satellites to a decisio
       f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
       col("Answers", [("flame", "Hazard zones"), ("road", "Surface mix"), ("users", "Exposure sites"), ("temperature", "Heat drivers"), ("target", "Priority + action")]) +
       f'<div class="aarr">{icon("arrow-right", 44)}</div>' +
-      col("Delivery", [("world", "Story dashboard"), ("database", "GeoJSON / API"), ("checklist", "Planner brief per hotspot"), ("clock", "Summer alerts")], "go") + "</div>")
+      col("Delivery", [("world", "Story dashboard"), ("database", "GeoJSON / API"), ("checklist", "Planner brief per hotspot"), ("clock", "Summer alerts")], "go") + "</div>" +
+      '<p class="credit" style="color:#cdbda4;font-size:16px">▶ Demo video (2 min): github.com/Noora-Alhajeri/QAYDH-813-T0049/blob/main/pitch/demo/qaydh_demo.mp4 · Live dashboard: noora-alhajeri.github.io/QAYDH-813-T0049</p>')
 
 # 20 why it fits
 slide(f'''<div class="kick">Why it fits</div><h1 class="big">Matched to a desert city</h1>
@@ -343,7 +349,7 @@ ol.agenda{font:800 44px/1.5 'Big Shoulders Display';margin:0;padding-left:60px;c
 .three div,.four div{border-top:4px solid #ff6b2c;padding-top:18px}
 .three b,.four b{display:block;font:800 40px/1.05 'Big Shoulders Display';margin-bottom:10px}
 .three span,.four span{font-size:22px;color:#cdbda4;line-height:1.35}
-.team3 b{font:600 46px 'IBM Plex Sans Arabic'}
+.team3 b{font:600 40px 'IBM Plex Sans Arabic'} .team3 span{display:block;font-size:19px;line-height:1.45} .team3 u{text-decoration:none;color:#43c6b4;font-weight:600;margin-right:6px} .team3 .did{margin-top:12px;color:#efe3cf} .team3 .role{font-style:normal;color:#ffb15c;font-weight:600}
 .four{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:20px}
 .photo{width:100%;height:700px;object-fit:cover;border-radius:18px}
 .filmstrip{position:absolute;left:0;right:0;bottom:0;height:180px;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -474,9 +480,16 @@ def at(sub, k=0):
     hits = [i_ for i_, s_ in enumerate(S) if sub in s_]
     assert len(hits) > k, sub; return hits[k]
 L_ = lambda t: at(f"<h2>{t}</h2>")
-ORDER = [0, at("Three people, one city problem"),                                                   # 1 title · team
+# Users and experts we spoke to (honest status; details in README)
+slide('''<div class="kick">End users &amp; stakeholders</div><h1>Shaped with experts and users</h1>
+<div class="mtab"><div class="mh"><span></span><span>Who</span><span>Role</span><span>What they told us / status</span><span>What we changed</span><span></span></div>
+<div><i style="background:#43c6b4"></i><b>Dr Diana Francis</b><span>Climate scientist, Khalifa University</span><span>Advised on the thermal method: report heat per 100 m block, not per building; drop the over-strong station claim</span><em>Block-level heat on the dashboard; station results reported as a difference</em><small></small></div>
+<div><i style="background:#ffb15c"></i><b>GIS specialist</b><span>Abu Dhabi municipality</span><span>Contacted: reviewing the dashboard and GeoJSON outputs</span><em>Feedback goes into the README table</em><small></small></div>
+<div><i style="background:#ffb15c"></i><b>Site engineer</b><span>Musaffah industrial area</span><span>Outreach in progress: daily heat exposure of outdoor workers</span><em>Feedback goes into the README table</em><small></small></div>
+</div><p class="lead" style="max-width:1300px;margin-top:30px;font-size:22px">End users: municipal planners, transport authorities, developers and delivery platforms (see the business case).</p>''')
+ORDER = [0, at("The team that can take it to MVP"),                                                   # 1 title · team
          at("Heat maps exist. Decisions don"), at("Real places, not pixels"),                          # 2 problem · who is affected
-         at("Business use case · the end user"), at("Who benefits"),                                   # 3 business use case · end users
+         at("Business use case · the end user"), at("Who benefits"), at("Shaped with experts and users"),                                   # 3 business use case · end users
          at("Nine open sources, one answer"), at("Narrow bands read the material"),                    # 4 data · hyperspectral
          at("From open satellites to a decision"), at("Every material gets its own fix"),              # 5 approach (workflow + rules)
          at("Open it, click, decide"), at("Hazard zones, not fake street"), at("139 named outdoor sites"), # 6 example outputs: dashboard steps
