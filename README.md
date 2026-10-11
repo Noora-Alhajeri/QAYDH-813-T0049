@@ -166,8 +166,8 @@ Along the way you see every map and score, including the headline **macro-F1 0.9
 | Who | Role | What they told us | What we changed |
 |---|---|---|---|
 | Dr Diana Francis | Climate scientist, Khalifa University | Report heat per 100 m thermal block, not per building; drop the over-strong station correlation claim | Dashboard colours blocks, buildings show their block's LST; station results reported as a surface–air difference |
-| GIS specialist | Abu Dhabi municipality | *Contacted; reply to be added* | |
-| Site engineer | Musaffah industrial area | *Outreach in progress; reply to be added* | |
+| GIS specialist | Abu Dhabi municipality | Called it "a brilliant idea"; population density and tracking heat after interventions are very useful, and municipalities value this; asked whether a similar product already exists | Population density already included (WorldPop, 100 m); QAYDH is positioned as adding cause, exposure and matched fixes on top of existing heat maps; first incubation step is reviewing existing municipal products to integrate, not duplicate |
+| Site engineer | Musaffah industrial area | -- | -- |
 
 **End users:** municipal planners, transport authorities, developers and delivery platforms (see [Business use case](#2--business-use-case)).
 
